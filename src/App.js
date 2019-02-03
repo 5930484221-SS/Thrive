@@ -1,12 +1,15 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Provider } from "react-redux";
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
-import "./App.css";
-import { store } from "./configStore";
-import * as Actions from "./actions";
+import Listing from './components/Listing';
+import CourseCreation from './components/CourseCreation';
+import Login from './components/Login';
+import NotFound from './components/NotFound';
 
-import Routes from "./components/Routes";
+import './App.css';
+import { store } from './configStore';
+import * as Actions from './actions';
 
 class App extends Component {
   render() {
@@ -19,6 +22,7 @@ class App extends Component {
                 <Route path="/listing" component={Listing} />
                 <Route path="/create_course" component={CourseCreation} />
                 <Route path="/" component={Login} />
+                <Route component={NotFound} />
               </Switch>
             </div>
           </div>
