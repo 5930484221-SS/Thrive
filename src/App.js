@@ -12,12 +12,8 @@ class App extends Component {
       <div>
         <img src={cowLeft} alt="" id="left1" />
         <img src={cowRight} alt="" id="right1" />
-        <div>
-          <NavBar />
-        </div>
-        <div>
-          <Landingtext />
-        </div>
+        <NavBar />
+        <Landingtext />
       </div>
     );
   }
