@@ -38,6 +38,11 @@ body {
   color: white;
 }
 
+.btn-light-orange {
+  background-color: #fff0b3;
+  color: black;
+}
+
 .btn-orange:hover {
   background-color: #eb9828;
 }
