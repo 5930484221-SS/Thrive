@@ -1,7 +1,6 @@
-import React, { Component } from "react";
-import LoginAndSignUp from "./LoginAndSignUp";
-import rocketLogo from "../img/rocket_logo.svg";
-import Landing from "./LandingText";
+import React, { Component } from 'react';
+import LoginAndSignUp from './LoginAndSignUp';
+import rocketLogo from '../img/rocket_logo.svg';
 
 export default props => {
   return (

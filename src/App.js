@@ -6,7 +6,9 @@ import Listing from './components/Listing';
 import CourseCreation from './components/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
+
 import Navbar from './components/Navbar';
+import NavBar from './components/NavBar';
 
 import './App.css';
 import { store } from './configStore';
@@ -15,10 +17,11 @@ import * as Actions from './actions';
 class App extends Component {
   render() {
     return (
-
       <Provider store={store}>
         <Router>
           <div className="App">
+            {localStorage.getItem('token') === null ? <NavBar /> : <Navbar />}
+
             <div className="container">
               <Switch>
                 <Route path="/listing" component={Listing} />
