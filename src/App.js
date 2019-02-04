@@ -6,6 +6,7 @@ import Listing from './components/Listing';
 import CourseCreation from './components/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
+import Navbar from './components/Navbar';
 
 import './App.css';
 import { store } from './configStore';
