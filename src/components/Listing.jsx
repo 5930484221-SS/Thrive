@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React, { Component } from 'react';
+import axios from 'axios';
 
 class Listing extends Component {
   state = {
@@ -8,11 +8,11 @@ class Listing extends Component {
 
   async componentDidMount() {
     const response = await axios({
-      method: "GET",
+      method: 'GET',
       crossDomain: true,
-      url: "http://localhost:8000/api/get_courses",
+      url: 'http://localhost:8000/api/get_courses',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        'Content-Type': 'application/x-www-form-urlencoded'
         // "Access-Control-Allow-Origin": "*"
       }
     });
