@@ -59,18 +59,24 @@ body {
   color: #f29500;
 }
 
+.text-extra {
+  font-size: 40px !important;
+}
+
 /* SVGs */
 
 #left1 {
   position: absolute;
   top: 20%;
   left: -60px;
+  z-index: -1;
 }
 
 #right1 {
   position: absolute;
   top: 50%;
   right: -60px;
+  z-index: -1;
 }
 
 /* MEDIA QUERIES */
