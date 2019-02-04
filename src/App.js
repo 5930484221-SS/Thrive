@@ -1,12 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import './App.css';
+import "./App.css";
+import NavBar from "./components/NavBar";
+import Landingtext from "./components/LandingText.js";
+import cowLeft from "./img/left1.svg";
+import cowRight from "./img/right1.svg";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <h1 className="text-center pt-5">Hello World</h1>
+      <div>
+        <img src={cowLeft} alt="" id="left1" />
+        <img src={cowRight} alt="" id="right1" />
+        <div>
+          <NavBar />
+        </div>
+        <div>
+          <Landingtext />
+        </div>
       </div>
     );
   }
