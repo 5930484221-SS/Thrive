@@ -72,6 +72,13 @@ body {
   z-index: -1;
 }
 
+#left2 {
+  position: absolute;
+  top: 20%;
+  left: -50px;
+  z-index: -1;
+}
+
 #right1 {
   position: absolute;
   top: 50%;
