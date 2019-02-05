@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { Component } from "react";
+import querystring from "query-string";
+import axios from "axios";
 
 class Listing extends Component {
   state = {
@@ -8,11 +9,11 @@ class Listing extends Component {
 
   async componentDidMount() {
     const response = await axios({
-      method: 'GET',
+      method: "GET",
       crossDomain: true,
-      url: 'http://localhost:8000/api/get_courses',
+      url: "http://localhost:8000/api/get_courses",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
         // "Access-Control-Allow-Origin": "*"
       }
     });
@@ -23,7 +24,10 @@ class Listing extends Component {
     return (
       <div>
         {this.state.course_list.map(c => (
-          <h1>{c}</h1>
+          <h7>
+            {querystring.stringify(c)}
+            <br />
+          </h7>
         ))}
       </div>
     );

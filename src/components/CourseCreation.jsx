@@ -1,30 +1,45 @@
-import axios from 'axios';
-import querystring from 'query-string';
-import React, { Component } from 'react';
-import CowBg from './CowBg';
+import axios from "axios";
+import querystring from "query-string";
+import React, { Component } from "react";
+import CowBg from "./CowBg";
 
-import './courseCreate.css';
+import "./courseCreate.css";
 
 class CourseCreation extends Component {
-  course_name = React.createRef();
+  field_topic = React.createRef();
+  field_description = React.createRef();
+  field_descriptionProfile = React.createRef();
+  field_duration = React.createRef();
+  field_fee = React.createRef();
+  field_location = React.createRef();
+  field_subject = React.createRef();
+  field_tuition = React.createRef();
   state = {};
 
   onSubmit = async e => {
     e.preventDefault();
     axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/create_course',
+      method: "POST",
+      url: "http://localhost:8000/api/create_course",
       crossDomain: true,
       data: querystring.stringify({
-        token: localStorage.getItem('token'),
-        course_name: this.course_name.current.value
+        token: localStorage.getItem("token"),
+
+        topic: this.field_topic.current.value,
+        description: this.field_description.current.value,
+        descriptionProfile: this.field_descriptionProfile.current.value,
+        duration: this.field_duration.current.value,
+        fee: this.field_fee.current.value,
+        location: this.field_location.current.value,
+        subject: this.field_subject.current.value,
+        tuition: this.field_tuition.current.value
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     })
-      .then(response => alert('ok'))
-      .catch(error => alert('failed'));
+      .then(response => alert("ok"))
+      .catch(error => alert("failed"));
   };
 
   render() {
@@ -51,6 +66,7 @@ class CourseCreation extends Component {
                   id="descriptionProfile"
                   rows="15"
                   placeholder="Describe your profile"
+                  ref={this.field_descriptionProfile}
                 />
               </div>
             </div>
@@ -64,18 +80,23 @@ class CourseCreation extends Component {
                   className="form-control"
                   id="topic"
                   placeholder="Enter topic here"
+                  ref={this.field_topic}
                 />
               </div>
               <br />
 
               <span className="topic">
-                {' '}
+                {" "}
                 <span className="text-orange text-extra">A</span>
-                bout <span className="text-orange text-slim">Course</span>{' '}
+                bout <span className="text-orange text-slim">Course</span>{" "}
               </span>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
-                <select className="form-control" id="subject">
+                <select
+                  className="form-control"
+                  id="subject"
+                  ref={this.field_subject}
+                >
                   <option>Mathematics</option>
                   <option>Science</option>
                   <option>Physics</option>
@@ -104,6 +125,7 @@ class CourseCreation extends Component {
                   id="description"
                   rows="3"
                   placeholder="Describe your course"
+                  ref={this.field_description}
                 />
 
                 <label htmlFor="location">Location</label>
@@ -112,6 +134,7 @@ class CourseCreation extends Component {
                   id="location"
                   rows="3"
                   placeholder="ex: Sukhumvit Line, Siam"
+                  ref={this.field_location}
                 />
 
                 <label htmlFor="duration">Duration</label>
@@ -120,6 +143,7 @@ class CourseCreation extends Component {
                   id="duration"
                   rows="3"
                   placeholder="Date and Time"
+                  ref={this.field_duration}
                 />
               </div>
               <br />
@@ -133,6 +157,7 @@ class CourseCreation extends Component {
                     className="form-control"
                     id="tuition"
                     step="10"
+                    ref={this.field_tuition}
                   />
                 </div>
                 <div className="form-group col-md-6">
@@ -142,6 +167,7 @@ class CourseCreation extends Component {
                     className="form-control"
                     id="fee"
                     step="10"
+                    ref={this.field_fee}
                   />
                 </div>
               </div>
@@ -154,8 +180,6 @@ class CourseCreation extends Component {
             />
 
             <br />
-            <input type="text" ref={this.course_name} />
-            <input type="submit" value="Submit" />
           </div>
         </form>
       </div>

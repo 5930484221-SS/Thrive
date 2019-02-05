@@ -7,6 +7,10 @@ from django.views.decorators.http import require_http_methods
 from thrive.mongo_connection import mongo_db
 
 
+course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
+                 'fee', 'location', 'subject', 'tuition']
+
+
 def set_response_header(response):
     response.__setitem__("Content-type", "application/json")
     response.__setitem__("Access-Control-Allow-Origin", "*")
@@ -70,10 +74,12 @@ def create_course(request):
     if user is None:
         return HttpResponseForbidden("please login first")
 
-    course_name = request.POST.get('course_name')
-    collection = mongo_db.get_collection('courses')
+    record = dict()
+    for field in course_fields:
+        record[field] = request.POST.get(field)
 
-    collection.insert_one({'course_name': course_name})
+    collection = mongo_db.get_collection('courses')
+    collection.insert_one(record)
 
     return HttpResponse('')
 
@@ -82,7 +88,7 @@ def create_course(request):
 @require_http_methods(["POST", "GET"])
 def get_courses(request):
     collection = mongo_db.get_collection('courses')
-    courses = list(t['course_name'] for t in collection.find({}))
+    courses = list({s:t[s] for s in course_fields} for t in collection.find({}))
 
     response = JsonResponse(dict(courses=courses))
 
