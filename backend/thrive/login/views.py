@@ -8,7 +8,7 @@ from thrive.mongo_connection import mongo_db
 
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
-                 'fee', 'location', 'subject', 'tuition']
+                 'fee', 'location', 'subject', 'tuition', 'img']
 
 
 def set_response_header(response):
