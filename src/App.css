@@ -44,6 +44,11 @@ body {
   color: white;
 }
 
+.btn-light-orange {
+  background-color: #fff0b3;
+  color: black;
+}
+
 .btn-orange:hover {
   background-color: #eb9828;
 }
@@ -60,24 +65,37 @@ body {
   color: #f29500;
 }
 
+.text-extra {
+  font-size: 40px !important;
+}
+
 /* SVGs */
 
 #left1 {
   position: absolute;
   top: 20%;
   left: -60px;
+  z-index: -1;
+}
+
+#left2 {
+  position: absolute;
+  top: 20%;
+  left: -50px;
+  z-index: -1;
 }
 
 #right1 {
   position: absolute;
   top: 50%;
   right: -60px;
+  z-index: -1;
 }
 
 /* MEDIA QUERIES */
 @media screen and (min-width: 768px) {
   .new-section {
-    margin-top: 120px;
+    margin-top: 80px;
   }
   /* SHOWCASE */
   .showcase-header {
