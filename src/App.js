@@ -7,7 +7,7 @@ import CourseCreation from './components/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
 
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar.jsx';
 import NavBar from './components/NavBar';
 
 import './App.css';

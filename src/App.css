@@ -127,3 +127,10 @@ body {
     left: -50%;
   }
 }
+
+.profileBorder{
+  border-radius: 50%;
+  border: thick double #787a7a;
+  width: 100%;
+  height: 100%;
+}
