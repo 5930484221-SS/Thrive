@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import axios from 'axios';
 import querystring from 'query-string';
 
@@ -9,6 +10,7 @@ class UsernameAndLogout extends Component {
     this.state = {
     };
   }
+
 
   onLogout = async e => {
     e.preventDefault();
@@ -30,6 +32,7 @@ class UsernameAndLogout extends Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav ml-auto">
@@ -40,7 +43,7 @@ class UsernameAndLogout extends Component {
               data-toggle="modal"
               data-target="#loginModal"
             >
-              Username: {localStorage.getItem("token").substring(0,8)}
+              Username: {localStorage.getItem("username")}
             </a>
           </li>
           <li>
@@ -54,4 +57,13 @@ class UsernameAndLogout extends Component {
   }
 };
 
-export default UsernameAndLogout;
+const mapStateToProps = state => {
+  return {
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { }
+)(UsernameAndLogout);

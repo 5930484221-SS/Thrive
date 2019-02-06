@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import axios from 'axios';
 import querystring from 'query-string';
+import {
+  loginUserSuccess
+} from "../actions";
 
 class LoginAndSignUp extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -40,6 +43,7 @@ class LoginAndSignUp extends Component {
     });
 
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem('username', this.state.username);
     alert('ok');
     window.location = '/';
   };
@@ -113,4 +117,13 @@ class LoginAndSignUp extends Component {
   }
 };
 
-export default LoginAndSignUp;
+const mapStateToProps = state => {
+  return {
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { loginUserSuccess }
+)(LoginAndSignUp);
