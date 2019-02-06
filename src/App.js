@@ -19,7 +19,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            {localStorage.getItem('token') === null ? <NavBar /> : ''}
+            {localStorage.getItem('token') === null ? <NavBar auth={false}/> : <NavBar auth={true}/>}
 
             <div className="container">
               <Switch>
