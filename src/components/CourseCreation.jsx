@@ -152,10 +152,6 @@ class CourseCreation extends Component {
               type="submit"
               value="Create Course"
             />
-
-            <br />
-            <input type="text" ref={this.course_name} />
-            <input type="submit" value="Submit" />
           </div>
         </form>
       </div>

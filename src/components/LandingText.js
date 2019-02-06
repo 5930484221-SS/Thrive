@@ -21,9 +21,15 @@ export default props => {
                 you want
               </p>
               <div id="big-button">
-                <button className="btn btn-primary btn-rounded btn-extra mt-4">
-                  SIGN UP
-                </button>
+                {localStorage.getItem('token') === null ? (
+                  <button className="btn btn-primary btn-rounded btn-extra mt-4">
+                    SIGN UP
+                  </button>
+                ) : (
+                  <button className="btn btn-danger btn-rounded btn-extra mt-4">
+                    GET STARTED
+                  </button>
+                )}
               </div>
             </div>
             <div className="col-md-2">
