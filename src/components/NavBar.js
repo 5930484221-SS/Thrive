@@ -1,61 +1,75 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-import LoginAndSignUp from "./LoginAndSignUp";
-import rocketLogo from "../img/rocket_logo.svg";
-import LandingText from "./LandingText";
-import UsernameAndLogout from "./UsernameAndLogout";
+import LoginAndSignUp from './LoginAndSignUp';
+import rocketLogo from '../img/rocket_logo.svg';
+import UsernameAndLogout from './UsernameAndLogout';
 
 class NavBar extends Component {
   componentWillMount() {
-    console.log(this.props.auth)
+    console.log(this.props.auth);
   }
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand-sm navbar-light navbar-light-orange">
+        <nav
+          className={
+            this.props.auth
+              ? 'navbar navbar-expand-sm navbar-dark bg-dark'
+              : 'navbar navbar-expand-sm navbar-light navbar-light-orange'
+          }
+        >
           <div className="container">
-            <a href="#" className="navbar-brand text-secondary">
+            <a
+              href="#"
+              className={
+                this.props.auth
+                  ? 'navbar-brand text-white'
+                  : 'navbar-brand text-secondary'
+              }
+            >
               <img src={rocketLogo} />
               THRIVE.
             </a>
-
-            <span>
+            <button
+              className="navbar-toggler"
+              data-toggle="collapse"
+              data-target="#navbarNav"
+            >
+              <span className="navbar-toggler-icon" />
+            </button>
+            <div id="navbarNav" className="collapse navbar-collapse">
+              <ul className="navbar-nav">
+                <li className="nav-item ml-3">
+                  <Link to="/" className="nav-link">
+                    Courses
+                  </Link>
+                </li>
+                {this.props.auth && (
+                  <li className="nav-item ml-3">
+                    <Link to="/create_course" className="nav-link">
+                      Add Course
+                    </Link>
+                  </li>
+                )}
+              </ul>
               <ul className="navbar-nav ml-auto">
-                <li className="nav-item ml-3">
-                  <a href="#" className="nav-link">Home</a>
-                </li>
-
-                <li className="nav-item ml-3">
-                  <a href="#" className="nav-link">Lists</a>
-                </li>
-
-                <li className="nav-item ml-3">
-                  <button
-                    className="navbar-toggler"
-                    data-toggle="collapse"
-                    data-target="#navbarNav"
-                  >
-                    <span className="navbar-toggler-icon" />
-                  </button>
-                </li>
                 {this.props.auth ? (
                   <li className="nav-item ml-3">
-                    <UsernameAndLogout/>
+                    <UsernameAndLogout />
                   </li>
                 ) : (
                   <li className="nav-item ml-3">
-                    <LoginAndSignUp/>
+                    <LoginAndSignUp />
                   </li>
-                )
-                }
+                )}
               </ul>
-            </span>
-
+            </div>
           </div>
         </nav>
       </div>
     );
   }
-};
+}
 
 export default NavBar;
