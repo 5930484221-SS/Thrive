@@ -21,7 +21,7 @@ class NavBar extends Component {
         >
           <div className="container">
             <a
-              href="#"
+              href="/"
               className={
                 this.props.auth
                   ? 'navbar-brand text-white'
@@ -41,7 +41,7 @@ class NavBar extends Component {
             <div id="navbarNav" className="collapse navbar-collapse">
               <ul className="navbar-nav">
                 <li className="nav-item ml-3">
-                  <Link to="/" className="nav-link">
+                  <Link to="/listing" className="nav-link">
                     Courses
                   </Link>
                 </li>

@@ -9,6 +9,11 @@ import defaultCourse from '../img/defaultCourse.png';
 import './courseCreate.css';
 
 class CourseCreation extends Component {
+
+  // componentDidMount(){
+  //   this.setImg(defaultCourse)
+  // }
+
   constructor() {
     super();
     this.state = {
@@ -20,11 +25,12 @@ class CourseCreation extends Component {
       location: '',
       tuition: '',
       fee: '',
-      img: defaultCourse,
+      img: '',
       isLoading: false
     };
   }
-
+    
+      
   handleInputChange = event => {
     const target = event.target;
     const value = target.value;
@@ -39,13 +45,17 @@ class CourseCreation extends Component {
     });
   };
 
-  onFileHandle = event => {
-    if (event.target.files.length > 0) {
-      let reader = new FileReader();
+  setImg(img){
+    let reader = new FileReader();
       reader.onload = function(ev) {
         this.setState({ img: ev.target.result });
       }.bind(this);
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(img);
+  }
+
+  onFileHandle = event => {
+    if (event.target.files.length > 0) {
+      this.setImg(event.target.files[0])
     }
   };
 

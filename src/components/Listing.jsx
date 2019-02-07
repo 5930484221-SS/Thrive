@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import CowBg from './CowBg';
 
 class Listing extends Component {
   state = {
-    course_list: []
+    courseList: []
   };
 
   async componentDidMount() {
@@ -16,15 +17,17 @@ class Listing extends Component {
         // "Access-Control-Allow-Origin": "*"
       }
     });
-    console.log(response);
-    this.setState({ course_list: response.data.courses });
+    console.log(response.data.courses);
+    this.setState({ courseList: response.data.courses });
   }
   render() {
+    console.log(this.state)
     return (
       <div>
-        {this.state.course_list.map(c => (
-          <h1>{c}</h1>
-        ))}
+        <CowBg />
+         {this.state.courseList.map(c => 
+           Object.keys(c).map(key=>(<p>{key}: {c[key]}</p>))          
+         )}
       </div>
     );
   }
