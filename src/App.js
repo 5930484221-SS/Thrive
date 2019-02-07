@@ -7,7 +7,6 @@ import CourseCreation from './components/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
 
-import Navbar from './components/Navbar.jsx';
 import NavBar from './components/NavBar';
 
 import './App.css';
@@ -20,7 +19,11 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            {localStorage.getItem('token') === null ? <NavBar /> : <Navbar />}
+            {localStorage.getItem('token') === null ? (
+              <NavBar auth={false} />
+            ) : (
+              <NavBar auth={true} />
+            )}
 
             <div className="container">
               <Switch>

@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import rocketWithShadow from "../img/rocket with shadow.svg";
+import React, { Component } from 'react';
+import rocketWithShadow from '../img/rocket with shadow.svg';
 
 export default props => {
   return (
@@ -10,10 +10,10 @@ export default props => {
             <div className="col-md-2" />
             <div className="col-lg-6 col-md-8">
               <div className="showcase-header">
-                The{" "}
+                The{' '}
                 <span className="text-orange">
                   <strong>BEST</strong>
-                </span>{" "}
+                </span>{' '}
                 Tutor & Learner Matching System
               </div>
               <p className="text-muted mt-3 showcase-text">
@@ -21,9 +21,15 @@ export default props => {
                 you want
               </p>
               <div id="big-button">
-                <button className="btn btn-primary btn-rounded btn-extra mt-4">
-                  SIGN UP
-                </button>
+                {localStorage.getItem('token') === null ? (
+                  <button className="btn btn-primary btn-rounded btn-extra mt-4">
+                    SIGN UP
+                  </button>
+                ) : (
+                  <button className="btn btn-danger btn-rounded btn-extra mt-4">
+                    GET STARTED
+                  </button>
+                )}
               </div>
             </div>
             <div className="col-md-2">

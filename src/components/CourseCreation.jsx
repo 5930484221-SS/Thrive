@@ -1,26 +1,25 @@
-import axios from "axios";
-import querystring from "query-string";
-import React, { Component } from "react";
-import CowBg from "./CowBg";
-import { Courses } from "./Courses";
-import Loader from "./loader/Loader";
-import defaultCourse from "../img/defaultCourse.png";
+import axios from 'axios';
+import querystring from 'query-string';
+import React, { Component } from 'react';
+import CowBg from './CowBg';
+import { Courses } from './Courses';
+import Loader from './loader/Loader';
+import defaultCourse from '../img/defaultCourse.png';
 
-import "./courseCreate.css";
+import './courseCreate.css';
 
 class CourseCreation extends Component {
-
   constructor() {
     super();
     this.state = {
-      topic: "",
-      description: "",
-      descriptionProfile: "",
-      subject: "",
-      duration: "",
-      location: "",
-      tuition: "",
-      fee: "",
+      topic: '',
+      description: '',
+      descriptionProfile: '',
+      subject: '',
+      duration: '',
+      location: '',
+      tuition: '',
+      fee: '',
       img: defaultCourse,
       isLoading: false
     };
@@ -31,8 +30,8 @@ class CourseCreation extends Component {
     const value = target.value;
     const name = target.name;
     if (
-      (name === "fee" || name === "tuition") &&
-      (isNaN(value) || value.includes("-"))
+      (name === 'fee' || name === 'tuition') &&
+      (isNaN(value) || value.includes('-'))
     )
       return;
     this.setState({
@@ -54,20 +53,20 @@ class CourseCreation extends Component {
     event.preventDefault();
     this.setState({ isLoading: true });
     const { isLoading, ...postData } = this.state;
-    postData["token"] = localStorage.getItem("token");
+    postData['token'] = localStorage.getItem('token');
     try {
       await axios({
-        method: "POST",
-        url: "http://localhost:8000/api/create_course",
+        method: 'POST',
+        url: 'http://localhost:8000/api/create_course',
         crossDomain: true,
         data: querystring.stringify(postData),
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      window.location = "/listing";
+      window.location = '/listing';
     } catch (error) {
-      alert("Failed to submit, please try again");
+      alert('Failed to submit, please try again');
       console.log(error);
     }
     this.setState({ isLoading: false });
@@ -92,8 +91,12 @@ class CourseCreation extends Component {
         <form onSubmit={this.onSubmit}>
           <div className="form-row">
             <div className="form-group col-md-6">
-              <div className="form-group col-md-11">
-                <img className="profileBorder m-6" src={img} />
+              <div className="form-group col-md-11 text-center">
+                <img
+                  id="img-profile"
+                  className="img-fluid px-5 py-3"
+                  src={img}
+                />
                 <input
                   className="form-control-file"
                   type="file"
@@ -140,9 +143,9 @@ class CourseCreation extends Component {
               <br />
 
               <span className="topic">
-                {" "}
+                {' '}
                 <span className="text-orange text-extra">A</span>
-                bout <span className="text-orange text-slim">Course</span>{" "}
+                bout <span className="text-orange text-slim">Course</span>{' '}
               </span>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
@@ -244,8 +247,6 @@ class CourseCreation extends Component {
               value="Create Course"
               disabled={isLoading}
             />
-
-            <br />
           </div>
         </form>
         {isLoading ? Loader : null}
