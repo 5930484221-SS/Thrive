@@ -1,33 +1,91 @@
-import axios from 'axios';
-import querystring from 'query-string';
-import React, { Component } from 'react';
-import CowBg from './CowBg';
+import axios from "axios";
+import querystring from "query-string";
+import React, { Component } from "react";
+import CowBg from "./CowBg";
+import { Courses } from "./Courses";
+import Loader from "./loader/Loader";
+import defaultCourse from "../img/defaultCourse.png";
 
-import './courseCreate.css';
+import "./courseCreate.css";
 
 class CourseCreation extends Component {
-  course_name = React.createRef();
-  state = {};
 
-  onSubmit = async e => {
-    e.preventDefault();
-    axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/create_course',
-      crossDomain: true,
-      data: querystring.stringify({
-        token: localStorage.getItem('token'),
-        course_name: this.course_name.current.value
-      }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-      .then(response => alert('ok'))
-      .catch(error => alert('failed'));
+  constructor() {
+    super();
+    this.state = {
+      topic: "",
+      description: "",
+      descriptionProfile: "",
+      subject: "",
+      duration: "",
+      location: "",
+      tuition: "",
+      fee: "",
+      img: defaultCourse,
+      isLoading: false
+    };
+  }
+
+  handleInputChange = event => {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    if (
+      (name === "fee" || name === "tuition") &&
+      (isNaN(value) || value.includes("-"))
+    )
+      return;
+    this.setState({
+      [name]: value
+    });
+  };
+
+  onFileHandle = event => {
+    if (event.target.files.length > 0) {
+      let reader = new FileReader();
+      reader.onload = function(ev) {
+        this.setState({ img: ev.target.result });
+      }.bind(this);
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
+  onSubmit = async event => {
+    event.preventDefault();
+    this.setState({ isLoading: true });
+    const { isLoading, ...postData } = this.state;
+    postData["token"] = localStorage.getItem("token");
+    try {
+      await axios({
+        method: "POST",
+        url: "http://localhost:8000/api/create_course",
+        crossDomain: true,
+        data: querystring.stringify(postData),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+      window.location = "/listing";
+    } catch (error) {
+      alert("Failed to submit, please try again");
+      console.log(error);
+    }
+    this.setState({ isLoading: false });
   };
 
   render() {
+    const {
+      topic,
+      description,
+      descriptionProfile,
+      subject,
+      duration,
+      location,
+      tuition,
+      fee,
+      img,
+      isLoading
+    } = this.state;
     return (
       <div>
         <CowBg />
@@ -35,12 +93,14 @@ class CourseCreation extends Component {
           <div className="form-row">
             <div className="form-group col-md-6">
               <div className="form-group col-md-11">
-                <button
-                  type="button"
-                  className="btn btn-outline-dark uploadPic"
-                >
-                  Upload Image
-                </button>
+                <img className="profileBorder m-6" src={img} />
+                <input
+                  className="form-control-file"
+                  type="file"
+                  onChange={this.onFileHandle}
+                  ref={this.imgRef}
+                  accept="image/*"
+                />
               </div>
               <div className="form-group col-md-11">
                 <label htmlFor="descriptionProfile" className="topic">
@@ -49,8 +109,13 @@ class CourseCreation extends Component {
                 <textarea
                   className="form-control"
                   id="descriptionProfile"
+                  name="descriptionProfile"
                   rows="15"
                   placeholder="Describe your profile"
+                  onChange={this.handleInputChange}
+                  value={descriptionProfile}
+                  disabled={isLoading}
+                  required
                 />
               </div>
             </div>
@@ -63,65 +128,81 @@ class CourseCreation extends Component {
                   type="text"
                   className="form-control"
                   id="topic"
+                  name="topic"
                   placeholder="Enter topic here"
+                  onChange={this.handleInputChange}
+                  value={topic}
+                  disabled={isLoading}
+                  required
                 />
               </div>
+
               <br />
 
               <span className="topic">
-                {' '}
+                {" "}
                 <span className="text-orange text-extra">A</span>
-                bout <span className="text-orange text-slim">Course</span>{' '}
+                bout <span className="text-orange text-slim">Course</span>{" "}
               </span>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
-                <select className="form-control" id="subject">
-                  <option>Mathematics</option>
-                  <option>Science</option>
-                  <option>Physics</option>
-                  <option>Chemical</option>
-                  <option>Biology</option>
-                  <option>Astronomy</option>
-                  <option>Basic Science</option>
-                  <option>Thai</option>
-                  <option>Social</option>
-                  <option>GAT-Thai</option>
-                  <option>GAT-Eng</option>
-                  <option>English</option>
-                  <option>France</option>
-                  <option>China</option>
-                  <option>Japanese</option>
-                  <option>Korea</option>
-                  <option>Pat1</option>
-                  <option>Pat2</option>
-                  <option>Pat3</option>
-                  <option>CU-TEP</option>
-                  <option>TU GET</option>
+                <select
+                  className="form-control"
+                  id="subject"
+                  name="subject"
+                  onChange={this.handleInputChange}
+                  value={subject}
+                  disabled={isLoading}
+                  required
+                >
+                  <option value="" selected disabled hidden>
+                    Select the course subject
+                  </option>
+                  {Courses.map(course => (
+                    <option key={course}>{course}</option>
+                  ))}
                 </select>
+
                 <label htmlFor="description">Description</label>
                 <textarea
                   className="form-control"
                   id="description"
+                  name="description"
                   rows="3"
                   placeholder="Describe your course"
+                  onChange={this.handleInputChange}
+                  value={description}
+                  disabled={isLoading}
+                  required
                 />
 
                 <label htmlFor="location">Location</label>
                 <textarea
                   className="form-control"
                   id="location"
+                  name="location"
                   rows="3"
                   placeholder="ex: Sukhumvit Line, Siam"
+                  onChange={this.handleInputChange}
+                  value={location}
+                  disabled={isLoading}
+                  required
                 />
 
                 <label htmlFor="duration">Duration</label>
                 <textarea
                   className="form-control"
                   id="duration"
+                  name="duration"
                   rows="3"
                   placeholder="Date and Time"
+                  onChange={this.handleInputChange}
+                  value={duration}
+                  disabled={isLoading}
+                  required
                 />
               </div>
+
               <br />
 
               <span className="topic"> Charge </span>
@@ -129,19 +210,29 @@ class CourseCreation extends Component {
                 <div className="form-group col-md-6">
                   <label htmlFor="tuition">Tuition/Hour</label>
                   <input
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="tuition"
-                    step="10"
+                    name="tuition"
+                    size="6"
+                    onChange={this.handleInputChange}
+                    value={tuition}
+                    disabled={isLoading}
+                    required
                   />
                 </div>
                 <div className="form-group col-md-6">
                   <label htmlFor="fee">Joining fee</label>
                   <input
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="fee"
-                    step="10"
+                    name="fee"
+                    size="6"
+                    onChange={this.handleInputChange}
+                    value={fee}
+                    disabled={isLoading}
+                    required
                   />
                 </div>
               </div>
@@ -151,13 +242,13 @@ class CourseCreation extends Component {
               className="btn btn-warning btn-lg btn-block"
               type="submit"
               value="Create Course"
+              disabled={isLoading}
             />
 
             <br />
-            <input type="text" ref={this.course_name} />
-            <input type="submit" value="Submit" />
           </div>
         </form>
+        {isLoading ? Loader : null}
       </div>
     );
   }
