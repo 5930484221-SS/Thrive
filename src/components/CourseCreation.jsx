@@ -64,7 +64,7 @@ class CourseCreation extends Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      window.location = '/listing';
+      window.location = '/';
     } catch (error) {
       alert('Failed to submit, please try again');
       console.log(error);
