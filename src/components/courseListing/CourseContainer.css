@@ -1,0 +1,7 @@
+.limitP {
+    height:  80px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

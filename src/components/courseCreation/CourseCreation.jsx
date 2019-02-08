@@ -1,10 +1,10 @@
 import axios from 'axios';
 import querystring from 'query-string';
 import React, { Component } from 'react';
-import CowBg from './CowBg';
+import CowBg from '../CowBg';
 import { Courses } from './Courses';
-import Loader from './loader/Loader';
-import defaultCourse from '../img/defaultCourse.png';
+import Loader from '../loader/Loader';
+import defaultCourse from '../../img/defaultCourse.png';
 
 import './courseCreate.css';
 
@@ -25,7 +25,7 @@ class CourseCreation extends Component {
       location: '',
       tuition: '',
       fee: '',
-      img: '',
+      img: defaultCourse,
       isLoading: false
     };
   }
@@ -47,10 +47,10 @@ class CourseCreation extends Component {
 
   setImg(img){
     let reader = new FileReader();
-      reader.onload = function(ev) {
-        this.setState({ img: ev.target.result });
-      }.bind(this);
-      reader.readAsDataURL(img);
+    reader.onload = function(ev) {
+      this.setState({ img: ev.target.result });
+    }.bind(this);
+    reader.readAsDataURL(img);
   }
 
   onFileHandle = event => {
@@ -74,7 +74,7 @@ class CourseCreation extends Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      window.location = '/';
+      window.location = '/listing';
     } catch (error) {
       alert('Failed to submit, please try again');
       console.log(error);
