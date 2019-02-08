@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import Listing from './components/Listing';
-import CourseCreation from './components/CourseCreation';
+import Listing from './components/courseListing/Listing';
+import CourseCreation from './components/courseCreation/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
 

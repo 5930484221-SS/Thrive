@@ -1,14 +1,19 @@
 import axios from 'axios';
 import querystring from 'query-string';
 import React, { Component } from 'react';
-import CowBg from './CowBg';
+import CowBg from '../CowBg';
 import { Courses } from './Courses';
-import Loader from './loader/Loader';
-import defaultCourse from '../img/defaultCourse.png';
+import Loader from '../loader/Loader';
+import defaultCourse from '../../img/defaultCourse.png';
 
 import './courseCreate.css';
 
 class CourseCreation extends Component {
+
+  // componentDidMount(){
+  //   this.setImg(defaultCourse)
+  // }
+
   constructor() {
     super();
     this.state = {
@@ -24,7 +29,8 @@ class CourseCreation extends Component {
       isLoading: false
     };
   }
-
+    
+      
   handleInputChange = event => {
     const target = event.target;
     const value = target.value;
@@ -39,13 +45,17 @@ class CourseCreation extends Component {
     });
   };
 
+  setImg(img){
+    let reader = new FileReader();
+    reader.onload = function(ev) {
+      this.setState({ img: ev.target.result });
+    }.bind(this);
+    reader.readAsDataURL(img);
+  }
+
   onFileHandle = event => {
     if (event.target.files.length > 0) {
-      let reader = new FileReader();
-      reader.onload = function(ev) {
-        this.setState({ img: ev.target.result });
-      }.bind(this);
-      reader.readAsDataURL(event.target.files[0]);
+      this.setImg(event.target.files[0])
     }
   };
 
@@ -64,7 +74,7 @@ class CourseCreation extends Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      window.location = '/';
+      window.location = '/listing';
     } catch (error) {
       alert('Failed to submit, please try again');
       console.log(error);
