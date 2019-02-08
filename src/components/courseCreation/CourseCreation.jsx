@@ -10,10 +10,6 @@ import './courseCreate.css';
 
 class CourseCreation extends Component {
 
-  // componentDidMount(){
-  //   this.setImg(defaultCourse)
-  // }
-
   constructor() {
     super();
     this.state = {
