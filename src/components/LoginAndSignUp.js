@@ -26,7 +26,7 @@ export default props => {
                     <div className="modal-body">
                       <form>
                         <div className="form-group">
-                          <label for="username">Username</label>
+                          <label htmlFor="username">Username</label>
                           <input
                             type="text"
                             placeholder="Username"
@@ -34,7 +34,7 @@ export default props => {
                           />
                         </div>
                         <div className="form-group">
-                          <label for="password">Password</label>
+                          <label htmlFor="password">Password</label>
                           <input
                             type="password"
                             placeholder="Password"
