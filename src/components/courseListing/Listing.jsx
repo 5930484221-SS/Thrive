@@ -3,6 +3,9 @@ import axios from 'axios';
 
 import CowBg from '../CowBg';
 import CourseContainer from './CourseContainer';
+import SearchBar from './SearchBar';
+import Filter from './Filter';
+
 import Loader from '../loader/Loader';
 
 class Listing extends Component {
@@ -10,7 +13,8 @@ class Listing extends Component {
     super();
     this.state = {
       courseList: [],
-      isLoading: true
+      isLoading: true,
+      search: ''
     };
   }
 
@@ -27,17 +31,34 @@ class Listing extends Component {
     console.log('courses fetched: ', response.data.courses);
     this.setState({ courseList: response.data.courses, isLoading: false });
   }
+
+  onSearchChange(e) {
+    this.setState({
+      search: e.target.value
+    });
+  }
+
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, search } = this.state;
 
     return (
       <div>
         {isLoading ? Loader : null}
         <CowBg />
+        <div className="my-5">
+          <SearchBar
+            onChange={this.onSearchChange.bind(this)}
+            searchValue={search}
+          />
+          <Filter />
+        </div>
+
         <div className="row m-4">
-          {this.state.courseList.map((c, index) => (
-            <CourseContainer key={index} info={c} />
-          ))}
+          <div className="card-deck">
+            {this.state.courseList.map((c, index) => (
+              <CourseContainer key={index} info={c} />
+            ))}
+          </div>
         </div>
       </div>
     );
