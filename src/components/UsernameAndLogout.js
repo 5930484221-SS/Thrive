@@ -33,7 +33,11 @@ class UsernameAndLogout extends Component {
     return (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+          <a
+            href="#"
+            className="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+          >
             <i className="fas fa-user ml-2" />{' '}
             {localStorage.getItem('username')}
           </a>
@@ -42,13 +46,13 @@ class UsernameAndLogout extends Component {
               <i className="fas fa-user-circle" /> Profile
             </a>
             <a href="#" className="dropdown-item">
-              <i class="fas fa-clipboard-list" /> My Courses
+              <i className="fas fa-clipboard-list" /> My Courses
             </a>
             <a href="#" className="dropdown-item">
               <i className="fas fa-cog" /> Settings
             </a>
             <a href="#" onClick={this.onLogout} className="dropdown-item">
-              <i class="fas fa-sign-out-alt" /> Logout
+              <i className="fas fa-sign-out-alt" /> Logout
             </a>
           </div>
         </li>
