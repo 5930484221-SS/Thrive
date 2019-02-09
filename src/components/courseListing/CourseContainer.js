@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./CourseContainer.css";
+import React, { Component } from 'react';
+import './CourseContainer.css';
 
 class CourseContainer extends Component {
   render() {
