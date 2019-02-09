@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 
-import Listing from "./components/Listing";
-import CourseCreation from "./components/CourseCreation";
-import Login from "./components/Login";
-import NotFound from "./components/NotFound";
+import Listing from './components/courseListing/Listing';
+import CourseCreation from './components/courseCreation/CourseCreation';
+import Login from './components/Login';
+import NotFound from './components/NotFound';
 
-import Navbar from "./components/Navbar.jsx";
-import NavBar from "./components/NavBar";
+import NavBar from './components/NavBar';
 
 import "./App.css";
 import { store } from "./configStore";
@@ -20,7 +19,11 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            {localStorage.getItem("token") === null ? <NavBar /> : <Navbar />}
+            {localStorage.getItem('token') === null ? (
+              <NavBar auth={false} />
+            ) : (
+                <NavBar auth={true} />
+              )}
 
             <div className="container">
               <Switch>

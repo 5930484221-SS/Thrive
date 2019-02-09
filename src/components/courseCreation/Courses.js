@@ -1,0 +1,23 @@
+export const Courses = [
+  "Mathematics",
+  "Science",
+  "Physics",
+  "Chemical",
+  "Biology",
+  "Astronomy",
+  "Basic Science",
+  "Thai",
+  "Social",
+  "GAT-Thai",
+  "GAT-Eng",
+  "English",
+  "France",
+  "China",
+  "Japanese",
+  "Korea",
+  "Pat1",
+  "Pat2",
+  "Pat3",
+  "CU-TEP",
+  "TU GET"
+];
