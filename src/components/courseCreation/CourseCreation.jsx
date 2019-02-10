@@ -9,7 +9,6 @@ import defaultCourse from '../../img/defaultCourse.png';
 import './courseCreate.css';
 
 class CourseCreation extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -25,8 +24,7 @@ class CourseCreation extends Component {
       isLoading: false
     };
   }
-    
-      
+
   handleInputChange = event => {
     const target = event.target;
     const value = target.value;
@@ -41,7 +39,7 @@ class CourseCreation extends Component {
     });
   };
 
-  setImg(img){
+  setImg(img) {
     let reader = new FileReader();
     reader.onload = function(ev) {
       this.setState({ img: ev.target.result });
@@ -51,7 +49,7 @@ class CourseCreation extends Component {
 
   onFileHandle = event => {
     if (event.target.files.length > 0) {
-      this.setImg(event.target.files[0])
+      this.setImg(event.target.files[0]);
     }
   };
 
@@ -164,7 +162,7 @@ class CourseCreation extends Component {
                   disabled={isLoading}
                   required
                 >
-                  <option value="" selected disabled hidden>
+                  <option value="selected" disabled hidden>
                     Select the course subject
                   </option>
                   {Courses.map(course => (

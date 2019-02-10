@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
 
 import Listing from './components/courseListing/Listing';
 import CourseCreation from './components/courseCreation/CourseCreation';
@@ -9,9 +9,9 @@ import NotFound from './components/NotFound';
 
 import NavBar from './components/NavBar';
 
-import './App.css';
-import { store } from './configStore';
-import * as Actions from './actions';
+import "./App.css";
+import { store } from "./configStore";
+import * as Actions from "./actions";
 
 class App extends Component {
   render() {
@@ -22,8 +22,8 @@ class App extends Component {
             {localStorage.getItem('token') === null ? (
               <NavBar auth={false} />
             ) : (
-              <NavBar auth={true} />
-            )}
+                <NavBar auth={true} />
+              )}
 
             <div className="container">
               <Switch>

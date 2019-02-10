@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import querystring from "query-string";
 import axios from "axios";
 
 class Listing extends Component {
@@ -24,10 +23,7 @@ class Listing extends Component {
     return (
       <div>
         {this.state.course_list.map(c => (
-          <h7>
-            {querystring.stringify(c)}
-            <br />
-          </h7>
+          <h1>{c}</h1>
         ))}
       </div>
     );

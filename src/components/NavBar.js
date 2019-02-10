@@ -59,10 +59,10 @@ class NavBar extends Component {
                     <UsernameAndLogout />
                   </li>
                 ) : (
-                  <li className="nav-item ml-3">
-                    <LoginAndSignUp />
-                  </li>
-                )}
+                    <li className="nav-item ml-3">
+                      <LoginAndSignUp />
+                    </li>
+                  )}
               </ul>
             </div>
           </div>
