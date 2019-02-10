@@ -1,3 +1,11 @@
+#section1 {
+  position: absolute;
+  top: 300;
+  left: 0;
+  width: 100%;
+  z-index: -5;
+}
+
 .limitP {
   height: 80px;
   white-space: normal;
@@ -6,6 +14,8 @@
 }
 
 .search-form {
+  padding-left: 1.5rem;
+  height: 3rem;
   border-radius: 30px 0px 0px 30px;
   border: none;
   background-color: #e5e7e9;
@@ -16,7 +26,10 @@
 }
 
 .search-btn {
+  height: 3rem;
   border-radius: 0px 30px 30px 0px;
+  padding-right: 2rem;
+  padding-left: 2rem;
   border: none;
   cursor: pointer;
 }
