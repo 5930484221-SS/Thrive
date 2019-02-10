@@ -80,7 +80,26 @@ def create_course(request):
     if user is None:
         return HttpResponseForbidden("please login first")
 
+<<<<<<< HEAD
     record = dict(tutor=user)
+||||||| merged common ancestors
+    record = dict()
+=======
+<<<<<<< HEAD
+    record = dict()
+    for field in course_fields:
+        record[field] = request.POST.get(field)
+
+    collection = mongo_db.get_collection('courses')
+    collection.insert_one(record)
+||||||| merged common ancestors
+    course_name = request.POST.get('course_name')
+    collection = mongo_db.get_collection('courses')
+
+    collection.insert_one({'course_name': course_name})
+=======
+    record = dict()
+>>>>>>> 07ddcb8e6c97e3784c9f18cff311504fd430b241
     for field in course_fields:
         value = request.POST.get(field)
         if field in course_number_fields:
@@ -95,6 +114,7 @@ def create_course(request):
 
     collection = mongo_db.get_collection('courses')
     collection.insert_one(record)
+>>>>>>> 0f64d821a8319bac2548697c4dbf3cc17380ef92
 
     return HttpResponse('')
 
