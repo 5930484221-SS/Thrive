@@ -1,6 +1,6 @@
 import React from 'react';
 import Left2 from '../img/left2.svg';
-import Right1 from '../img/right1.svg';
+import Right1 from '../img/right2.svg';
 
 export default () => (
   <div>
