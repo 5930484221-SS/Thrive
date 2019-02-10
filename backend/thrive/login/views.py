@@ -71,15 +71,30 @@ def login(request):
 def create_course(request):
     token = request.POST.get('token')
     user = get_username_from_token(token)
+    
     if user is None:
+        print(456)
         return HttpResponseForbidden("please login first")
 
+<<<<<<< HEAD
     record = dict()
     for field in course_fields:
         record[field] = request.POST.get(field)
 
     collection = mongo_db.get_collection('courses')
     collection.insert_one(record)
+||||||| merged common ancestors
+    course_name = request.POST.get('course_name')
+    collection = mongo_db.get_collection('courses')
+
+    collection.insert_one({'course_name': course_name})
+=======
+    record = dict()
+    for field in course_fields:
+        record[field] = request.POST.get(field)
+    collection = mongo_db.get_collection('courses')
+    collection.insert_one(record)
+>>>>>>> 0f64d821a8319bac2548697c4dbf3cc17380ef92
 
     return HttpResponse('')
 

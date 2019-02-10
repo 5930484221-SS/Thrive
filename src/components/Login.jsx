@@ -37,12 +37,6 @@ class Login extends Component {
       <div>
         <CowBg />
         <LandingText />
-
-        <form onSubmit={this.onSubmit}>
-          <input type="text" ref={this.username} />
-          <input type="text" ref={this.password} />
-          <input type="submit" value="login" />
-        </form>
       </div>
     );
   }
