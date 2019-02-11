@@ -26,7 +26,7 @@ class CourseContainer extends Component {
             <div className="modal-dialog" >
               <div className="modal-content" >
                 <div className="modal-header">
-                  <h5 className="modal-title"> {topic} </h5>
+                  <h5 className="modal-title pt-3 pb-3"> {topic} </h5>
                   <button className="close">&times;</button>
                 </div>
 
@@ -34,7 +34,7 @@ class CourseContainer extends Component {
                   <p className="modal-text"> {description} </p>
                   <hr />
                   <strong className="modal-text">Instructor: </strong>
-                  <span className="modal-text"> Mosttiee </span>
+                  <a className="modal-text" href="#"> Mosttiee </a>
                   <p className="modal-text"> {descriptionProfile} </p>
                   <hr />
                   <strong className="modal-text">location: </strong>

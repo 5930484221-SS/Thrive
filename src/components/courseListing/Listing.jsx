@@ -181,22 +181,22 @@ class Listing extends Component {
                 </div>
               </div>
             ) : (
-              <div className="card bg-transparent mt-3">
-                <div className="card-body text-center">
-                  <a
-                    href="#"
-                    className="card-title text-center h5"
-                    onClick={() =>
-                      this.setState({
-                        isFilterOn: true
-                      })
-                    }
-                  >
-                    Filters <i class="fas fa-angle-down" />
-                  </a>
+                <div className="card bg-transparent mt-3">
+                  <div className="card-body text-center">
+                    <a
+                      href="#"
+                      className="card-title text-center h5"
+                      onClick={() =>
+                        this.setState({
+                          isFilterOn: true
+                        })
+                      }
+                    >
+                      Filters <i className="fas fa-angle-down" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
 
