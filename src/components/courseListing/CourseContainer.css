@@ -60,6 +60,7 @@
 .modal-title {
   font-size: 1.5rem
 }
-.modal-text {
-  font-size: 1rem
+
+.card:hover {
+  cursor: pointer
 }
