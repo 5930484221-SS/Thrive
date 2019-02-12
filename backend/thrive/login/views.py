@@ -14,6 +14,7 @@ course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
                  'fee', 'location', 'subject', 'tuition', 'img']
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
+user_info_fields = ['user', 'display']
 
 
 def set_response_header(response):
@@ -76,7 +77,7 @@ def login(request):
 def create_course(request):
     token = request.POST.get('token')
     user = get_username_from_token(token)
-    
+
     if user is None:
         return HttpResponseForbidden("please login first")
 
@@ -131,6 +132,21 @@ def get_course_query_object(data):
             query_object[field] = q
 
     return query_object
+
+def get_user_info_from_token(token):
+    collection = mongo_db.get_collection('active_token')
+
+    lookup_stage = {'as': 'user_info', 'foreignField': 'user', 'from': 'users', 'localField': 'user'}
+
+    pipeline = [{'$match': {'token': token}},
+                {'$lookup': lookup_stage}]
+
+    query = list(collection.aggregate(pipeline))
+    if query:
+        record = query[0]['user_info'][0]
+        user_info = {field: str(record[field]) for field in user_info_fields}
+        return user_info
+    return dict()
 
 
 @csrf_exempt
@@ -283,3 +299,15 @@ def get_courses_by_student(request):  # rename???
     token = request.POST.get('token')
     user = get_username_from_token(token)
     pass
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_user(request):
+    token = request.GET.get('token')
+    user_info = get_user_info_from_token(token)
+    if user_info:
+        response = JsonResponse(user_info)
+        return set_response_header(response)
+
+    return HttpResponseNotFound('token not found')

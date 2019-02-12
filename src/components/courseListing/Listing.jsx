@@ -102,7 +102,7 @@ class Listing extends Component {
             onSearch={this.onSearch.bind(this)}
             searchValue={search}
           />
-          <div className="col-lg-8 offset-lg-2">
+          <div>
             {isFilterOn ? (
               <div className="card bg-transparent mt-3">
                 <div className="card-body">
@@ -120,7 +120,7 @@ class Listing extends Component {
                       href="#"
                       className="h5 card-title text-center"
                     >
-                      Filters <i class="fas fa-angle-up" />{' '}
+                      Filters <i className="fas fa-angle-up" />{' '}
                     </a>
                   </div>
 
@@ -181,25 +181,24 @@ class Listing extends Component {
                 </div>
               </div>
             ) : (
-                <div className="card bg-transparent mt-3">
-                  <div className="card-body text-center">
-                    <a
-                      href="#"
-                      className="card-title text-center h5"
-                      onClick={() =>
-                        this.setState({
-                          isFilterOn: true
-                        })
-                      }
-                    >
-                      Filters <i className="fas fa-angle-down" />
-                    </a>
-                  </div>
+              <div className="card bg-transparent mt-3">
+                <div className="card-body text-center">
+                  <a
+                    href="#"
+                    className="card-title text-center h5"
+                    onClick={() =>
+                      this.setState({
+                        isFilterOn: true
+                      })
+                    }
+                  >
+                    Filters <i className="fas fa-angle-down" />
+                  </a>
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
-
         <div className="row">
           <div className="card-deck">
             {this.state.courseList.map((c, index) => (
