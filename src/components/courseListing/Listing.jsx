@@ -181,6 +181,7 @@ class Listing extends Component {
                 </div>
               </div>
             ) : (
+
               <div className="card bg-transparent mt-3">
                 <div className="card-body text-center">
                   <a
@@ -194,16 +195,16 @@ class Listing extends Component {
                   >
                     Filters <i className="fas fa-angle-down" />
                   </a>
+
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
 
-        <div className="row m-4">
+        <div className="row">
           <div className="card-deck">
             {this.state.courseList.map((c, index) => (
-              <CourseContainer key={index} info={c} />
+              <CourseContainer key={index} info={c} index={index} />
             ))}
           </div>
         </div>
