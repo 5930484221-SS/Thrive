@@ -38,7 +38,11 @@
   height: 140px;
 }
 
-.card-title {
+
+h5 .card-title {
+
+
+
   display: block !important ;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
@@ -47,20 +51,23 @@
   text-overflow: ellipsis !important;
   white-space: normal;
   max-width: 200px;
-  height: 80px; 
-  margin: 0 auto ;
-  line-height: 1.3;  
-  font-size: 18px
+
+  height: 80px;
+  margin: 0 auto;
+  line-height: 1.3;
+  font-size: 18px;
 }
 
-.card-body {
+.course-card-body {
+
   height: 15rem;
 }
 
 .modal-title {
-  font-size: 1.5rem
+  font-size: 1.5rem;
 }
 
 .card:hover {
-  cursor: pointer
+  cursor: pointer;
 }
+
