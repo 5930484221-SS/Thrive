@@ -6,6 +6,9 @@ import Listing from './components/courseListing/Listing';
 import CourseCreation from './components/courseCreation/CourseCreation';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
+import Profile from './components/dropDown/Profile';
+import MyCourses from './components/dropDown/MyCourses';
+import Setting from './components/dropDown/Setting';
 
 import NavBar from './components/NavBar';
 
@@ -29,6 +32,9 @@ class App extends Component {
               <Switch>
                 <Route path="/listing" component={Listing} />
                 <Route path="/create_course" component={CourseCreation} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/myCourses" component={MyCourses} />
+                <Route path="/setting" component={Setting} />
                 <Route path="/" component={Login} />
                 <Route component={NotFound} />
               </Switch>
