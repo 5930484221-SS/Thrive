@@ -3,6 +3,10 @@ body {
   margin-bottom: 5rem;
 }
 
+#root {
+  margin-bottom: 5em;
+}
+
 /* IMAGE */
 #img-profile {
   width: auto;
