@@ -9,13 +9,14 @@ export default props => {
           <div className="row">
             <div className="col-md-2" />
             <div className="col-lg-6 col-md-8">
-              <div className="showcase-header">
+              <h1 className="showcase-header">
                 The{' '}
                 <span className="text-orange">
                   <strong>BEST</strong>
                 </span>{' '}
                 Tutor & Learner Matching System
-              </div>
+            </h1>
+
               <p className="text-muted mt-3 showcase-text">
                 Find your favorite tutor and study with your own pace wherever
                 you want
@@ -26,10 +27,10 @@ export default props => {
                     SIGN UP
                   </button>
                 ) : (
-                  <button className="btn btn-danger btn-rounded btn-extra mt-4">
-                    GET STARTED
+                    <button className="btn btn-danger btn-rounded btn-extra mt-4">
+                      GET STARTED
                   </button>
-                )}
+                  )}
               </div>
             </div>
             <div className="col-md-2">
