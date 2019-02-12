@@ -120,7 +120,7 @@ class Listing extends Component {
                       href="#"
                       className="h5 card-title text-center"
                     >
-                      Filters <i class="fas fa-angle-up" />{' '}
+                      Filters <i className="fas fa-angle-up" />{' '}
                     </a>
                   </div>
 
@@ -192,7 +192,7 @@ class Listing extends Component {
                       })
                     }
                   >
-                    Filters <i class="fas fa-angle-down" />
+                    Filters <i className="fas fa-angle-down" />
                   </a>
                 </div>
               </div>
