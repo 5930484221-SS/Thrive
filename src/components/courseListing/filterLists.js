@@ -1,11 +1,11 @@
 const subjects = [
   {
-    value: 'sub1',
-    label: 'Sub1'
+    value: 'gat-eng',
+    label: 'GAT-ENG'
   },
   {
-    value: 'sub2',
-    label: 'Sub2'
+    value: 'english',
+    label: 'ENG'
   },
   {
     value: 'sub3',
@@ -55,6 +55,29 @@ const tuitionFees = [
   }
 ];
 
+const joiningFees = [
+  {
+    value: '0',
+    label: '-none-'
+  },
+  {
+    value: '200',
+    label: '< 200 Baht'
+  },
+  {
+    value: '300',
+    label: '< 300 Baht'
+  },
+  {
+    value: '500',
+    label: '< 500 Baht'
+  },
+  {
+    value: '1000',
+    label: '< 1000 Baht'
+  }
+];
+
 const ratings = [
   {
     value: '0',
@@ -74,4 +97,4 @@ const ratings = [
   }
 ];
 
-export { subjects, locations, tuitionFees, ratings };
+export { subjects, locations, tuitionFees, joiningFees, ratings };

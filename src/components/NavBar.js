@@ -39,7 +39,7 @@ class NavBar extends Component {
               <span className="navbar-toggler-icon" />
             </button>
             <div id="navbarNav" className="collapse navbar-collapse">
-              <ul className="navbar-nav">
+              <ul className="nav navbar-nav">
                 <li className="nav-item ml-3">
                   <Link to="/listing" className="nav-link">
                     Courses
@@ -53,17 +53,7 @@ class NavBar extends Component {
                   </li>
                 )}
               </ul>
-              <ul className="navbar-nav ml-auto">
-                {this.props.auth ? (
-                  <li className="nav-item ml-3">
-                    <UsernameAndLogout />
-                  </li>
-                ) : (
-                    <li className="nav-item ml-3">
-                      <LoginAndSignUp />
-                    </li>
-                  )}
-              </ul>
+              {this.props.auth ? <UsernameAndLogout /> : <LoginAndSignUp />}
             </div>
           </div>
         </nav>
