@@ -1,16 +1,16 @@
-import axios from 'axios';
-import querystring from 'query-string';
-import React, { Component } from 'react';
-import CowBg from '../CowBg';
-import { Courses } from './Courses';
-import Loader from '../loader/Loader';
-import defaultCourse from '../../img/defaultCourse.png';
+import axios from "axios";
+import querystring from "query-string";
+import React, { Component } from "react";
+import CowBg from "../CowBg";
+import { Courses } from "./Courses";
+import Loader from "../loader/Loader";
+import defaultCourse from "../../img/defaultCourse.png";
+import "./courseCreate.css";
 
-import './courseCreate.css';
 //redux
 import { EditCourseAction } from "../../actions/EditCourseAction";
 import { connect } from "react-redux";
-const mapStateToProps = state => ({editedInfo : state.editCourse.course});
+const mapStateToProps = state => ({ editedInfo: state.editCourse.course });
 const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
 });
@@ -19,30 +19,30 @@ class CourseCreation extends Component {
   constructor() {
     super();
     this.state = {
-      topic: '',
-      description: '',
-      descriptionProfile: '',
-      subject: '',
-      duration: '',
-      location: '',
-      tuition: '',
-      fee: '',
+      topic: "",
+      description: "",
+      descriptionProfile: "",
+      subject: "",
+      duration: "",
+      location: "",
+      tuition: "",
+      fee: "",
       img: defaultCourse,
       isLoading: false,
-      isEditing : false
+      isEditing: false,
+      _id: ""
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const editedInfo = this.props.editedInfo;
-    if (Object.keys(editedInfo).length !== 0){
-      console.group("editedInfo",editedInfo)
-      this.setState({...editedInfo,isEditing:true})
+    if (Object.keys(editedInfo).length !== 0) {
+      this.setState({ ...editedInfo, isEditing: true });
     }
   }
 
-  componentWillUnmount(){
-    if (this.props.editedInfo !== {}){
+  componentWillUnmount() {
+    if (this.props.editedInfo !== {}) {
       this.props.setEditCourse({});
     }
   }
@@ -52,8 +52,8 @@ class CourseCreation extends Component {
     const value = target.value;
     const name = target.name;
     if (
-      (name === 'fee' || name === 'tuition') &&
-      (isNaN(value) || value.includes('-'))
+      (name === "fee" || name === "tuition") &&
+      (isNaN(value) || value.includes("-"))
     )
       return;
     this.setState({
@@ -75,33 +75,41 @@ class CourseCreation extends Component {
     }
   };
 
+  getData() {
+    const { isLoading, isEditing, _id, ...postData } = this.state;
+    if (isEditing) {
+      return { ...postData, token: localStorage.getItem("token"), id: _id };
+    }
+    return { ...postData, token: localStorage.getItem("token") };
+  }
+
   onSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    const { isLoading,isEditing, ...postData } = this.state;
-    postData['token'] = localStorage.getItem('token');
-    const url = isEditing? 'http://localhost:8000/api/edit_course' : 'http://localhost:8000/api/create_course'
+    const postData = this.getData();
+    const url = this.state.isEditing
+      ? "http://localhost:8000/api/edit_course"
+      : "http://localhost:8000/api/create_course";
     try {
       const response = await axios({
-        method: 'POST',
+        method: "POST",
         url: url,
         crossDomain: true,
         data: querystring.stringify(postData),
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded"
         }
       });
-      console.log(response)
-      window.location = '/listing';
+      window.location = "/myCourses";
     } catch (error) {
-      alert('Failed to submit, please try again');
+      alert("Failed to submit, please try again\n" + error);
       console.log(error);
     }
     this.setState({ isLoading: false });
   };
 
   render() {
-    console.log(this.state)
+    console.log(this.state);
     const {
       topic,
       description,
@@ -173,9 +181,9 @@ class CourseCreation extends Component {
               <br />
 
               <span className="topic">
-                {' '}
+                {" "}
                 <span className="text-orange text-extra">A</span>
-                bout <span className="text-orange text-slim">Course</span>{' '}
+                bout <span className="text-orange text-slim">Course</span>{" "}
               </span>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
@@ -274,7 +282,7 @@ class CourseCreation extends Component {
             <input
               className="btn btn-warning btn-lg btn-block"
               type="submit"
-              value={isEditing? "Edit Course":"Create Course"}
+              value={isEditing ? "Edit Course" : "Create Course"}
               disabled={isLoading}
             />
           </div>
@@ -285,4 +293,7 @@ class CourseCreation extends Component {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(CourseCreation);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CourseCreation);
