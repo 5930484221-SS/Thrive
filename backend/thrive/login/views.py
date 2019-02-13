@@ -291,7 +291,7 @@ def edit_course(request):
         record[field] = value
 
     collection = mongo_db.get_collection('courses')
-    collection.update({'_id': _id}, {'$set': record})
+    collection.update({'_id': ObjectId(_id)}, {'$set': record})
 
     return HttpResponse('')
 

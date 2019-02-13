@@ -109,7 +109,6 @@ class CourseCreation extends Component {
   };
 
   render() {
-    console.log(this.state);
     const {
       topic,
       description,
