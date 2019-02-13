@@ -1,7 +1,46 @@
 import React, { Component } from 'react'
 import '../courseListing/CourseContainer.css';
+//query
+import axios from "axios";
+import querystring from "query-string";
+//redux
+import {store} from "../../configStore"
+import { EditCourseAction } from "../../actions/EditCourseAction";
+import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({
+  setEditCourse: course => dispatch(EditCourseAction(course))
+});
 
-export default class MyCoursesContainer extends Component {
+
+class MyCoursesContainer extends Component {
+  onDeleteCourse = event => {
+    try {
+      this.deleteCourse(event.target.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async deleteCourse(id) {
+    const response = await axios({
+      method: "POST",
+      url: "http://127.0.0.1:8000/api/delete_course",
+      crossDomain: true,
+      data: querystring.stringify({ token: window.localStorage.token, id: id }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+    console.log(response);
+    return response;
+  }
+
+  onEditCourse = event => {
+    this.props.setEditCourse(this.props.info);
+  };
+
   render() {
     const {
       topic,
@@ -44,8 +83,10 @@ export default class MyCoursesContainer extends Component {
                 </div>
 
                 <div className="modal-footer">
-                  <button className="btn btn-orange" >Edit</button>
-                  <button className="btn btn-secondary">Delete</button>
+                  <button className="btn btn-orange"  onClick={this.onEditCourse}>
+                      <Link to="/create_course">Edit</Link>
+                  </button>
+                  <button className="btn btn-secondary" onClick={this.onDeleteCourse}>Delete</button>
                 </div>
               </div>
             </div>
@@ -75,3 +116,5 @@ export default class MyCoursesContainer extends Component {
     )
   }
 }
+
+export default connect(mapStateToProps,mapDispatchToProps)(MyCoursesContainer);
