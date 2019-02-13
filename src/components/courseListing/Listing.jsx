@@ -221,7 +221,7 @@ class Listing extends Component {
                       <div className="col-lg-10">
                         <input
                           type="text"
-                          placeholder="location"
+                          placeholder="Location"
                           className="form-control"
                           onChange={this.onChange.bind(this)}
                           value={location}
