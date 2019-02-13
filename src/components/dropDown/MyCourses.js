@@ -5,17 +5,20 @@ import '../courseListing/CourseContainer.css';
 import MyCoursesContainer from './MyCoursesContainer';
 import books from '../../img/books.svg';
 import teacher from '../../img/teacher.svg';
+import Loader from "../loader/Loader";
 
 export default class MyCourses extends Component {
   constructor() {
     super();
     this.state = {
       coursesAsTutor: [],
-      coursesAsStudent: []
+      coursesAsStudent: [],
+      isLoading: false
     };
   }
 
   componentDidMount() {
+    this.setState({isLoading:true})
     this.fetchTutorCourses();
     // this.fetchStudentCourses();
   }
@@ -27,7 +30,7 @@ export default class MyCourses extends Component {
           window.localStorage.username
       );
       const courses = await response.json();
-      this.setState({coursesAsTutor:courses.courses})
+      this.setState({coursesAsTutor:courses.courses,isLoading:false})
     } catch (error) {
       console.log(error);
     }
@@ -41,7 +44,7 @@ export default class MyCourses extends Component {
   }
 
   render() {
-    const {coursesAsTutor} = this.state;
+    const {coursesAsTutor,isLoading} = this.state;
     return (
       <div>
         <CowBg />
@@ -68,7 +71,7 @@ export default class MyCourses extends Component {
         <img src={books} style={{ width: "40px", height: "auto" }} />
         <br />
         <br />
-
+        {isLoading ? Loader : null}
       </div>
     )
   }

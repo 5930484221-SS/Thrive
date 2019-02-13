@@ -1,41 +1,36 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 import '../courseListing/CourseContainer.css';
+
 //query
 import axios from "axios";
 import querystring from "query-string";
+
 //redux
-import {store} from "../../configStore"
 import { EditCourseAction } from "../../actions/EditCourseAction";
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
 });
 
-
 class MyCoursesContainer extends Component {
   onDeleteCourse = event => {
-    try {
-      this.deleteCourse(event.target.id);
-    } catch (error) {
-      console.log(error);
+    axios({
+        method: "POST",
+        url: "http://127.0.0.1:8000/api/delete_course",
+        crossDomain: true,
+        data: querystring.stringify({ token: window.localStorage.token, id: this.props.info._id }),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      })
+      .then(()=> window.location = "/myCourses")
+      .catch(error => {
+        alert("Failed to Delete the course\n"+error);
+        console.log(error);
+      })      
     }
-  };
-
-  async deleteCourse(id) {
-    const response = await axios({
-      method: "POST",
-      url: "http://127.0.0.1:8000/api/delete_course",
-      crossDomain: true,
-      data: querystring.stringify({ token: window.localStorage.token, id: id }),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    });
-    console.log(response);
-    return response;
-  }
 
   onEditCourse = event => {
     this.props.setEditCourse(this.props.info);
