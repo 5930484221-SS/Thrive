@@ -45,10 +45,10 @@ class UsernameAndLogout extends Component {
             <a href="/profile" className="dropdown-item">
               <i className="fas fa-user-circle" /> Profile
             </a>
-            <a href="/myCourses" className="dropdown-item">
+            <a href="myCourses" className="dropdown-item">
               <i className="fas fa-clipboard-list" /> My Courses
             </a>
-            <a href="/setting" className="dropdown-item">
+            <a href="setting" className="dropdown-item">
               <i className="fas fa-cog" /> Settings
             </a>
             <a href="#" onClick={this.onLogout} className="dropdown-item">

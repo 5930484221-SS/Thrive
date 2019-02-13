@@ -2,35 +2,72 @@ import React, { Component } from 'react'
 import CowBg from '../CowBg';
 import './myCourses.css';
 import '../courseListing/CourseContainer.css';
-import books from './books.svg';
-import teacher from './teacher.svg';
-import CourseContainer from '../courseListing/CourseContainer';
 import MyCoursesContainer from './MyCoursesContainer';
+import books from '../../img/books.svg';
+import teacher from '../../img/teacher.svg';
 
 export default class MyCourses extends Component {
-   
+  constructor() {
+    super();
+    this.state = {
+      coursesAsTutor: [],
+      coursesAsStudent: []
+    };
+  }
+
+  componentDidMount() {
+    this.fetchTutorCourses();
+    // this.fetchStudentCourses();
+  }
+
+  async fetchTutorCourses() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/get_courses?tutor=" +
+          window.localStorage.username
+      );
+      const courses = await response.json();
+      this.setState({coursesAsTutor:courses.courses})
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async fetchStudentCourses() {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
-  
+    const {coursesAsTutor} = this.state;
     return (
       <div>
         <CowBg />
-        <div class="topic">
-            <h1 class="display-4">My Courses</h1>
-            <hr />
+        <div className="topic">
+          <h1 className="display-4">My Courses</h1>
+          <hr />
         </div>
-            <span class="display-4 topic" style={{fontSize:"30px"}}> As a Tutor</span> 
-            <img src={teacher} style={{width:"40px",height:"auto"}}/>
-            <br />
-            <MyCoursesContainer />
-        
-            <br />
-            <br />
-            <span class="display-4 topic" style={{fontSize:"30px"}}> As a Learner</span>
-            <img src={books} style={{width:"40px",height:"auto"}}/>
-            <MyCoursesContainer />
-       
 
+        <span className="display-4 topic" style={{ fontSize: "30px" }}> As a Tutor</span>
+        <img src={teacher} style={{ width: "40px", height: "auto" }} />
+        <br />
+        <br />
+        <div className="row">
+          <div className="card-deck">
+            {coursesAsTutor.map((course, index)=>
+              <MyCoursesContainer key={index} info={course} index={index} />
+            )}
+        </div>
+        </div>
 
+        <br />
+        <br />
+        <span className="display-4 topic" style={{ fontSize: "30px" }}> As a Learner</span>
+        <img src={books} style={{ width: "40px", height: "auto" }} />
+        <br />
+        <br />
 
       </div>
     )

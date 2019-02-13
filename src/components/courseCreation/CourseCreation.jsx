@@ -7,6 +7,13 @@ import Loader from '../loader/Loader';
 import defaultCourse from '../../img/defaultCourse.png';
 
 import './courseCreate.css';
+//redux
+import { EditCourseAction } from "../../actions/EditCourseAction";
+import { connect } from "react-redux";
+const mapStateToProps = state => ({editedInfo : state.editCourse.course});
+const mapDispatchToProps = dispatch => ({
+  setEditCourse: course => dispatch(EditCourseAction(course))
+});
 
 class CourseCreation extends Component {
   constructor() {
@@ -21,8 +28,23 @@ class CourseCreation extends Component {
       tuition: '',
       fee: '',
       img: defaultCourse,
-      isLoading: false
+      isLoading: false,
+      isEditing : false
     };
+  }
+
+  componentDidMount(){
+    const editedInfo = this.props.editedInfo;
+    if (Object.keys(editedInfo).length !== 0){
+      console.group("editedInfo",editedInfo)
+      this.setState({...editedInfo,isEditing:true})
+    }
+  }
+
+  componentWillUnmount(){
+    if (this.props.editedInfo !== {}){
+      this.props.setEditCourse({});
+    }
   }
 
   handleInputChange = event => {
@@ -56,18 +78,20 @@ class CourseCreation extends Component {
   onSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    const { isLoading, ...postData } = this.state;
+    const { isLoading,isEditing, ...postData } = this.state;
     postData['token'] = localStorage.getItem('token');
+    const url = isEditing? 'http://localhost:8000/api/edit_course' : 'http://localhost:8000/api/create_course'
     try {
-      await axios({
+      const response = await axios({
         method: 'POST',
-        url: 'http://localhost:8000/api/create_course',
+        url: url,
         crossDomain: true,
         data: querystring.stringify(postData),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
+      console.log(response)
       window.location = '/listing';
     } catch (error) {
       alert('Failed to submit, please try again');
@@ -77,6 +101,7 @@ class CourseCreation extends Component {
   };
 
   render() {
+    console.log(this.state)
     const {
       topic,
       description,
@@ -87,7 +112,8 @@ class CourseCreation extends Component {
       tuition,
       fee,
       img,
-      isLoading
+      isLoading,
+      isEditing
     } = this.state;
     return (
       <div>
@@ -248,7 +274,7 @@ class CourseCreation extends Component {
             <input
               className="btn btn-warning btn-lg btn-block"
               type="submit"
-              value="Create Course"
+              value={isEditing? "Edit Course":"Create Course"}
               disabled={isLoading}
             />
           </div>
@@ -259,4 +285,4 @@ class CourseCreation extends Component {
   }
 }
 
-export default CourseCreation;
+export default connect(mapStateToProps,mapDispatchToProps)(CourseCreation);
