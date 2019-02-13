@@ -1,6 +1,6 @@
 body {
   overflow-x: hidden;
-  margin-bottom: 5rem;
+  height:100%;
 }
 
 #root {
@@ -156,8 +156,12 @@ body {
 }
 
 .footer {
-  height: auto;
-  margin-top: 50px;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: -1;
   color: white;
 }
 
