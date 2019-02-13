@@ -56,6 +56,12 @@ class Listing extends Component {
     });
   }
 
+  onChange(e) {
+    this.setState({
+      location: e.target.value
+    });
+  }
+
   genQueryString(name, arr) {
     let str = '';
     for (let i = 0; i < arr.length; i++) {
@@ -75,7 +81,7 @@ class Listing extends Component {
     let queryString = '';
 
     if (subject) queryString += this.genQueryString('subject', subject);
-    if (location) queryString += `&location=${location.value}`;
+    if (location) queryString += `&location=${location}`;
     if (tuitionMax) queryString += `&tuitionMax=${tuitionMax.value}`;
     if (feeMax) queryString += `&feeMax=${feeMax.value}`;
     if (rating) queryString += `&ratingMin=${rating.value}`;
@@ -213,12 +219,12 @@ class Listing extends Component {
                       <div className="col-lg-2">Location</div>
 
                       <div className="col-lg-10">
-                        <Select
+                        <input
+                          type="text"
+                          placeholder="location"
+                          className="form-control"
+                          onChange={this.onChange.bind(this)}
                           value={location}
-                          onChange={this.handleChange.bind(this, 1)}
-                          options={locations}
-                          placeholder="Location"
-                          name="location"
                         />
                       </div>
                     </div>
