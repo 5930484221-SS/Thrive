@@ -34,25 +34,26 @@ class Listing extends Component {
   }
 
   async componentDidMount() {
-    const response = await axios({
-      method: 'GET',
-      crossDomain: true,
-      url: 'http://localhost:8000/api/get_courses',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        // "Access-Control-Allow-Origin": "*"
-      }
-    });
-    console.log('courses fetched: ', response.data.courses);
-    this.setState({ courseList: response.data.courses, isLoading: false });
+    try {
+      const response = await axios({
+        method: 'GET',
+        crossDomain: true,
+        url: 'http://localhost:8000/api/get_courses',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+          // "Access-Control-Allow-Origin": "*"
+        }
+      });
+      this.setState({ courseList: response.data.courses, isLoading: false });
+    } catch (error) {
+      console.log('fetch fails, please refresh the page');
+    }
   }
 
   onSearchChange(e) {
     this.setState({
       search: e.target.value
     });
-    // set courseList to the filtered results
-    // you can use subject, location, tuitionFee, and rating state to do the queries
   }
 
   genQueryString(name, arr) {
@@ -81,13 +82,16 @@ class Listing extends Component {
     queryString = queryString.slice(1);
 
     console.log('queryString: ', queryString);
-    const response = await axios({
-      method: 'GET',
-      crossDomain: true,
-      url: `http://localhost:8000/api/get_courses?${queryString}`
-    });
-    console.log('courses fetched from search: ', response.data.courses);
-    this.setState({ courseList: response.data.courses, isLoading: false });
+    try {
+      const response = await axios({
+        method: 'GET',
+        crossDomain: true,
+        url: `http://localhost:8000/api/get_courses?${queryString}`
+      });
+      this.setState({ courseList: response.data.courses, isLoading: false });
+    } catch (error) {
+      console.log('fail to search, please try again');
+    }
   }
 
   async onSearch(e) {
@@ -98,14 +102,19 @@ class Listing extends Component {
       courseList: [],
       isLoading: true
     });
-    const response = await axios({
-      method: 'GET',
-      url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
-    });
-    console.log('courses fetched from search: ', response.data.courses);
-    this.setState({ courseList: response.data.courses, isLoading: false }, () =>
-      console.log('courseList: ', this.state.courseList)
-    );
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
+      });
+      console.log('courses fetched from search: ', response.data.courses);
+      this.setState(
+        { courseList: response.data.courses, isLoading: false },
+        () => console.log('courseList: ', this.state.courseList)
+      );
+    } catch (error) {
+      console.log('search fails, please try again');
+    }
   }
 
   handleChange(index, selectedOption) {
@@ -165,7 +174,7 @@ class Listing extends Component {
             searchValue={search}
           />
           <div>
-            {isFilterOn ? (
+            {isFilterOn && !isLoading ? (
               <div className="card bg-transparent mt-3">
                 <div className="card-body">
                   <div className="card-title text-center">
