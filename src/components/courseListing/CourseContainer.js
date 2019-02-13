@@ -11,6 +11,7 @@ class CourseContainer extends Component {
       duration,
       location,
       tuition,
+      tutor_display,
       fee,
       img
     } = this.props.info;
@@ -38,8 +39,7 @@ class CourseContainer extends Component {
                   <strong className="modal-text">Instructor: </strong>
 
                   <a className="modal-text" href="#">
-                    {' '}
-                    Mosttiee{' '}
+                    {tutor_display}
                   </a>
                   <p className="modal-text"> {descriptionProfile} </p>
                   <hr />
@@ -73,7 +73,7 @@ class CourseContainer extends Component {
             <h5 className="card-title">{topic}</h5>
             <hr />
             <strong className="card-text">Instructor: </strong>
-            <span className="card-text"> Mosttiee </span>
+            <span className="card-text"> {tutor_display} </span>
             <hr />
             <strong className="card-text limitP">Score: </strong>
 

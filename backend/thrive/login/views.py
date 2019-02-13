@@ -136,6 +136,9 @@ def get_course_query_object(data):
 @csrf_exempt
 @require_http_methods(["POST", "GET"])
 def get_courses(request):
+    
+    print(request.GET.get('tutor'))
+    
     collection = mongo_db.get_collection('courses')
 
     limit = request.GET.get('limit')
