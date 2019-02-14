@@ -9,7 +9,7 @@ import NotFound from './components/NotFound';
 import Profile from './components/dropDown/Profile';
 import MyCourses from './components/dropDown/MyCourses';
 import Setting from './components/dropDown/Setting';
-
+import Footer from './components/Footer';
 import NavBar from './components/NavBar';
 
 import "./App.css";
@@ -39,6 +39,7 @@ class App extends Component {
                 <Route component={NotFound} />
               </Switch>
             </div>
+            <Footer />
           </div>
         </Router>
       </Provider>

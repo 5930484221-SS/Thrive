@@ -8,8 +8,32 @@ const subjects = [
     label: 'ENG'
   },
   {
-    value: 'sub3',
-    label: 'Sub3'
+    value: 'mathematics',
+    label: 'Mathemetics'
+  },
+  {
+    value: 'biology',
+    label: 'Biology'
+  },
+  {
+    value: 'pat1',
+    label: 'PAT1'
+  },
+  {
+    value: 'pat2',
+    label: 'PAT2'
+  },
+  {
+    value: 'pat3',
+    label: 'PAT3'
+  },
+  {
+    value: 'cu-tep',
+    label: 'CU-TEP'
+  },
+  {
+    value: 'tu-get',
+    label: 'TU-GET'
   }
 ];
 
@@ -34,7 +58,7 @@ const locations = [
 
 const tuitionFees = [
   {
-    value: '0',
+    value: '1000000000',
     label: '-none-'
   },
   {
@@ -57,7 +81,7 @@ const tuitionFees = [
 
 const joiningFees = [
   {
-    value: '0',
+    value: '1000000000',
     label: '-none-'
   },
   {
@@ -80,7 +104,7 @@ const joiningFees = [
 
 const ratings = [
   {
-    value: '0',
+    value: '',
     label: '-none-'
   },
   {

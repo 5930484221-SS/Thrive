@@ -191,6 +191,7 @@ class Listing extends Component {
                           subject: null,
                           location: null,
                           tuitionMax: null,
+                          feeMax: null,
                           rating: null
                         })
                       }

@@ -4,16 +4,26 @@ from bson.objectid import ObjectId
 from bson.son import SON
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound, JsonResponse,
                          HttpResponseForbidden, HttpResponse)
+from django.http.request import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from thrive.mongo_connection import mongo_db
+from pymongo.results import DeleteResult
 
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
                  'fee', 'location', 'subject', 'tuition', 'img']
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
+user_info_fields = ['user', 'display']
+
+
+def safe_cast(dtype, value, default=None):
+    try:
+        return dtype(value)
+    except ValueError:
+        return default
 
 
 def set_response_header(response):
@@ -74,18 +84,18 @@ def login(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def create_course(request):
-    token = request.POST.get('token')
+    token = request.POST.get('token', 'test')
     user = get_username_from_token(token)
-    
+
     if user is None:
         return HttpResponseForbidden("please login first")
 
     record = dict(tutor=user)
 
     for field in course_fields:
-        value = request.POST.get(field)
+        value = request.POST.get(field, '')
         if field in course_number_fields:
-            value = float(value)
+            value = safe_cast(float, value, 0)
         record[field] = value
 
     record['rating_1'] = 0
@@ -100,10 +110,11 @@ def create_course(request):
     return HttpResponse('')
 
 
-def get_course_query_object(data):
-    fields_exact = ['subject', 'tutor']
+def get_course_query_object(data: QueryDict):
+    fields_exact = ['tutor']
     fields_substring = ['description', 'descriptionProfile', 'location', 'topic']
     fields_range = ['fee', 'tuition', 'rating']
+    fields_multi = ['subject']
 
     query_object = dict()
 
@@ -130,11 +141,35 @@ def get_course_query_object(data):
         if q:
             query_object[field] = q
 
+    for field in fields_multi:
+        values = data.getlist('subject')
+        if not values:
+            continue
+        value = '|'.join(values)
+        if value:
+            query_object[field] = re.compile(rf'^(?:{value})$', re.IGNORECASE)
+
     return query_object
 
 
+def get_user_info_from_token(token):
+    collection = mongo_db.get_collection('active_token')
+
+    lookup_stage = {'as': 'user_info', 'foreignField': 'user', 'from': 'users', 'localField': 'user'}
+
+    pipeline = [{'$match': {'token': token}},
+                {'$lookup': lookup_stage}]
+
+    query = list(collection.aggregate(pipeline))
+    if query:
+        record = query[0]['user_info'][0]
+        user_info = {field: str(record[field]) for field in user_info_fields}
+        return user_info
+    return dict()
+
+
 @csrf_exempt
-@require_http_methods(["POST", "GET"])
+@require_http_methods(["GET"])
 def get_courses(request):
     
     print(request.GET.get('tutor'))
@@ -259,7 +294,7 @@ def edit_course(request):
         record[field] = value
 
     collection = mongo_db.get_collection('courses')
-    collection.update({'_id': _id}, {'$set': record})
+    collection.update({'_id': ObjectId(_id)}, {'$set': record})
 
     return HttpResponse('')
 
@@ -275,9 +310,13 @@ def delete_course(request):
 
     _id = request.POST.get('id')
 
-    pass  # check autherization bf delete course
+    collection = mongo_db.get_collection('courses')
+    ret = collection.delete_many({'_id': ObjectId(_id), 'tutor': user})  # type: DeleteResult
 
-    return HttpResponse('')
+    if ret.deleted_count:
+        return HttpResponse('')
+
+    return HttpResponseForbidden('the action is not allowed')
 
 
 @csrf_exempt
@@ -286,3 +325,15 @@ def get_courses_by_student(request):  # rename???
     token = request.POST.get('token')
     user = get_username_from_token(token)
     pass
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_user(request):
+    token = request.GET.get('token')
+    user_info = get_user_info_from_token(token)
+    if user_info:
+        response = JsonResponse(user_info)
+        return set_response_header(response)
+
+    return HttpResponseNotFound('token not found')

@@ -163,3 +163,14 @@ body {
     left: -50%;
   }
 }
+
+.footer {
+  height: auto;
+  margin-top: 50px;
+  color: white;
+}
+
+.copyR {
+  text-align: center;
+  font-size: 11px;
+}
