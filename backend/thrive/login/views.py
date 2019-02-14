@@ -171,6 +171,9 @@ def get_user_info_from_token(token):
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_courses(request):
+    
+    print(request.GET.get('tutor'))
+    
     collection = mongo_db.get_collection('courses')
 
     limit = request.GET.get('limit')

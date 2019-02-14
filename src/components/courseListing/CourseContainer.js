@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './CourseContainer.css';
 
 class CourseContainer extends Component {
-
   render() {
     const {
       topic,
@@ -12,6 +11,7 @@ class CourseContainer extends Component {
       duration,
       location,
       tuition,
+      tutor_display,
       fee,
       img
     } = this.props.info;
@@ -19,8 +19,7 @@ class CourseContainer extends Component {
     const index = this.props.index;
 
     return (
-      <div className="col-sm-6 col-md-4 col-lg-3 ">
-
+      <div className="col-sm-6 col-md-4 col-lg-3 px-4">
         <div
           className="card shadow mb-5"
           data-toggle="modal"
@@ -29,7 +28,6 @@ class CourseContainer extends Component {
           <div className="modal" id={`modal${index}`.toLowerCase()}>
             <div className="modal-dialog">
               <div className="modal-content">
-
                 <div className="modal-header">
                   <h5 className="modal-title pt-3 pb-3"> {topic} </h5>
                   <button className="close">&times;</button>
@@ -41,8 +39,7 @@ class CourseContainer extends Component {
                   <strong className="modal-text">Instructor: </strong>
 
                   <a className="modal-text" href="#">
-                    {' '}
-                    Mosttiee{' '}
+                    {tutor_display}
                   </a>
                   <p className="modal-text"> {descriptionProfile} </p>
                   <hr />
@@ -58,7 +55,6 @@ class CourseContainer extends Component {
                 </div>
 
                 <div className="modal-footer">
-
                   <button className="btn btn-orange">See more review</button>
 
                   <button className="btn btn-secondary">Reserve</button>
@@ -67,7 +63,6 @@ class CourseContainer extends Component {
             </div>
           </div>
 
-
           <img
             className="card-img-top img-fluid"
             src={img}
@@ -75,11 +70,10 @@ class CourseContainer extends Component {
           />
 
           <div className="card-body course-card-body">
-
             <h5 className="card-title">{topic}</h5>
             <hr />
             <strong className="card-text">Instructor: </strong>
-            <span className="card-text"> Mosttiee </span>
+            <span className="card-text"> {tutor_display} </span>
             <hr />
             <strong className="card-text limitP">Score: </strong>
 
@@ -92,9 +86,7 @@ class CourseContainer extends Component {
             <h5>{subject}</h5>
             <h5 className="ml-auto">฿{tuition}</h5>
           </div>
-
         </div>
-
       </div>
     );
   }

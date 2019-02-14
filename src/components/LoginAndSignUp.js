@@ -49,9 +49,9 @@ class LoginAndSignUp extends Component {
   render() {
     return (
       <ul className="navbar-nav ml-auto">
-        <li className="nav-item mr-4">
+        <li className="nav-item">
           <a
-            className="nav-link"
+            className="nav-link mx-3"
             href="#"
             data-toggle="modal"
             data-target="#loginModal"
@@ -103,11 +103,7 @@ class LoginAndSignUp extends Component {
             </div>
           </div>
         </li>
-        <li>
-          <button className="btn btn-orange btn-rounded" data-toggle="modal">
-            SIGN UP
-          </button>
-        </li>
+        <button className="nav-item btn btn-orange btn-rounded">SIGN UP</button>
       </ul>
     );
   }
