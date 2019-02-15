@@ -38,7 +38,7 @@
   height: 140px;
 }
 
-.card-title {
+h5 .card-title {
   display: block !important ;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
@@ -53,7 +53,7 @@
   font-size: 18px
 }
 
-.card-body {
+.course-card-body {
   height: 15rem;
 }
 

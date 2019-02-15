@@ -55,7 +55,7 @@ class CourseContainer extends Component {
 
           <img className="card-img-top img-fluid" src={img} alt="unable to load file" />
 
-          <div className="card-body" >
+          <div className="card-body course-card-body" >
             <h5 className="card-title">{topic}</h5>
             <hr />
             <strong className="card-text">Instructor: </strong>
