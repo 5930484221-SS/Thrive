@@ -1,7 +1,44 @@
 import React, { Component } from 'react';
-import './CourseContainer.css';
+import { Link } from 'react-router-dom';
+import '../courseListing/CourseContainer.css';
 
-class CourseContainer extends Component {
+//query
+import axios from 'axios';
+import querystring from 'query-string';
+
+//redux
+import { EditCourseAction } from '../../actions/EditCourseAction';
+import { connect } from 'react-redux';
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({
+  setEditCourse: course => dispatch(EditCourseAction(course))
+});
+
+class MyCoursesContainer extends Component {
+  onDeleteCourse = event => {
+    axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:8000/api/delete_course',
+      crossDomain: true,
+      data: querystring.stringify({
+        token: window.localStorage.token,
+        id: this.props.info._id
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .then(() => (window.location = '/myCourses'))
+      .catch(error => {
+        alert('Failed to Delete the course\n' + error);
+        console.log(error);
+      });
+  };
+
+  onEditCourse = event => {
+    this.props.setEditCourse(this.props.info);
+  };
+
   render() {
     const {
       topic,
@@ -17,9 +54,8 @@ class CourseContainer extends Component {
     } = this.props.info;
 
     const index = this.props.index;
-
     return (
-      <div className="col-sm-6 col-md-4 col-lg-3 px-4">
+      <div className="col-sm-6 col-md-4  ">
         <div
           className="card shadow mb-5"
           data-toggle="modal"
@@ -37,9 +73,9 @@ class CourseContainer extends Component {
                   <p className="modal-text"> {description} </p>
                   <hr />
                   <strong className="modal-text">Instructor: </strong>
-
                   <a className="modal-text" href="#">
-                    {tutor_display}
+                    {' '}
+                    {tutor_display}{' '}
                   </a>
                   <p className="modal-text"> {descriptionProfile} </p>
                   <hr />
@@ -49,15 +85,23 @@ class CourseContainer extends Component {
                   <strong className="modal-text">Duration:</strong>
                   <span className="modal-text"> {duration} </span>
                   <br />
-
                   <strong className="modal-text">Fee: </strong>
                   <span className="modal-text">฿{fee}</span>
                 </div>
 
                 <div className="modal-footer">
-                  <button className="btn btn-orange">See more review</button>
-
-                  <button className="btn btn-secondary">Reserve</button>
+                  <button
+                    className="btn btn-orange"
+                    onClick={this.onEditCourse}
+                  >
+                    <Link to="/create_course">Edit</Link>
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={this.onDeleteCourse}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
@@ -69,14 +113,13 @@ class CourseContainer extends Component {
             alt="unable to load file"
           />
 
-          <div className="card-body course-card-body">
+          <div className="card-body">
             <h5 className="card-title">{topic}</h5>
             <hr />
             <strong className="card-text">Instructor: </strong>
             <span className="card-text"> {tutor_display} </span>
             <hr />
             <strong className="card-text limitP">Score: </strong>
-
             <i className="star icon" />
             <i className="half star icon" />
             <br />
@@ -92,4 +135,7 @@ class CourseContainer extends Component {
   }
 }
 
-export default CourseContainer;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyCoursesContainer);

@@ -1,6 +1,11 @@
 body {
   overflow-x: hidden;
+  width: 100%;
   margin-bottom: 5rem;
+}
+
+#root {
+  margin-bottom: 5em;
 }
 
 /* IMAGE */
@@ -24,7 +29,7 @@ body {
 
 /* NAVBAR */
 .navbar {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 
 .navbar-light-orange {
@@ -39,8 +44,8 @@ body {
 
 /* BUTTONS */
 .btn-rounded {
-  font-size: 1.4rem;
-  border-radius: 40px;
+  font-size: 1.6rem;
+  border-radius: 50px;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -64,9 +69,9 @@ body {
 }
 
 .btn-extra {
-  min-width: 16rem;
-  height: 4.5rem;
-  font-size: 2.2rem;
+  min-width: 20rem;
+  height: 6rem;
+  font-size: 2.6rem;
   font-weight: 500;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -112,12 +117,18 @@ body {
   /* SHOWCASE */
   .showcase-header {
     margin-top: 30px;
-    font-size: 2rem;
-    font-weight: 1500 !important;
+    /* font-size: 35px; */
+    font-weight: 500;
   }
 
   .showcase-text {
     font-size: 1.3rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  #img-profile {
+    height: 230px;
   }
 }
 
@@ -128,7 +139,7 @@ body {
 
   .btn-extra {
     width: 10rem;
-    height: 3.4rem;
+    height: 4.5rem;
     font-size: 1.5rem;
     font-weight: 500;
   }
@@ -138,8 +149,8 @@ body {
   }
 
   .showcase-header {
-    font-size: 2rem;
-    font-weight: 1500; 
+    /* font-size: 2rem; */
+    font-weight: 500;
     text-align: center;
   }
 
@@ -151,4 +162,15 @@ body {
   #left1 {
     left: -50%;
   }
+}
+
+.footer {
+  height: auto;
+  margin-top: 50px;
+  color: white;
+}
+
+.copyR {
+  text-align: center;
+  font-size: 11px;
 }

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import querystring from 'query-string';
-import { loginUserSuccess } from '../actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import axios from "axios";
+import querystring from "query-string";
+import { loginUserSuccess } from "../actions";
 
 class LoginAndSignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: ''
+      username: "",
+      password: ""
     };
   }
 
@@ -28,30 +28,30 @@ class LoginAndSignUp extends Component {
   onSubmit = async e => {
     e.preventDefault();
     const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/login',
+      method: "POST",
+      url: "http://localhost:8000/api/login",
       crossDomain: true,
       data: querystring.stringify({
         username: this.state.username,
         password: this.state.password
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     });
 
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('username', this.state.username);
-    alert('ok');
-    window.location = '/';
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("username", this.state.username);
+    alert("ok");
+    window.location = "/";
   };
 
   render() {
     return (
       <ul className="navbar-nav ml-auto">
-        <li className="nav-item mr-4">
+        <li className="nav-item">
           <a
-            className="nav-link"
+            className="nav-link mx-3"
             href="#"
             data-toggle="modal"
             data-target="#loginModal"
@@ -103,11 +103,7 @@ class LoginAndSignUp extends Component {
             </div>
           </div>
         </li>
-        <li>
-          <button className="btn btn-orange btn-rounded" data-toggle="modal">
-            SIGN UP
-          </button>
-        </li>
+        <button className="nav-item btn btn-orange btn-rounded">SIGN UP</button>
       </ul>
     );
   }
