@@ -25,27 +25,6 @@ class UserContainer extends Component { //mock-up
                   <button className="close">&times;</button>
                 </div>
 
-                <div className="modal-body">
-                  <p className="modal-text"> {"description"} </p>
-                  <hr />
-                  <strong className="modal-text">Instructor: </strong>
-
-                  <a className="modal-text" href="#">
-                    {"tutor_display"}
-                  </a>
-                  <p className="modal-text"> {"descriptionProfile"} </p>
-                  <hr />
-                  <strong className="modal-text">location: </strong>
-                  <span className="modal-text"> {"location"}</span>
-                  <br />
-                  <strong className="modal-text">Duration:</strong>
-                  <span className="modal-text"> {"duration"} </span>
-                  <br />
-
-                  <strong className="modal-text">Fee: </strong>
-                  <span className="modal-text">฿{"fee"}</span>
-                </div>
-
                 <div className="modal-footer">
 
                   <button className="btn btn-secondary">Delete</button>
@@ -65,6 +44,7 @@ class UserContainer extends Component { //mock-up
             <hr />
             <strong className="card-text">Username: </strong>
             <span className="card-text"> {"Jenny"} </span>
+            <br></br>
             <strong className="card-text">Role: </strong>
             <span className="card-text"> {"Tutor"} </span>
           </div>

@@ -75,7 +75,7 @@ class SearchUser extends Component {
             </div>
           )}
         </div>
-        {/* <UserContainer /> */}
+        <UserContainer />
       </div>
     );
   }
