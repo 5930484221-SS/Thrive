@@ -10,7 +10,7 @@ export default props => (
           <input
             type="text"
             className="form-control search-form"
-            placeholder="Search Tutor"
+            placeholder={props.placeHolder}
             onChange={e => props.onChange(e)}
             value={props.searchValue}
           />
