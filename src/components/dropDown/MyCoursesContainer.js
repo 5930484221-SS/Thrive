@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import '../courseListing/CourseContainer.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import "../courseListing/CourseContainer.css";
 
 //query
-import axios from 'axios';
-import querystring from 'query-string';
+import axios from "axios";
+import querystring from "query-string";
 
 //redux
-import { EditCourseAction } from '../../actions/EditCourseAction';
-import { connect } from 'react-redux';
+import { EditCourseAction } from "../../actions/EditCourseAction";
+import { connect } from "react-redux";
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
@@ -17,20 +17,20 @@ const mapDispatchToProps = dispatch => ({
 class MyCoursesContainer extends Component {
   onDeleteCourse = event => {
     axios({
-      method: 'POST',
-      url: 'http://127.0.0.1:8000/api/delete_course',
+      method: "POST",
+      url: "http://127.0.0.1:8000/api/delete_course",
       crossDomain: true,
       data: querystring.stringify({
         token: window.localStorage.token,
         id: this.props.info._id
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     })
-      .then(() => (window.location = '/myCourses'))
+      .then(() => (window.location = "/myCourses"))
       .catch(error => {
-        alert('Failed to Delete the course\n' + error);
+        alert("Failed to Delete the course\n" + error);
         console.log(error);
       });
   };
@@ -74,8 +74,8 @@ class MyCoursesContainer extends Component {
                   <hr />
                   <strong className="modal-text">Instructor: </strong>
                   <a className="modal-text" href="#">
-                    {' '}
-                    {tutor_display}{' '}
+                    {" "}
+                    {tutor_display}{" "}
                   </a>
                   <p className="modal-text"> {descriptionProfile} </p>
                   <hr />

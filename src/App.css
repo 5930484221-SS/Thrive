@@ -174,3 +174,34 @@ body {
   text-align: center;
   font-size: 11px;
 }
+
+.edge {
+  /* border: 0.1px solid rgba(0, 0, 0, 0.411); */
+  background-color: rgba(255, 255, 255, 0.301);
+  padding: 10px 10px 10px 10px;
+}
+
+.underline-on-hover {
+  border-bottom: 4px solid salmon;
+  border-radius: 5px;
+}
+
+.mycoursePage {
+  /* background-color: rgba(196, 201, 252, 0.226); */
+  background-color: rgba(255, 255, 255, 0.226);
+}
+
+.courseCard {
+  border: 1px solid rgba(192, 192, 192, 0.404);
+  width: 100%;
+  display: flex;
+}
+
+.text {
+  /* display: block; */
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

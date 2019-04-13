@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-import LoginAndSignUp from './LoginAndSignUp';
-import rocketLogo from '../img/rocket_logo.svg';
-import UsernameAndLogout from './UsernameAndLogout';
+import LoginAndSignUp from "./LoginAndSignUp";
+import rocketLogo from "../img/rocket_logo.svg";
+import UsernameAndLogout from "./UsernameAndLogout";
 
 class NavBar extends Component {
   componentWillMount() {
@@ -15,8 +15,8 @@ class NavBar extends Component {
         <nav
           className={
             this.props.auth
-              ? 'navbar navbar-expand-sm navbar-dark bg-dark'
-              : 'navbar navbar-expand-sm navbar-light navbar-light-orange'
+              ? "navbar navbar-expand-sm navbar-dark bg-dark"
+              : "navbar navbar-expand-sm navbar-light navbar-light-orange"
           }
         >
           <div className="container">
@@ -24,8 +24,8 @@ class NavBar extends Component {
               href="/"
               className={
                 this.props.auth
-                  ? 'navbar-brand text-white'
-                  : 'navbar-brand text-secondary'
+                  ? "navbar-brand text-white"
+                  : "navbar-brand text-secondary"
               }
             >
               <img src={rocketLogo} />
