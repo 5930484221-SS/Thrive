@@ -337,3 +337,35 @@ def get_user(request):
         return set_response_header(response)
 
     return HttpResponseNotFound('token not found')
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def create_request(request):  # rename???
+    token = request.POST.get('token')
+    user = get_username_from_token(token)
+    #create req - set flag and time stamp
+    pass
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_learner_transactions(request):  # rename???
+    token = request.GET.get('token')
+    user = get_username_from_token(token)
+    #get all req and res as a learner
+    pass
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_tutor_transactions(request):  # rename???
+    token = request.GET.get('token')
+    user = get_username_from_token(token)
+    #get all req and res as a tutor
+    pass
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def set_flag(request):  # rename???
+    token = request.POST.get('token')
+    user = get_username_from_token(token)
+    #set transaction flag
+    pass
