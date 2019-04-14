@@ -67,6 +67,48 @@ def get_username_from_token(token):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+def register(request):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    first_name = request.POST.get("firstName", '')
+    last_name = request.POST.get("lastName", '')
+    nickname = request.POST.get("nickname", '')
+    display_name = request.POST.get("displayName", '')
+    address = request.POST.get("address", '')
+    phone_number = request.POST.get("phoneNumber", '')
+    email = request.POST.get("email", '')
+    contact = request.POST.get("contact", '')
+
+    if username is None or password is None:
+        return HttpResponseBadRequest('Please provide both username and password')
+
+    collection = mongo_db.get_collection('users')
+    match = collection.find_one({'user': username})
+
+    if match:
+        return HttpResponseBadRequest('The username already exists')
+
+    record = {
+        'user': username,
+        'password': password,
+
+        'first_name': first_name,
+        'last_name': last_name,
+        'nickname': nickname,
+        'display': display_name,
+
+        'address': address,
+        'phone_number': phone_number,
+        'email': email,
+        'contact': contact,
+    }
+    collection.insert_one(record)
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
 def login(request):
     username = request.POST.get("username")
     password = request.POST.get("password")
