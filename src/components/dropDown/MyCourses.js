@@ -8,7 +8,7 @@ import teacher from "../../img/teacher.svg";
 import noti from "../../img/notification.svg";
 import edu from "../../img/education.svg";
 import Loader from "../loader/Loader";
-import NoCourse from "./NoCourses";
+import MyCourseContentError from "./MyCourseContentError";
 import TutorCourseContainer from "./TutorCourseContainer";
 import { Link } from "react-router-dom";
 import Noti from "./Noti";
@@ -101,6 +101,48 @@ class MyCourses extends Component {
     this.props.setEditCourse(info);
   };
 
+  renderContent() {
+    const currentSubPage = this.state.currentSubPage;
+    if (currentSubPage === tutor) {
+      return this.state.coursesAsTutor.map(course => {
+        return (
+          <TutorCourseContainer info={course}>
+            <div>
+              <button
+                className="btn btn-orange"
+                onClick={() => this.onEditCourse(course)}
+              >
+                <Link to="/create_course" style={{ color: "white" }}>
+                  Edit
+                </Link>
+              </button>
+              <span> </span>
+              <button
+                className="btn btn-secondary"
+                onClick={() => this.onDeleteCourse(course)}
+              >
+                Delete
+              </button>
+            </div>
+          </TutorCourseContainer>
+        );
+      });
+    } else if (currentSubPage === learner) {
+      return this.state.coursesAsLearner.map(course => (
+        <TutorCourseContainer info={course}>
+          <div>
+            {" "}
+            <button className="btn btn-success">Review</button>
+          </div>
+        </TutorCourseContainer>
+      ));
+    } else if (currentSubPage === notification) {
+      return <Noti />;
+    } else {
+      return [];
+    }
+  }
+
   render() {
     const {
       coursesAsTutor,
@@ -108,6 +150,7 @@ class MyCourses extends Component {
       isLoading,
       currentSubPage
     } = this.state;
+
     return (
       <div>
         <CowBg />
@@ -163,51 +206,7 @@ class MyCourses extends Component {
 
           {/* Content */}
           <div className="container">
-            {currentSubPage === tutor
-              ? // this.state.hasCourse ? (
-                coursesAsTutor.map(course => {
-                  return (
-                    <TutorCourseContainer info={course}>
-                      <div>
-                        <button
-                          className="btn btn-orange"
-                          onClick={() => this.onEditCourse(course)}
-                        >
-                          <Link to="/create_course" style={{ color: "white" }}>
-                            Edit
-                          </Link>
-                        </button>
-                        <span> </span>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => this.onDeleteCourse(course)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </TutorCourseContainer>
-                  );
-                })
-              : // ) : (
-                //   <NoCourse />
-                // )
-                null}
-
-            {currentSubPage === learner
-              ? // this.state.hasCourse ? (
-                coursesAsLearner.map(course => (
-                  <TutorCourseContainer info={course}>
-                    <div>
-                      {" "}
-                      <button className="btn btn-success">Review</button>
-                    </div>
-                  </TutorCourseContainer>
-                ))
-              : // ) : (
-                // <NoCourse />
-                // )
-                null}
-            {currentSubPage === notification ? <Noti /> : null}
+            <MyCourseContentError>{this.renderContent()}</MyCourseContentError>
           </div>
         </div>
 
