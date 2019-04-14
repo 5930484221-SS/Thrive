@@ -10,6 +10,7 @@ import edu from "../../img/education.svg";
 import Loader from "../loader/Loader";
 import NoCourse from "./NoCourses";
 import TutorCourseContainer from "./TutorCourseContainer";
+import Noti from "./Noti";
 
 export default class MyCourses extends Component {
   constructor() {
@@ -139,12 +140,12 @@ export default class MyCourses extends Component {
             <div className="col">
               <a className="display-4 topic btn" onClick={this.onNotification}>
                 {this.state.isNotification ? (
-                  <span className="underline-on-hover">Notification</span>
+                  <span className="underline-on-hover">Request/Response</span>
                 ) : (
-                  <span>Notification</span>
+                  <span>Request/Response</span>
                 )}
               </a>
-              <img src={noti} style={{ width: "40px", height: "auto" }} />
+              {/* <img src={noti} style={{ width: "40px", height: "auto" }} /> */}
             </div>
           </div>
           <hr />
@@ -163,7 +164,7 @@ export default class MyCourses extends Component {
                 <NoCourse />
               )
             ) : null}
-            {this.state.isNotification ? <div>noti</div> : null}
+            {this.state.isNotification ? <Noti /> : null}
           </div>
         </div>
 
