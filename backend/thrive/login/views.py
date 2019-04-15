@@ -35,6 +35,9 @@ def get_or_create_token(user):
 
     return token
 
+def now():
+    return '11-04-2562'
+
 
 def authenticate(username, password):
     collection = mongo_db.get_collection('users')
@@ -314,11 +317,16 @@ def get_user(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def create_request(request):  # rename???
+def create_request(request): 
     token = request.POST.get('token')
+    tutor = request.POST.get('tutor')
+    courseId = request.POST.get('courseId')
     user = get_username_from_token(token)
-    #create req - set flag and time stamp
-    pass
+
+    collection = mongo_db.get_collection('requests')
+    collection.insert_one({'courseId': courseId, 'learner': user, 'tutor': tutor, 'flag': 'WAIT_TUTOR',
+    'requestTimestamp': now(), 'responseTimestamp': 'NULL', 'paymentTimestamp': 'NULL'})
+    return HttpResponse('')
 
 @csrf_exempt
 @require_http_methods(["GET"])
@@ -326,6 +334,22 @@ def get_learner_transactions(request):  # rename???
     token = request.GET.get('token')
     user = get_username_from_token(token)
     #get all req and res as a learner
+
+    #request merge with courses where user = learner(not) and courseId = courseId(tick)
+    lookup_stage = {'from': 'requests',
+                    'let': {'course': '$courseId'},
+                    'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', '$$course']}}},
+                                 {'$count': 'n_courses'}],
+                    'as': 'requests'}
+
+    pipeline = [{'$match': qobj},
+                {'$lookup': lookup_stage},
+                {'$sort': SON([('_id', order)])},
+                {'$match': {'courses': {'$not': {'$size': 0}}}}]
+
+    #collection is course
+    collection = mongo_db.get_collection('courses')
+    query = collection.aggregate(pipeline)
     pass
 
 @csrf_exempt
