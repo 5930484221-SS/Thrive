@@ -1,12 +1,63 @@
 import React, { Component } from "react";
 import CowBg from "./CowBg";
+import axios from "axios";
+import querystring from "query-string";
 
 export default class Register extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      nickname: "",
+      displayName: "",
+      address: "",
+      phoneNumber: "",
+      email: "",
+      contact: ""
+    };
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit() {}
+  handleInputChange = e => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  onSubmit = async e => {
+    e.preventDefault();
+
+    const data = {
+      username: this.state.username,
+      password: this.state.password,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      nickname: this.state.nickname,
+      displayName: this.state.displayName,
+      address: this.state.address,
+      phoneNumber: this.state.phoneNumber,
+      email: this.state.email,
+      contact: this.state.contact
+    };
+
+    const response = await axios({
+      method: "POST",
+      url: "http://localhost:8000/api/register",
+      crossDomain: true,
+      data: querystring.stringify(data),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+    // console.log(data);
+  };
   render() {
     return (
       <div>
@@ -32,6 +83,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="firstName"
                     placeholder="first name"
+                    onChange={this.handleInputChange}
+                    name="firstName"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -41,6 +94,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="lastName"
                     placeholder="last name"
+                    onChange={this.handleInputChange}
+                    name="lastName"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -50,6 +105,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="nickname"
                     placeholder="nickname"
+                    onChange={this.handleInputChange}
+                    name="nickname"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -58,6 +115,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="address"
                     placeholder="address"
+                    onChange={this.handleInputChange}
+                    name="address"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -67,6 +126,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="phone number"
                     placeholder="phone number"
+                    onChange={this.handleInputChange}
+                    name="phoneNumber"
                   />
                 </div>
               </div>
@@ -78,6 +139,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="email"
                     placeholder="email"
+                    onChange={this.handleInputChange}
+                    name="email"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -87,12 +150,13 @@ export default class Register extends Component {
                     className="form-control"
                     id="contact"
                     placeholder="contact"
+                    onChange={this.handleInputChange}
+                    name="contact"
                   />
                 </div>
                 <br />
                 <div className="form-group col-md-12">
                   <h1>
-                    {" "}
                     <span className="text-orange text-extra">Account</span>
                   </h1>
                 </div>
@@ -103,6 +167,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="diaplay name"
                     placeholder="diaplay name"
+                    onChange={this.handleInputChange}
+                    name="displayName"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -112,6 +178,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="username"
                     placeholder="username"
+                    onChange={this.handleInputChange}
+                    name="username"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -121,6 +189,8 @@ export default class Register extends Component {
                     className="form-control"
                     id="password"
                     placeholder="password"
+                    onChange={this.handleInputChange}
+                    name="password"
                   />
                 </div>
                 <div className="form-group col-md-12 text-right">
