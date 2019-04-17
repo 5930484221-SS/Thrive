@@ -195,7 +195,7 @@ body {
   border: 1px solid rgba(192, 192, 192, 0.404);
   width: 100%;
   display: flex;
-  overflow: hidden;
+  overflow: inherit;
 }
 
 .text {

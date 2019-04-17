@@ -58,13 +58,17 @@ export default class Register extends Component {
       }
     })
       .then(() => {
-        swal(
+        // swal(
+        //   "Welcome to THRIVE. Your registration has been done successfully."
+        // );
+        alert(
           "Welcome to THRIVE. Your registration has been done successfully."
         );
         return this.props.history.push("/");
       })
       .catch(ere => {
-        swal("There are invalid data. Please try again.");
+        // swal("There are invalid data. Please try again.");
+        alert("There are invalid data. Please try again.");
       });
   };
   render() {
