@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import CowBg from '../CowBg';
-import './myCourses.css';
-import '../courseListing/CourseContainer.css';
-import MyCoursesContainer from './MyCoursesContainer';
-import books from '../../img/books.svg';
-import teacher from '../../img/teacher.svg';
+import React, { Component } from "react";
+import CowBg from "../CowBg";
+import "./myCourses.css";
+import "../courseListing/CourseContainer.css";
+import MyCoursesContainer from "./MyCoursesContainer";
+import books from "../../img/books.svg";
+import teacher from "../../img/teacher.svg";
 import Loader from "../loader/Loader";
 
 export default class MyCourses extends Component {
@@ -18,7 +18,7 @@ export default class MyCourses extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isLoading: true })
+    this.setState({ isLoading: true });
     this.fetchTutorCourses();
     // this.fetchStudentCourses();
   }
@@ -27,10 +27,10 @@ export default class MyCourses extends Component {
     try {
       const response = await fetch(
         "http://127.0.0.1:8000/api/get_courses?tutor=" +
-        window.localStorage.username
+          window.localStorage.username
       );
       const courses = await response.json();
-      this.setState({ coursesAsTutor: courses.courses, isLoading: false })
+      this.setState({ coursesAsTutor: courses.courses, isLoading: false });
     } catch (error) {
       console.log(error);
     }
@@ -53,24 +53,32 @@ export default class MyCourses extends Component {
           <hr />
         </div>
 
-        <span className="display-4 topic" style={{ fontSize: "30px" }}> As a Tutor</span>
+        <span className="display-4 topic" style={{ fontSize: "30px" }}>
+          {" "}
+          As a Tutor
+        </span>
         <img src={teacher} style={{ width: "40px", height: "auto" }} />
         <br />
         <br />
         <div className="row">
-          {coursesAsTutor.map((course, index) =>
-            <MyCoursesContainer key={index} info={course} index={index} />
-          )}
+          <div className="card-deck">
+            {coursesAsTutor.map((course, index) => (
+              <MyCoursesContainer key={index} info={course} index={index} />
+            ))}
+          </div>
         </div>
 
         <br />
         <br />
-        <span className="display-4 topic" style={{ fontSize: "30px" }}> As a Learner</span>
+        <span className="display-4 topic" style={{ fontSize: "30px" }}>
+          {" "}
+          As a Learner
+        </span>
         <img src={books} style={{ width: "40px", height: "auto" }} />
         <br />
         <br />
         {isLoading ? Loader : null}
       </div>
-    )
+    );
   }
 }
