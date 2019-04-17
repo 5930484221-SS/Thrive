@@ -50,7 +50,7 @@ class Listing extends Component {
     }
   }
 
-  onSearchChange(e) {
+  onSearchChange(e) { 
     this.setState({
       search: e.target.value
     });
@@ -175,6 +175,7 @@ class Listing extends Component {
         <CowBg />
         <div className="py-4">
           <SearchBar
+            placeHolder="Search Tutor"
             onChange={this.onSearchChange.bind(this)}
             onSearch={this.onSearch.bind(this)}
             searchValue={search}
@@ -268,7 +269,7 @@ class Listing extends Component {
                         />
                       </div>
                     </div>
-                    <div className="text-center">
+                    <div classNfame="text-center">
                       <input
                         type="submit"
                         value="Search"
@@ -298,6 +299,7 @@ class Listing extends Component {
           </div>
         </div>
         <div className="row">
+          {/* {console.log(courseList)} */}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => (
               <CourseContainer key={index} info={c} index={index} />
