@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import Listing from "./components/courseListing/Listing";
-import CourseCreation from "./components/courseCreation/CourseCreation";
-import Login from "./components/Login";
-import NotFound from "./components/NotFound";
-import Profile from "./components/dropDown/Profile";
-import MyCourses from "./components/dropDown/MyCourses";
-import Setting from "./components/dropDown/Setting";
-import Footer from "./components/Footer";
-import NavBar from "./components/NavBar";
+import Listing from './components/courseListing/Listing';
+import CourseCreation from './components/courseCreation/CourseCreation';
+import Login from './components/Login';
+import NotFound from './components/NotFound';
+import Profile from './components/dropDown/Profile';
+import MyCourses from './components/dropDown/MyCourses';
+import Setting from './components/dropDown/Setting';
+import Footer from './components/Footer';
+import NavBar from './components/NavBar';
+import Dashboard from './components/admin/Dashboard';
+import SearchUser from './components/admin/SearchUser';
+import PrivateRoute from './components/admin/PrivateRoute';
 import Register from "./components/Register";
 
 import './App.css';
@@ -37,6 +40,16 @@ class App extends Component {
                 <Route path="/myCourses" component={MyCourses} />
                 <Route path="/setting" component={Setting} />
                 <Route path="/register" component={Register} />
+                <PrivateRoute
+                  path="/admin/dashboard"
+                  condition={true}
+                  component={Dashboard}
+                />
+                <PrivateRoute
+                  path="/admin/searchUser"
+                  condition={false}
+                  component={SearchUser}
+                />
                 <Route path="/" component={Login} />
                 <Route component={NotFound} />
               </Switch>

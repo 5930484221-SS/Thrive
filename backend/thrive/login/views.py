@@ -307,6 +307,28 @@ def get_tutors(request):
 
 
 @csrf_exempt
+@require_http_methods(["GET"])
+def user(request):
+    result_keys = {'user': 'username', 'first_name': 'firstName', 'last_name': 'lastName', 'nickname': 'nickname',
+                   'display': 'displayName', 'address': 'address', 'phone_number': 'phoneNumber', 'email': 'email',
+                   'contact': 'contact'}
+
+    collection = mongo_db.get_collection('users')
+
+    username = request.GET.get('username')
+
+    match = collection.find_one({'user': username})
+
+    if not match:
+        return HttpResponseNotFound('The given username does not exist')
+
+    result = {v: match[k] for k, v in result_keys.items()}
+    response = JsonResponse(result)
+
+    return set_response_header(response)
+
+
+@csrf_exempt
 @require_http_methods(["POST"])
 def logout(request):
     token = request.POST.get("token")
