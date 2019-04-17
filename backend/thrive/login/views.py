@@ -1,3 +1,4 @@
+import datetime
 import re
 import secrets
 from bson.objectid import ObjectId
@@ -9,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from thrive.mongo_connection import mongo_db
-from pymongo.results import DeleteResult
+from pymongo.results import DeleteResult, UpdateResult
 
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
@@ -365,7 +366,7 @@ def edit_course(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def delete_course(request):
+def close_course(request):
     token = request.POST.get('token')
     user = get_username_from_token(token)
 
@@ -374,13 +375,56 @@ def delete_course(request):
 
     _id = request.POST.get('id')
 
-    collection = mongo_db.get_collection('courses')
-    ret = collection.delete_many({'_id': ObjectId(_id), 'tutor': user})  # type: DeleteResult
+    collection_course = mongo_db.get_collection('courses')
+    collection_reserve = mongo_db.get_collection('reserve')
 
-    if ret.deleted_count:
+    filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    update_data = {'$set': {'status': 'closed'}}
+    ret = collection_course.update_one(filter_data, update_data)  # type: UpdateResult
+
+    if ret.modified_count:
+        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x']}}
+        update_data = {'status': 'c'}
+        collection_reserve.update_many(filter_data, {'$set': update_data})
+
+        filter_data = {'course_id': ObjectId(_id), 'status': 's'}
+        update_data = {'status': 'cs'}
+        collection_reserve.update_many(filter_data, {'$set': update_data})
+
         return HttpResponse('')
 
     return HttpResponseForbidden('the action is not allowed')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def delete_course(request):
+    token = request.POST.get('token')
+    user = get_username_from_token(token)
+
+    if user is None:
+        return HttpResponseForbidden("please login first")
+
+    _id = request.POST.get('id')
+    collection_reserve = mongo_db.get_collection('reserve')
+    collection_course = mongo_db.get_collection('courses')
+
+    filter_data = {'course_id': ObjectId(_id), 'status': 's'}
+    reservation_sample = collection_reserve.find_one(filter_data)
+    is_reserved = bool(reservation_sample)
+    if is_reserved:
+        if reservation_sample['tutor'] != user:
+            return HttpResponseForbidden('the action is not allowed')
+        return HttpResponseForbidden('the course has been reserved')
+
+    filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    ret = collection_course.delete_one(filter_data)
+    if not ret.deleted_count:
+        return HttpResponseForbidden('the action is not allowed')
+
+    collection_reserve.update_many({'course_id': ObjectId(_id)}, {'$set': {'status': 'x'}})
+
+    return HttpResponse('')
 
 
 @csrf_exempt
