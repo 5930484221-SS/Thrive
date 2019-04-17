@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CowBg from "./CowBg";
 import axios from "axios";
 import querystring from "query-string";
+import swal from "sweetalert";
 
 export default class Register extends Component {
   constructor(props) {
@@ -47,7 +48,7 @@ export default class Register extends Component {
       contact: this.state.contact
     };
 
-    const response = await axios({
+    return axios({
       method: "POST",
       url: "http://localhost:8000/api/register",
       crossDomain: true,
@@ -55,8 +56,16 @@ export default class Register extends Component {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
-    });
-    // console.log(data);
+    })
+      .then(() => {
+        swal(
+          "Welcome to THRIVE. Your registration has been done successfully."
+        );
+        return this.props.history.push("/");
+      })
+      .catch(ere => {
+        swal("There are invalid data. Please try again.");
+      });
   };
   render() {
     return (
