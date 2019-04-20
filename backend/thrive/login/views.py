@@ -1,5 +1,6 @@
 import datetime
 import re
+import datetime
 import secrets
 from bson.objectid import ObjectId
 from bson.son import SON
@@ -44,6 +45,9 @@ def get_or_create_token(user):
         token = match['token']
 
     return token
+
+def now():
+    return '11-04-2562'
 
 
 def authenticate(username, password):
@@ -448,32 +452,99 @@ def get_user(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def create_request(request):  # rename???
+def create_request(request):
+    token = request.POST.get('token')
+    tutor = request.POST.get('tutor')
+    courseId = request.POST.get('courseId')
+    user = get_username_from_token(token)
+
+    collection = mongo_db.get_collection('requests')
+    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
+    'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None})
+    return HttpResponse('')
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_learner_transactions(request):
     token = request.POST.get('token')
     user = get_username_from_token(token)
-    #create req - set flag and time stamp
-    pass
+    #get all req and res as a learner
+
+    lookup_stage = {'from': 'courses',
+                    'let': {'id': '$courseId'},
+                    'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', '$$id']}}}],
+                    'as': 'course'}
+
+    qobj = dict()
+    print(user)
+    qobj = {'learner': user}
+    pipeline = [{'$match': qobj},
+                {'$lookup': lookup_stage}]
+
+    collection = mongo_db.get_collection('requests')
+    query = collection.aggregate(pipeline)
+
+    requests=[]
+    for record in query:
+        request = {field: str(record[field]) for field in ['_id']}
+        record['_id'] =  str(record['_id'])
+        record['courseId'] =  str(record['courseId'])
+        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
+        print(record)
+        requests.append(record)
+
+    response = JsonResponse(dict(courses=requests))
+    return set_response_header(response)
 
 @csrf_exempt
-@require_http_methods(["GET"])
-def get_learner_transactions(request):  # rename???
-    token = request.GET.get('token')
+@require_http_methods(["POST"])
+def get_tutor_transactions(request):  # rename???
+    token = request.POST.get('token')
     user = get_username_from_token(token)
     #get all req and res as a learner
-    pass
 
-@csrf_exempt
-@require_http_methods(["GET"])
-def get_tutor_transactions(request):  # rename???
-    token = request.GET.get('token')
-    user = get_username_from_token(token)
-    #get all req and res as a tutor
-    pass
+    lookup_stage = {'from': 'courses',
+                    'let': {'id': '$courseId'},
+                    'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', '$$id']}}}],
+                    'as': 'course'}
+
+    qobj = dict()
+    print(user)
+    qobj = {'tutor': user}
+    pipeline = [{'$match': qobj},
+                {'$lookup': lookup_stage}]
+
+    collection = mongo_db.get_collection('requests')
+    query = collection.aggregate(pipeline)
+
+    requests=[]
+    for record in query:
+        request = {field: str(record[field]) for field in ['_id']}
+        record['_id'] =  str(record['_id'])
+        record['courseId'] =  str(record['courseId'])
+        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
+        print(record)
+        requests.append(record)
+
+    response = JsonResponse(dict(courses=requests))
+    return set_response_header(response)
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def set_flag(request):  # rename???
     token = request.POST.get('token')
     user = get_username_from_token(token)
-    #set transaction flag
-    pass
+
+    if user is None:
+        return HttpResponseForbidden("please login first")
+
+    _id = request.POST.get('id')
+    flag = request.POST.get('flag')
+
+    record = dict()
+    record['flag'] = flag
+
+    collection = mongo_db.get_collection('requests')
+    collection.update({'_id': _id}, {'$set': record})
+
+    return HttpResponse('')
