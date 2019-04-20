@@ -39,7 +39,8 @@ params list:
 | flag | flag text that want to be set |
 
 flags list:
-| param | describe |
+
+| flag | describe |
 | --- | --- |
 | wr | wait for response - initial flag |
 | wp | wait for payment - deposit 30% of full price |
