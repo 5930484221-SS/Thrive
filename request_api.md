@@ -1,26 +1,50 @@
-# Foobar
+# How to call request api
 
-Foobar is a Python library for dealing with word pluralization.
+## api/create_request
+params list:
 
-## Installation
+| param | describe |
+| --- | --- |
+| token | user's token |
+| tutor | tutor's username |
+| courseId | object id of course object |
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## api/get_learner_transactions
+params list:
 
-```bash
-pip install foobar
-```
+| param | describe |
+| --- | --- |
+| token | user's token |
 
-## Usage
+return object:
+Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a learner.
 
-```python
-import foobar
+## api/get_tutor_transactions
+params list:
 
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
-```
+| param | describe |
+| --- | --- |
+| token | user's token |
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+return object:
+Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a tutor.
 
-Please make sure to update tests as appropriate.
+## api/set_flag
+params list:
+
+| param | describe |
+| --- | --- |
+| token | user's token |
+| id | object id of request that want to set flag |
+| flag | flag text that want to be set |
+
+flags list:
+| param | describe |
+| --- | --- |
+| wr | wait for response - initial flag |
+| wp | wait for payment - deposit 30% of full price |
+| s | success - everything finish include pay deposit |
+| d | declined - tutor decline the request |
+| x | the course is delete |
+| c | the course is closed |
+| cs | the course is closed but request had been success |
