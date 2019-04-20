@@ -17,6 +17,7 @@ params list:
 | token | user's token |
 
 return object:
+
 Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a learner.
 
 ## api/get_tutor_transactions
