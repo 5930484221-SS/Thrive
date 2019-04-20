@@ -218,9 +218,6 @@ def get_user_info_from_token(token):
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_courses(request):
-    
-    print(request.GET.get('tutor'))
-    
     collection = mongo_db.get_collection('courses')
 
     limit = request.GET.get('limit')
@@ -492,8 +489,7 @@ def get_learner_transactions(request):
         record['course'][0]['_id'] =  str(record['course'][0]['_id'])
         print(record)
         requests.append(record)
-
-    response = JsonResponse(dict(courses=requests))
+    response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
 
 @csrf_exempt
@@ -525,8 +521,7 @@ def get_tutor_transactions(request):  # rename???
         record['course'][0]['_id'] =  str(record['course'][0]['_id'])
         print(record)
         requests.append(record)
-
-    response = JsonResponse(dict(courses=requests))
+    response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
 
 @csrf_exempt
