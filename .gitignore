@@ -26,5 +26,7 @@ yarn-error.log*
 # django
 .idea
 db.sqlite3
+venv/
 __pycache__/
 *.py[cod]
+*.ipynb

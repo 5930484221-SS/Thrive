@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import querystring from 'query-string';
 
 import CowBg from '../CowBg';
 import CourseContainer from './CourseContainer';
@@ -8,7 +9,13 @@ import SearchBar from './SearchBar';
 
 import Loader from '../loader/Loader';
 
-import { subjects, locations, tuitionFees, ratings } from './filterLists';
+import {
+  subjects,
+  locations,
+  tuitionFees,
+  joiningFees,
+  ratings
+} from './filterLists';
 
 class Listing extends Component {
   constructor() {
@@ -16,41 +23,104 @@ class Listing extends Component {
     this.state = {
       courseList: [],
       isLoading: true,
-      search: null,
-      subject: null,
-      location: null,
-      tuitionFee: null,
-      rating: null,
+      search: '',
+      subject: [],
+      location: '',
+      tuitionMax: '',
+      feeMax: '',
+      rating: '',
       isFilterOn: false
     };
   }
 
   async componentDidMount() {
-    const response = await axios({
-      method: 'GET',
-      crossDomain: true,
-      url: 'http://localhost:8000/api/get_courses',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        // "Access-Control-Allow-Origin": "*"
-      }
-    });
-    console.log('courses fetched: ', response.data.courses);
-    this.setState({ courseList: response.data.courses, isLoading: false });
+    try {
+      const response = await axios({
+        method: 'GET',
+        crossDomain: true,
+        url: 'http://localhost:8000/api/get_courses',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+          // "Access-Control-Allow-Origin": "*"
+        }
+      });
+      this.setState({ courseList: response.data.courses, isLoading: false });
+    } catch (error) {
+      console.log('fetch fails, please refresh the page');
+    }
   }
 
-  async onSearchChange(e) {
+  onSearchChange(e) { 
     this.setState({
       search: e.target.value
     });
-    // set courseList to the filtered results
-    // you can use subject, location, tuitionFee, and rating state to do the queries
+  }
+
+  onChange(e) {
+    this.setState({
+      location: e.target.value
+    });
+  }
+
+  genQueryString(name, arr) {
+    let str = '';
+    for (let i = 0; i < arr.length; i++) {
+      str += `&${name}=${arr[i].value}`;
+    }
+    return str;
+  }
+
+  async onFilterSubmit(e) {
+    e.preventDefault();
+    const { subject, location, tuitionMax, feeMax, rating } = this.state;
+    this.setState({
+      courseList: [],
+      isLoading: true
+    });
+
+    let queryString = '';
+
+    if (subject) queryString += this.genQueryString('subject', subject);
+    if (location) queryString += `&location=${location}`;
+    if (tuitionMax) queryString += `&tuitionMax=${tuitionMax.value}`;
+    if (feeMax) queryString += `&feeMax=${feeMax.value}`;
+    if (rating) queryString += `&ratingMin=${rating.value}`;
+    queryString = queryString.slice(1);
+
+    console.log('queryString: ', queryString);
+    try {
+      const response = await axios({
+        method: 'GET',
+        crossDomain: true,
+        url: `http://localhost:8000/api/get_courses?${queryString}`
+      });
+      this.setState({ courseList: response.data.courses, isLoading: false });
+    } catch (error) {
+      console.log('fail to search, please try again');
+    }
   }
 
   async onSearch(e) {
     e.preventDefault();
-    // set courseList to the searched results
-    // you can use search state to do the queries
+    const { search } = this.state;
+
+    this.setState({
+      courseList: [],
+      isLoading: true
+    });
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
+      });
+      console.log('courses fetched from search: ', response.data.courses);
+      this.setState(
+        { courseList: response.data.courses, isLoading: false },
+        () => console.log('courseList: ', this.state.courseList)
+      );
+    } catch (error) {
+      console.log('search fails, please try again');
+    }
   }
 
   handleChange(index, selectedOption) {
@@ -67,12 +137,17 @@ class Listing extends Component {
         break;
       case 2:
         this.setState({
-          tuitionFee: selectedOption
+          tuitionMax: selectedOption
         });
         break;
       case 3:
         this.setState({
           rating: selectedOption
+        });
+        break;
+      case 4:
+        this.setState({
+          feeMax: selectedOption
         });
         break;
     }
@@ -84,12 +159,14 @@ class Listing extends Component {
       search,
       subject,
       location,
-      tuitionFee,
+      tuitionMax,
+      feeMax,
       rating,
-      isFilterOn
+      isFilterOn,
+      courseList
     } = this.state;
     // take a look at the states in the console!
-    console.log({ search, subject, location, tuitionFee, rating });
+    console.log({ search, subject, location, tuitionMax, feeMax, rating });
 
     return (
       <div>
@@ -98,12 +175,13 @@ class Listing extends Component {
         <CowBg />
         <div className="py-4">
           <SearchBar
+            placeHolder="Search Tutor"
             onChange={this.onSearchChange.bind(this)}
             onSearch={this.onSearch.bind(this)}
             searchValue={search}
           />
           <div>
-            {isFilterOn ? (
+            {isFilterOn && !isLoading ? (
               <div className="card bg-transparent mt-3">
                 <div className="card-body">
                   <div className="card-title text-center">
@@ -113,7 +191,8 @@ class Listing extends Component {
                           isFilterOn: false,
                           subject: null,
                           location: null,
-                          tuitionFee: null,
+                          tuitionMax: null,
+                          feeMax: null,
                           rating: null
                         })
                       }
@@ -123,61 +202,81 @@ class Listing extends Component {
                       Filters <i className="fas fa-angle-up" />{' '}
                     </a>
                   </div>
+                  <form onSubmit={this.onFilterSubmit.bind(this)}>
+                    <div className="row my-3">
+                      <div className="col-lg-2">Subject</div>
 
-                  <div className="row my-3">
-                    <div className="col-lg-2">Subject</div>
+                      <div className="col-lg-10">
+                        <Select
+                          value={subject}
+                          onChange={this.handleChange.bind(this, 0)}
+                          options={subjects}
+                          isMulti={true}
+                          placeholder="Subject"
+                          name="subject"
+                        />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-lg-2">Location</div>
 
-                    <div className="col-lg-10">
-                      <Select
-                        value={subject}
-                        onChange={this.handleChange.bind(this, 0)}
-                        options={subjects}
-                        isMulti={true}
-                        placeholder="Subject"
-                        name="subject"
+                      <div className="col-lg-10">
+                        <input
+                          type="text"
+                          placeholder="Location"
+                          className="form-control"
+                          onChange={this.onChange.bind(this)}
+                          value={location}
+                        />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-lg-2">Tuition/Hour</div>
+
+                      <div className="col-lg-10">
+                        <Select
+                          value={tuitionMax}
+                          onChange={this.handleChange.bind(this, 2)}
+                          options={tuitionFees}
+                          placeholder="Tuition"
+                          name="tuitionMax"
+                        />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-lg-2">Joining Fee</div>
+
+                      <div className="col-lg-10">
+                        <Select
+                          value={feeMax}
+                          onChange={this.handleChange.bind(this, 4)}
+                          options={joiningFees}
+                          placeholder="Joining Fee"
+                          name="feeMax"
+                        />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-lg-2">Rating</div>
+
+                      <div className="col-lg-10">
+                        <Select
+                          value={rating}
+                          onChange={this.handleChange.bind(this, 3)}
+                          options={ratings}
+                          placeholder="Rating"
+                          name="rating"
+                        />
+                      </div>
+                    </div>
+                    <div classNfame="text-center">
+                      <input
+                        type="submit"
+                        value="Search"
+                        className="btn btn-outline-dark btn-lg"
                       />
                     </div>
-                  </div>
-                  <div className="row mb-3">
-                    <div className="col-lg-2">Location</div>
-
-                    <div className="col-lg-10">
-                      <Select
-                        value={location}
-                        onChange={this.handleChange.bind(this, 1)}
-                        options={locations}
-                        isMulti={true}
-                        placeholder="Location"
-                        name="location"
-                      />
-                    </div>
-                  </div>
-                  <div className="row mb-3">
-                    <div className="col-lg-2">Tuition Fee</div>
-
-                    <div className="col-lg-10">
-                      <Select
-                        value={tuitionFee}
-                        onChange={this.handleChange.bind(this, 2)}
-                        options={tuitionFees}
-                        placeholder="Tuition Fee"
-                        name="tuitionFee"
-                      />
-                    </div>
-                  </div>
-                  <div className="row mb-3">
-                    <div className="col-lg-2">Rating</div>
-
-                    <div className="col-lg-10">
-                      <Select
-                        value={rating}
-                        onChange={this.handleChange.bind(this, 3)}
-                        options={ratings}
-                        placeholder="Rating"
-                        name="rating"
-                      />
-                    </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             ) : (
@@ -200,11 +299,16 @@ class Listing extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="card-deck">
-            {this.state.courseList.map((c, index) => (
+          {/* {console.log(courseList)} */}
+          {courseList.length > 0 || isLoading ? (
+            courseList.map((c, index) => (
               <CourseContainer key={index} info={c} index={index} />
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="display-4 m-auto">
+              No <span className="text-orange">Results</span>
+            </div>
+          )}
         </div>
       </div>
     );
