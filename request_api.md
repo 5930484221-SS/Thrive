@@ -48,4 +48,4 @@ flags list:
 | d | declined - tutor decline the request |
 | x | the course is delete |
 | c | the course is closed |
-| cs | the course is closed but request had been success |
+| cs | the course is closed but request had been success before |
