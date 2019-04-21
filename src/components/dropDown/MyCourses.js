@@ -25,9 +25,9 @@ const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
 });
 
-const tutor = "tutor";
-const learner = "learner";
-const notification = "notification";
+const TUTOR = "TUTOR";
+const LEARNER = "LEARNER";
+const NOTIFICATION = "NOTIFICATION";
 
 class MyCourses extends Component {
   constructor() {
@@ -36,7 +36,7 @@ class MyCourses extends Component {
       coursesAsTutor: [],
       coursesAsLearner: [],
       isLoading: false,
-      currentSubPage: tutor
+      currentSubPage: TUTOR
     };
   }
 
@@ -103,7 +103,7 @@ class MyCourses extends Component {
 
   renderContent() {
     const currentSubPage = this.state.currentSubPage;
-    if (currentSubPage === tutor) {
+    if (currentSubPage === TUTOR) {
       return this.state.coursesAsTutor.map(course => {
         return (
           <TutorCourseContainer info={course}>
@@ -127,7 +127,7 @@ class MyCourses extends Component {
           </TutorCourseContainer>
         );
       });
-    } else if (currentSubPage === learner) {
+    } else if (currentSubPage === LEARNER) {
       return this.state.coursesAsLearner.map(course => (
         <TutorCourseContainer info={course}>
           <div>
@@ -136,7 +136,7 @@ class MyCourses extends Component {
           </div>
         </TutorCourseContainer>
       ));
-    } else if (currentSubPage === notification) {
+    } else if (currentSubPage === NOTIFICATION) {
       return <Noti />;
     } else {
       return [];
@@ -167,10 +167,10 @@ class MyCourses extends Component {
           <div className="row text-center">
             <div className="col border-right">
               <a className="display-4 topic btn">
-                {currentSubPage === tutor ? (
+                {currentSubPage === TUTOR ? (
                   <span className="underline-on-hover">As a tutor</span>
                 ) : (
-                  <span id={tutor} onClick={this.onSubNavClick}>
+                  <span id={TUTOR} onClick={this.onSubNavClick}>
                     As a tutor
                   </span>
                 )}
@@ -179,10 +179,10 @@ class MyCourses extends Component {
             </div>
             <div className="col border-right">
               <a className="display-4 topic btn">
-                {currentSubPage === learner ? (
+                {currentSubPage === LEARNER ? (
                   <span className="underline-on-hover">As a learner</span>
                 ) : (
-                  <span id={learner} onClick={this.onSubNavClick}>
+                  <span id={LEARNER} onClick={this.onSubNavClick}>
                     As a learner
                   </span>
                 )}
@@ -191,10 +191,10 @@ class MyCourses extends Component {
             </div>
             <div className="col">
               <a className="display-4 topic btn">
-                {currentSubPage === notification ? (
+                {currentSubPage === NOTIFICATION ? (
                   <span className="underline-on-hover">Request/Response</span>
                 ) : (
-                  <span id={notification} onClick={this.onSubNavClick}>
+                  <span id={NOTIFICATION} onClick={this.onSubNavClick}>
                     Request/Response
                   </span>
                 )}
