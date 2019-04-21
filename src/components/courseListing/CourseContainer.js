@@ -1,7 +1,31 @@
-import React, { Component } from 'react';
-import './CourseContainer.css';
+import React, { Component } from "react";
+import "./CourseContainer.css";
+
+import axios from "axios";
+import querystring from "query-string";
 
 class CourseContainer extends Component {
+  onRequest = () => {
+    axios({
+      method: "POST",
+      url: "http://127.0.0.1:8000/api/create_request",
+      crossDomain: true,
+      data: querystring.stringify({
+        token: window.localStorage.token,
+        tutor: this.props.info.tutor,
+        courseId: this.props.info._id
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+      .then(console.log)
+      // .catch(error => {
+      //   alert("Failed to Delete the course\n" + error);
+      //   console.log(error);
+      // });
+  };
+
   render() {
     const {
       topic,
@@ -57,7 +81,9 @@ class CourseContainer extends Component {
                 <div className="modal-footer">
                   <button className="btn btn-orange">See more review</button>
 
-                  <button className="btn btn-secondary">Reserve</button>
+                  <button className="btn btn-secondary" onClick = {this.onRequest}>
+                    Request reservation
+                  </button>
                 </div>
               </div>
             </div>

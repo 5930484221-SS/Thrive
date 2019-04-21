@@ -456,7 +456,7 @@ def create_request(request):
     user = get_username_from_token(token)
 
     collection = mongo_db.get_collection('requests')
-    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
+    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'REQUESTED',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None})
     return HttpResponse('')
 
@@ -473,7 +473,7 @@ def get_learner_transactions(request):
                     'as': 'course'}
 
     qobj = dict()
-    print(user)
+    # print(user)
     qobj = {'learner': user}
     pipeline = [{'$match': qobj},
                 {'$lookup': lookup_stage}]
@@ -487,7 +487,7 @@ def get_learner_transactions(request):
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
         record['course'][0]['_id'] =  str(record['course'][0]['_id'])
-        print(record)
+        # print(record)
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
@@ -505,7 +505,7 @@ def get_tutor_transactions(request):  # rename???
                     'as': 'course'}
 
     qobj = dict()
-    print(user)
+    # print(user)
     qobj = {'tutor': user}
     pipeline = [{'$match': qobj},
                 {'$lookup': lookup_stage}]
@@ -519,7 +519,7 @@ def get_tutor_transactions(request):  # rename???
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
         record['course'][0]['_id'] =  str(record['course'][0]['_id'])
-        print(record)
+        # print(record)
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
@@ -540,6 +540,6 @@ def set_flag(request):  # rename???
     record['flag'] = flag
 
     collection = mongo_db.get_collection('requests')
-    collection.update({'_id': _id}, {'$set': record})
+    collection.update({'_id': ObjectId(_id)}, {'$set': record})
 
     return HttpResponse('')

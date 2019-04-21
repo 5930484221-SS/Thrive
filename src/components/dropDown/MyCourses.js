@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MyCourseContainer from "./MyCourseContainer";
 import MyCourseContentError from "./MyCourseContentError";
-import Noti from "./Noti";
+import Noti from "./Notifications";
 import Loader from "../loader/Loader";
 
 import CowBg from "../CowBg";
@@ -106,7 +106,7 @@ class MyCourses extends Component {
     if (currentSubPage === TUTOR) {
       return this.state.coursesAsTutor.map(course => {
         return (
-          <MyCourseContainer info={course}>
+          <MyCourseContainer info={course} key={course._id}>
             <div> 
               <button
                 className="btn btn-orange"
@@ -129,7 +129,7 @@ class MyCourses extends Component {
       });
     } else if (currentSubPage === LEARNER) {
       return this.state.coursesAsLearner.map(course => (
-        <MyCourseContainer info={course}>
+        <MyCourseContainer info={course} key={course._id}>
           <div>
             {" "}
             <button className="btn btn-success">Review</button>
