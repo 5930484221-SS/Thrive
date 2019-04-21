@@ -15,6 +15,6 @@ urlpatterns = [
     path('create_request', views.create_request, name='create_request'),
     path('get_learner_transactions', views.get_learner_transactions, name='get_learner_transactions'),
     path('get_tutor_transactions', views.get_tutor_transactions, name='get_tutor_transactions'),
-    path('set_flag', views.set_flag, name='set_flag')
-    path('close_course', views.close_course, name='close_course'),
+    path('set_flag', views.set_flag, name='set_flag'),
+    path('close_course', views.close_course, name='close_course')
 ]
