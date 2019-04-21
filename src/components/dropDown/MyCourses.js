@@ -1,17 +1,17 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import MyCourseContainer from "./MyCourseContainer";
+import MyCourseContentError from "./MyCourseContentError";
+import Noti from "./Noti";
+import Loader from "../loader/Loader";
+
 import CowBg from "../CowBg";
 import "./myCourses.css";
 import "../courseListing/CourseContainer.css";
-import MyCoursesContainer from "./MyCoursesContainer";
 import books from "../../img/books.svg";
 import teacher from "../../img/teacher.svg";
 import noti from "../../img/notification.svg";
 import edu from "../../img/education.svg";
-import Loader from "../loader/Loader";
-import NoCourse from "./NoCourses";
-import TutorCourseContainer from "./TutorCourseContainer";
-import { Link } from "react-router-dom";
-import Noti from "./Noti";
 
 //query
 import axios from "axios";
@@ -25,9 +25,9 @@ const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
 });
 
-const tutor = "tutor";
-const learner = "learner";
-const notification = "notification";
+const TUTOR = "TUTOR";
+const LEARNER = "LEARNER";
+const NOTIFICATION = "NOTIFICATION";
 
 class MyCourses extends Component {
   constructor() {
@@ -36,7 +36,7 @@ class MyCourses extends Component {
       coursesAsTutor: [],
       coursesAsLearner: [],
       isLoading: false,
-      currentSubPage: tutor
+      currentSubPage: TUTOR
     };
   }
 
@@ -101,13 +101,51 @@ class MyCourses extends Component {
     this.props.setEditCourse(info);
   };
 
+  renderContent() {
+    const currentSubPage = this.state.currentSubPage;
+    if (currentSubPage === TUTOR) {
+      return this.state.coursesAsTutor.map(course => {
+        return (
+          <MyCourseContainer info={course}>
+            <div> 
+              <button
+                className="btn btn-orange"
+                onClick={() => this.onEditCourse(course)}
+              >
+                <Link to="/create_course" style={{ color: "white" }}>
+                  Edit
+                </Link>
+              </button>
+              <span> </span>
+              <button
+                className="btn btn-secondary"
+                onClick={() => this.onDeleteCourse(course)}
+              >
+                Delete
+              </button>
+            </div>
+          </MyCourseContainer>
+        );
+      });
+    } else if (currentSubPage === LEARNER) {
+      return this.state.coursesAsLearner.map(course => (
+        <MyCourseContainer info={course}>
+          <div>
+            {" "}
+            <button className="btn btn-success">Review</button>
+          </div>
+        </MyCourseContainer>
+      ));
+    } else if (currentSubPage === NOTIFICATION) {
+      return <Noti />;
+    } else {
+      return [];
+    }
+  }
+
   render() {
-    const {
-      coursesAsTutor,
-      coursesAsLearner,
-      isLoading,
-      currentSubPage
-    } = this.state;
+    const { isLoading, currentSubPage } = this.state;
+
     return (
       <div>
         <CowBg />
@@ -124,10 +162,10 @@ class MyCourses extends Component {
           <div className="row text-center">
             <div className="col border-right">
               <a className="display-4 topic btn">
-                {currentSubPage === tutor ? (
+                {currentSubPage === TUTOR ? (
                   <span className="underline-on-hover">As a tutor</span>
                 ) : (
-                  <span id={tutor} onClick={this.onSubNavClick}>
+                  <span id={TUTOR} onClick={this.onSubNavClick}>
                     As a tutor
                   </span>
                 )}
@@ -136,10 +174,10 @@ class MyCourses extends Component {
             </div>
             <div className="col border-right">
               <a className="display-4 topic btn">
-                {currentSubPage === learner ? (
+                {currentSubPage === LEARNER ? (
                   <span className="underline-on-hover">As a learner</span>
                 ) : (
-                  <span id={learner} onClick={this.onSubNavClick}>
+                  <span id={LEARNER} onClick={this.onSubNavClick}>
                     As a learner
                   </span>
                 )}
@@ -148,10 +186,10 @@ class MyCourses extends Component {
             </div>
             <div className="col">
               <a className="display-4 topic btn">
-                {currentSubPage === notification ? (
+                {currentSubPage === NOTIFICATION ? (
                   <span className="underline-on-hover">Request/Response</span>
                 ) : (
-                  <span id={notification} onClick={this.onSubNavClick}>
+                  <span id={NOTIFICATION} onClick={this.onSubNavClick}>
                     Request/Response
                   </span>
                 )}
@@ -163,51 +201,7 @@ class MyCourses extends Component {
 
           {/* Content */}
           <div className="container">
-            {currentSubPage === tutor
-              ? // this.state.hasCourse ? (
-                coursesAsTutor.map(course => {
-                  return (
-                    <TutorCourseContainer info={course}>
-                      <div>
-                        <button
-                          className="btn btn-orange"
-                          onClick={() => this.onEditCourse(course)}
-                        >
-                          <Link to="/create_course" style={{ color: "white" }}>
-                            Edit
-                          </Link>
-                        </button>
-                        <span> </span>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => this.onDeleteCourse(course)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </TutorCourseContainer>
-                  );
-                })
-              : // ) : (
-                //   <NoCourse />
-                // )
-                null}
-
-            {currentSubPage === learner
-              ? // this.state.hasCourse ? (
-                coursesAsLearner.map(course => (
-                  <TutorCourseContainer info={course}>
-                    <div>
-                      {" "}
-                      <button className="btn btn-success">Review</button>
-                    </div>
-                  </TutorCourseContainer>
-                ))
-              : // ) : (
-                // <NoCourse />
-                // )
-                null}
-            {currentSubPage === notification ? <Noti /> : null}
+            <MyCourseContentError>{this.renderContent()}</MyCourseContentError>
           </div>
         </div>
 
