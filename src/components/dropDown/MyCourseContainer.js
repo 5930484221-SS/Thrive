@@ -21,12 +21,13 @@ export default class TutorCourseContainer extends Component {
     } = this.props.info;
 
     return (
-      <div className="courseCard">
+      <div className="courseCard container">
         <div className="col-3">
           <img
             className="card-img-top img-fluid"
             src={img}
             alt="unable to load picture"
+            style={{ marginTop: "10%", marginBottom: "10%" }}
           />
         </div>
 

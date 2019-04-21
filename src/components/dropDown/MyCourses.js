@@ -1,17 +1,17 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import MyCourseContainer from "./MyCourseContainer";
+import MyCourseContentError from "./MyCourseContentError";
+import Noti from "./Noti";
+import Loader from "../loader/Loader";
+
 import CowBg from "../CowBg";
 import "./myCourses.css";
 import "../courseListing/CourseContainer.css";
-import MyCoursesContainer from "./MyCoursesContainer";
 import books from "../../img/books.svg";
 import teacher from "../../img/teacher.svg";
 import noti from "../../img/notification.svg";
 import edu from "../../img/education.svg";
-import Loader from "../loader/Loader";
-import MyCourseContentError from "./MyCourseContentError";
-import TutorCourseContainer from "./TutorCourseContainer";
-import { Link } from "react-router-dom";
-import Noti from "./Noti";
 
 //query
 import axios from "axios";
@@ -106,8 +106,8 @@ class MyCourses extends Component {
     if (currentSubPage === TUTOR) {
       return this.state.coursesAsTutor.map(course => {
         return (
-          <TutorCourseContainer info={course}>
-            <div>
+          <MyCourseContainer info={course}>
+            <div> 
               <button
                 className="btn btn-orange"
                 onClick={() => this.onEditCourse(course)}
@@ -124,17 +124,17 @@ class MyCourses extends Component {
                 Delete
               </button>
             </div>
-          </TutorCourseContainer>
+          </MyCourseContainer>
         );
       });
     } else if (currentSubPage === LEARNER) {
       return this.state.coursesAsLearner.map(course => (
-        <TutorCourseContainer info={course}>
+        <MyCourseContainer info={course}>
           <div>
             {" "}
             <button className="btn btn-success">Review</button>
           </div>
-        </TutorCourseContainer>
+        </MyCourseContainer>
       ));
     } else if (currentSubPage === NOTIFICATION) {
       return <Noti />;
@@ -144,12 +144,7 @@ class MyCourses extends Component {
   }
 
   render() {
-    const {
-      coursesAsTutor,
-      coursesAsLearner,
-      isLoading,
-      currentSubPage
-    } = this.state;
+    const { isLoading, currentSubPage } = this.state;
 
     return (
       <div>

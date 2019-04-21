@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import querystring from 'query-string';
-import { loginUserSuccess } from '../actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import axios from "axios";
+import querystring from "query-string";
+import { loginUserSuccess } from "../actions";
+import swal from "sweetalert";
 
 class LoginAndSignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: ''
+      username: "",
+      password: ""
     };
   }
 
@@ -28,22 +29,23 @@ class LoginAndSignUp extends Component {
   onSubmit = async e => {
     e.preventDefault();
     const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/login',
+      method: "POST",
+      url: "http://localhost:8000/api/login",
       crossDomain: true,
       data: querystring.stringify({
         username: this.state.username,
         password: this.state.password
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     });
 
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('username', this.state.username);
-    alert('ok');
-    window.location = '/';
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("username", this.state.username);
+    const success = await swal("Login sucessfully! Welcome to THRIVE.");
+    // alert("ok");
+    window.location = "/";
   };
 
   render() {
@@ -167,7 +169,11 @@ class LoginAndSignUp extends Component {
             </div>
           </div>
         </li>
-        <button className="nav-item btn btn-orange btn-rounded">SIGN UP</button>
+        <a href="/register">
+          <button className="nav-item btn btn-orange btn-rounded">
+            SIGN UP
+          </button>
+        </a>
       </ul>
     );
   }
