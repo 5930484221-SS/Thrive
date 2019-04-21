@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import CowBg from '../CowBg';
+import React, { Component } from "react";
+import CowBg from "../CowBg";
+import CourseContainer from "../courseListing/CourseContainer";
 
 export default class Profile extends Component {
   render() {
@@ -7,6 +8,6 @@ export default class Profile extends Component {
       <div>
         <CowBg />
       </div>
-    )
+    );
   }
 }
