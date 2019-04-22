@@ -98,6 +98,10 @@ export default class Register extends Component {
                     placeholder="first name"
                     onChange={this.handleInputChange}
                     name="firstName"
+                    maxLength="30"
+                    required
+                    pattern="[A-Za-z]*"
+                    title="Must contain only english alphabet"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -109,6 +113,10 @@ export default class Register extends Component {
                     placeholder="last name"
                     onChange={this.handleInputChange}
                     name="lastName"
+                    maxLength="30"
+                    required
+                    pattern="[A-Za-z]*"
+                    title="Must contain only english alphabet"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -120,6 +128,10 @@ export default class Register extends Component {
                     placeholder="nickname"
                     onChange={this.handleInputChange}
                     name="nickname"
+                    maxLength="10"
+                    required
+                    pattern="[A-Za-z]*"
+                    title="Must contain only english alphabet"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -130,6 +142,10 @@ export default class Register extends Component {
                     placeholder="address"
                     onChange={this.handleInputChange}
                     name="address"
+                    maxLength="1024"
+                    required
+                    pattern="[A-Za-z0-9]*"
+                    title="Must contain only english alphabet and number"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -141,6 +157,9 @@ export default class Register extends Component {
                     placeholder="phone number"
                     onChange={this.handleInputChange}
                     name="phoneNumber"
+                    required
+                    maxLength="10"
+                    minLength="10"
                   />
                 </div>
               </div>
@@ -154,6 +173,7 @@ export default class Register extends Component {
                     placeholder="email"
                     onChange={this.handleInputChange}
                     name="email"
+                    required
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -165,6 +185,7 @@ export default class Register extends Component {
                     placeholder="contact"
                     onChange={this.handleInputChange}
                     name="contact"
+                    required
                   />
                 </div>
                 <br />
@@ -182,6 +203,10 @@ export default class Register extends Component {
                     placeholder="diaplay name"
                     onChange={this.handleInputChange}
                     name="displayName"
+                    maxLength="30"
+                    required
+                    pattern="[A-Za-z0-9]*"
+                    title="Must contain only english alphabet and number"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -193,6 +218,11 @@ export default class Register extends Component {
                     placeholder="username"
                     onChange={this.handleInputChange}
                     name="username"
+                    maxLength="30"
+                    minLength="4"
+                    required
+                    pattern="[A-Za-z0-9]*"
+                    title="Must contain only english alphabet and number at least 4 and doesn't more than 30 characters"
                   />
                 </div>
                 <div className="form-group col-md-12">
@@ -204,6 +234,10 @@ export default class Register extends Component {
                     placeholder="password"
                     onChange={this.handleInputChange}
                     name="password"
+                    maxLength="30"
+                    minLength="6"
+                    required
+                    title="Must contain 6 or more character but not more than 30 character"
                   />
                 </div>
                 <div className="form-group col-md-12 text-right">
