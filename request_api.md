@@ -1,6 +1,6 @@
 # How to call request api
 
-## api/create_request
+## api/create_reserve
 params list:
 
 | param | describe |
@@ -30,6 +30,33 @@ params list:
 return object:
 
 Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a tutor.
+
+## api/accept
+params list:
+
+| param | describe |
+| --- | --- |
+| token | tutor's usertoken |
+| id | object id of request that want to accept (set flag tp 'wp' and set responseTimestamp) |
+
+## api/decline
+params list:
+
+| param | describe |
+| --- | --- |
+| token | tutor's usertoken |
+| id | object id of request that want to decline (set flag tp 'd' and set responseTimestamp) |
+
+## api/charge
+params list:
+
+| param | describe |
+| --- | --- |
+| token | user's token |
+| card_token | card token which obtain from stripe |
+| amount | amount of money that want to charge |
+| currency | money currency ref https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts |
+
 
 ## api/set_flag
 params list:
