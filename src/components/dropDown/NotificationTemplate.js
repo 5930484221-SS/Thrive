@@ -1,5 +1,6 @@
 import React from "react";
 import clock from "../../img/clock.svg";
+import StripeCheckout from "react-stripe-checkout";
 
 import axios from "axios";
 import querystring from "query-string";
@@ -11,15 +12,14 @@ export const NOTIFICATION_TYPE = {
   s: "s"
 };
 
-const onResponse = (event, _id) => {
+const onAccept = _id => {
   axios({
     method: "POST",
-    url: "http://127.0.0.1:8000/api/set_flag",
+    url: "http://127.0.0.1:8000/api/accept",
     crossDomain: true,
     data: querystring.stringify({
       token: window.localStorage.token,
-      id: _id,
-      flag: event.target.name
+      id: _id
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -29,6 +29,49 @@ const onResponse = (event, _id) => {
     .catch(error => {
       console.log(error);
     });
+};
+
+const onDecline = _id => {
+  axios({
+    method: "POST",
+    url: "http://127.0.0.1:8000/api/decline",
+    crossDomain: true,
+    data: querystring.stringify({
+      token: window.localStorage.token,
+      id: _id,
+      currency: "THB"
+    }),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(console.log)
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+const onCheckout = (checkoutToken, _id, fee) => {
+  axios({
+    method: "POST",
+    url: "http://127.0.0.1:8000/api/charge",
+    crossDomain: true,
+    data: querystring.stringify({
+      token: window.localStorage.token,
+      request_id: _id,
+      card_token: checkoutToken.id,
+      amount: fee * 100,
+      currency: "THB"
+    }),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(console.log)
+    .catch(error => {
+      console.log(error.response);
+    });
+  console.log(checkoutToken);
 };
 
 export const TutorNotification = props => {
@@ -70,7 +113,7 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-success btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={event => onResponse(event, _id)}
+                    onClick={() => onAccept(_id)}
                     name={NOTIFICATION_TYPE.wp}
                   >
                     Accept
@@ -78,7 +121,7 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-danger btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={event => onResponse(event, _id)}
+                    onClick={() => onDecline(_id)}
                     name={NOTIFICATION_TYPE.d}
                   >
                     Decline
@@ -195,13 +238,15 @@ export const TutorNotification = props => {
                   </div>
                 </td>
                 <td style={{ textAlign: "left" }}>
+                  Learner
                   <span className="text-success font-weight-bold">
-                    _Learner_Name_
+                    {" " + learner + " "}
                   </span>
-                  has been pay fee for
+                  had paid fee for your
                   <span className="text-info font-weight-bold">
-                    _course_Name_
+                    {" " + topic + " "}
                   </span>
+                  course
                 </td>
                 <td className="text-secondary text-right">
                   <img src={clock} className="timeClk" />
@@ -223,8 +268,8 @@ export const TutorNotification = props => {
 };
 
 export const LearnerNotification = props => {
-  const { tutor, flag, course } = props.info;
-  const { img, topic } = course[0];
+  const { tutor, flag, course, _id } = props.info;
+  const { img, topic, fee } = course;
   switch (flag) {
     case NOTIFICATION_TYPE.wr:
       return (
@@ -297,12 +342,23 @@ export const LearnerNotification = props => {
               </tr>
               <tr>
                 <td colSpan="2">
-                  <button
-                    className="btn btn btn btn-outline-warning btn-lg"
-                    style={{ margin: "20px 40px 20px 10px", width: "30%" }}
+                  <StripeCheckout
+                    stripeKey="pk_test_IQqSzL2RDKzgQnK2dJUc4kvo00b2cmxd73"
+                    amount={fee * 100}
+                    image={img}
+                    currency="THB"
+                    token={token => onCheckout(token, _id, fee)}
+                    name={"Buy " + topic + " course"}
+                    description={"Instruction by " + tutor}
+                    ComponentClass="form-group"
                   >
-                    Pay for fee
-                  </button>
+                    <button
+                      className="btn btn btn btn-outline-warning btn-lg"
+                      style={{ margin: "20px 40px 20px 10px", width: "30%" }}
+                    >
+                      Pay for fee
+                    </button>
+                  </StripeCheckout>
                 </td>
               </tr>
             </tbody>
@@ -352,7 +408,7 @@ export const LearnerNotification = props => {
         </div>
       );
       break;
-    
+
     case NOTIFICATION_TYPE.s:
       return (
         <div>
@@ -372,11 +428,11 @@ export const LearnerNotification = props => {
                   </div>
                 </td>
                 <td style={{ textAlign: "left" }}>
-                  Paid successed
+                  Your payment for
                   <span className="text-info font-weight-bold">
                     {" " + topic}
                   </span>
-                  {" course"}
+                  {" course has been successfully processed"}
                 </td>
                 <td className="text-secondary text-right">
                   <img src={clock} className="timeClk" />
@@ -391,7 +447,6 @@ export const LearnerNotification = props => {
         </div>
       );
       break;
-    
 
     default:
       return null;
