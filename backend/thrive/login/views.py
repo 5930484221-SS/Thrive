@@ -101,7 +101,7 @@ def edit_profile(request):
     if contact: update_data['contact'] = contact
 
     collection = mongo_db.get_collection('users')
-    collection.update_one(filter_data, update_data)
+    collection.update_one(filter_data, {'$set': update_data})
 
     return HttpResponse('')
 
