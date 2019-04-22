@@ -2,6 +2,7 @@ import datetime
 import re
 import datetime
 import secrets
+import stripe
 from bson.objectid import ObjectId
 from bson.son import SON
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound, JsonResponse,
@@ -13,12 +14,14 @@ from django.views.decorators.http import require_http_methods
 from thrive.mongo_connection import mongo_db
 from pymongo.results import DeleteResult, UpdateResult
 
+stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
                  'fee', 'location', 'subject', 'tuition', 'img']
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
 user_info_fields = ['user', 'display']
+course_info_in_reserve = ['topic', 'img']
 
 
 def safe_cast(dtype, value, default=None):
@@ -69,7 +72,6 @@ def get_username_from_token(token):
 
     return user
 
-
 @csrf_exempt
 @require_http_methods(["POST"])
 def edit_profile(request):
@@ -100,10 +102,9 @@ def edit_profile(request):
     if contact: update_data['contact'] = contact
 
     collection = mongo_db.get_collection('users')
-    collection.update_one(filter_data, update_data)
+    collection.update_one(filter_data, {'$set': update_data})
 
     return HttpResponse('')
-
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -183,8 +184,6 @@ def create_course(request):
         if field in course_number_fields:
             value = safe_cast(float, value, 0)
         record[field] = value
-
-    course_fields['status'] = 'open'
 
     record['rating_1'] = 0
     record['rating_2'] = 0
@@ -287,7 +286,7 @@ def get_courses(request):
 
     courses = []
     for record in query:
-        course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
+        course = {field: str(record[field]) for field in course_fields + ['_id']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
         courses.append(course)
@@ -522,17 +521,25 @@ def get_user(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def create_request(request):
+def create_reserve(request):
     token = request.POST.get('token')
     tutor = request.POST.get('tutor')
     courseId = request.POST.get('courseId')
     user = get_username_from_token(token)
 
     collection = mongo_db.get_collection('reserve')
-    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
-    'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None})
-    return HttpResponse('')
+    match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
 
+    print(match)
+
+    if match and match['flag'] != 'd':
+        return HttpResponseNotFound('Request is in process')
+
+    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
+    'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})
+    return HttpResponse('Request sent')
+  
+  
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_learner_transactions(request):
@@ -557,10 +564,14 @@ def get_learner_transactions(request):
     requests=[]
     for record in query:
         request = {field: str(record[field]) for field in ['_id']}
+
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
-        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
-        # print(record)
+
+        course = dict()
+        for field in course_info_in_reserve:
+            course[field] = str(record['course'][0][field])
+        record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
@@ -599,7 +610,7 @@ def get_tutor_transactions(request):  # rename???
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def set_flag(request):  # rename???
+def accept(request):
     token = request.POST.get('token')
     user = get_username_from_token(token)
 
@@ -607,14 +618,10 @@ def set_flag(request):  # rename???
         return HttpResponseForbidden("please login first")
 
     _id = request.POST.get('id')
-    flag = request.POST.get('flag')
 
     record = dict()
-    record['flag'] = flag
-    if(flag == 's'):
-        record['paymentTimestamp'] = datetime.datetime.now()
-    elif(flag == 'wp'):
-        record['responseTimestamp'] = datetime.datetime.now()
+    record['flag'] = 'wp'
+    record['responseTimestamp'] = datetime.datetime.now()
 
     collection = mongo_db.get_collection('reserve')
     collection.update({'_id': ObjectId(_id)}, {'$set': record})
@@ -641,3 +648,60 @@ def get_dashboard_data(request):
 
     response = JsonResponse(result)
     return set_response_header(response)
+
+    return HttpResponse('reserve was accepted')
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def decline(request):
+    token = request.POST.get('token')
+    user = get_username_from_token(token)
+
+    if user is None:
+        return HttpResponseForbidden("please login first")
+
+    _id = request.POST.get('id')
+
+    record = dict()
+    record['flag'] = 'd'
+    record['responseTimestamp'] = datetime.datetime.now()
+
+    collection = mongo_db.get_collection('reserve')
+    collection.update({'_id': ObjectId(_id)}, {'$set': record})
+
+    return HttpResponse('reserve was declined')
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def charge(request):
+    token = request.POST.get('token')
+    user = get_username_from_token(token)
+
+    if user is None:
+        return HttpResponseForbidden("please login first")
+
+    card_token = request.POST.get('card_token')
+    amount = request.POST.get('amount')
+    currency = request.POST.get('currency')
+
+    try:
+        charge = stripe.Charge.create(
+            amount = amount,
+            currency = currency,
+            source = card_token,
+            description = "Charge for user: " + user
+        )
+    except Exception as e:
+        return HttpResponseForbidden(e)
+
+    collection = mongo_db.get_collection('reserve')
+    request_id = request.POST.get('request_id')
+
+    record = dict()
+    record['flag'] = 's'
+    record['chargeId'] = charge['id']
+    record['paymentTimestamp'] = datetime.datetime.now()
+    collection.update({'_id': ObjectId(request_id)}, {'$set': record})
+
+    response = JsonResponse(dict(charge=charge))
+    return HttpResponse(response)
