@@ -120,6 +120,8 @@ def register(request):
     email = request.POST.get("email", '')
     contact = request.POST.get("contact", '')
 
+    reg_dt = datetime.datetime.now()
+
     if username is None or password is None:
         return HttpResponseBadRequest('Please provide both username and password')
 
@@ -142,6 +144,8 @@ def register(request):
         'phone_number': phone_number,
         'email': email,
         'contact': contact,
+
+        'reg_dt': reg_dt,
     }
     collection.insert_one(record)
 
@@ -349,7 +353,7 @@ def get_tutors(request):
 def user(request):
     result_keys = {'user': 'username', 'first_name': 'firstName', 'last_name': 'lastName', 'nickname': 'nickname',
                    'display': 'displayName', 'address': 'address', 'phone_number': 'phoneNumber', 'email': 'email',
-                   'contact': 'contact'}
+                   'contact': 'contact', 'is_admin': 'isAdmin'}
 
     collection = mongo_db.get_collection('users')
 
@@ -466,10 +470,42 @@ def delete_course(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def get_courses_by_student(request):  # rename???
+def get_courses_by_learner(request):  # not done
     token = request.POST.get('token')
-    user = get_username_from_token(token)
-    pass
+    learner = get_username_from_token(token)
+
+    collection = mongo_db.get_collection('courses')
+
+    reserve_lookup_stage = {'from': 'reserve', 'let': {'course_id': '$_id'}, 'as': 'reserve',
+                            'pipeline': [{'$match': {'$and': [
+                                {'$expr': {'$and': [
+                                    {'$eq': ['$learner', learner]},
+                                    {'$eq': ['$courseId', '$$course_id']},
+                                ]}},
+                                {'flag': {'$regex': '.*s.*'}},
+                            ]}}]
+                           }
+
+    user_lookup_stage = {'as': 'tutor_detail', 'foreignField': 'user', 'from': 'users', 'localField': 'tutor'}
+
+    pipeline = [
+        {'$lookup': reserve_lookup_stage},
+        {'$match': {'reserve.0': {'$exists': True}}},
+        {'$project': {'reserve': False}},
+        {'$lookup': user_lookup_stage},
+    ]
+    query = collection.aggregate(pipeline)
+
+    courses = []
+    for record in query:
+        course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
+        course['tutor'] = record['tutor']
+        course['tutor_display'] = record['tutor_detail'][0]['display']
+        courses.append(course)
+
+    response = JsonResponse(dict(courses=courses))
+
+    return set_response_header(response)
 
 
 @csrf_exempt
@@ -492,7 +528,6 @@ def create_reserve(request):
     user = get_username_from_token(token)
 
     collection = mongo_db.get_collection('reserve')
-
     match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
 
     print(match)
@@ -503,7 +538,8 @@ def create_reserve(request):
     collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})
     return HttpResponse('Request sent')
-
+  
+  
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_learner_transactions(request):
@@ -589,6 +625,29 @@ def accept(request):
 
     collection = mongo_db.get_collection('reserve')
     collection.update({'_id': ObjectId(_id)}, {'$set': record})
+
+    return HttpResponse('')
+
+
+def is_admin(username):
+    collection = mongo_db.get_collection('users')
+    user = collection.find_one({'user': username})
+    return user['is_admin']
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_dashboard_data(request):
+    token = request.POST.get('token')
+    username = get_username_from_token(token)
+
+    if not is_admin(username):
+        return HttpResponseForbidden('the given user is not an admin')
+
+    result = dict()
+
+    response = JsonResponse(result)
+    return set_response_header(response)
 
     return HttpResponse('reserve was accepted')
 
