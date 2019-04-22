@@ -14,10 +14,12 @@ urlpatterns = [
     path('user', views.user, name='user'),
     path('logout', views.logout, name='logout'),
     path('delete_course', views.delete_course, name='delete_course'),
-    path('create_request', views.create_request, name='create_request'),
+    path('create_reserve', views.create_reserve, name='create_reserve'),
     path('get_learner_transactions', views.get_learner_transactions, name='get_learner_transactions'),
     path('get_tutor_transactions', views.get_tutor_transactions, name='get_tutor_transactions'),
-    path('set_flag', views.set_flag, name='set_flag'),
     path('close_course', views.close_course, name='close_course'),
     path('dashboard', views.get_dashboard_data, name='dashboard'),
+    path('accept', views.accept, name='accept'),
+    path('decline', views.decline, name='decline'),
+    path('charge', views.charge, name='charge')
 ]
