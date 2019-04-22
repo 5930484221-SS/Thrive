@@ -14,14 +14,14 @@ from django.views.decorators.http import require_http_methods
 from thrive.mongo_connection import mongo_db
 from pymongo.results import DeleteResult, UpdateResult
 
-stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+stripe.api_key = "sk_test_lIYIz0834Sfhkl9i6J9JmnK600wI1neDfw"
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
                  'fee', 'location', 'subject', 'tuition', 'img']
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
 user_info_fields = ['user', 'display']
-course_info_in_reserve = ['topic', 'img']
+course_info_in_reserve = ['topic', 'img','fee']
 
 
 def safe_cast(dtype, value, default=None):
@@ -498,7 +498,7 @@ def create_reserve(request):
     print(match)
 
     if match and match['flag'] != 'd':
-        return HttpResponseNotFound('Request is in process')
+        return HttpResponseForbidden('Request is in process')
 
     collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})

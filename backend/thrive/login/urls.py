@@ -16,7 +16,6 @@ urlpatterns = [
     path('create_reserve', views.create_reserve, name='create_reserve'),
     path('get_learner_transactions', views.get_learner_transactions, name='get_learner_transactions'),
     path('get_tutor_transactions', views.get_tutor_transactions, name='get_tutor_transactions'),
-    path('set_flag', views.set_flag, name='set_flag'),
     path('close_course', views.close_course, name='close_course'),
     path('accept', views.accept, name='accept'),
     path('decline', views.decline, name='decline'),
