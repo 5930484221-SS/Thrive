@@ -58,17 +58,7 @@ params list:
 | currency | money currency ref https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts |
 
 
-## api/set_flag
-params list:
-
-| param | describe |
-| --- | --- |
-| token | user's token |
-| id | object id of reserve that want to set flag |
-| flag | flag text that want to be set |
-
-flags list:
-
+## Flag list
 | flag | describe |
 | --- | --- |
 | wr | wait for response - initial flag |
