@@ -704,6 +704,8 @@ def get_dashboard_table_data(n_rows=None):
 def get_dashboard_data(request):
     token = request.POST.get('token')
     n_rows = request.POST.get('nrows', None)
+    if n_rows:
+        n_rows = int(n_rows)
 
     username = get_username_from_token(token)
     if username is None:
