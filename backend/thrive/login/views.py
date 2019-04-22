@@ -73,41 +73,6 @@ def get_username_from_token(token):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def edit_profile(request):
-    token = request.POST.get('token', '')
-    username = get_username_from_token(token)
-
-    if username is None:
-        return HttpResponseForbidden("please login first")
-
-    first_name = request.POST.get("firstName", None)
-    last_name = request.POST.get("lastName", None)
-    nickname = request.POST.get("nickname", None)
-    display_name = request.POST.get("displayName", None)
-    address = request.POST.get("address", None)
-    phone_number = request.POST.get("phoneNumber", None)
-    email = request.POST.get("email", None)
-    contact = request.POST.get("contact", None)
-
-    filter_data = {'user': username}
-    update_data = dict()
-    if first_name: update_data['first_name'] = first_name
-    if last_name: update_data['last_name'] = last_name
-    if nickname: update_data['nickname'] = nickname
-    if display_name: update_data['display'] = display_name
-    if address: update_data['address'] = address
-    if phone_number: update_data['phone_number'] = phone_number
-    if email: update_data['email'] = email
-    if contact: update_data['contact'] = contact
-
-    collection = mongo_db.get_collection('users')
-    collection.update_one(filter_data, update_data)
-
-    return HttpResponse('')
-
-
-@csrf_exempt
-@require_http_methods(["POST"])
 def register(request):
     username = request.POST.get("username")
     password = request.POST.get("password")
@@ -180,8 +145,6 @@ def create_course(request):
         if field in course_number_fields:
             value = safe_cast(float, value, 0)
         record[field] = value
-
-    course_fields['status'] = 'open'
 
     record['rating_1'] = 0
     record['rating_2'] = 0
@@ -284,7 +247,7 @@ def get_courses(request):
 
     courses = []
     for record in query:
-        course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
+        course = {field: str(record[field]) for field in course_fields + ['_id']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
         courses.append(course)
