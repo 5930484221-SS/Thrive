@@ -160,6 +160,7 @@ export default class Register extends Component {
                     required
                     maxLength="10"
                     minLength="10"
+                    pattern="[0-9]*"
                   />
                 </div>
               </div>

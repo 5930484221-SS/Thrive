@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CowBg from "../CowBg";
 import axios from "axios";
+import querystring from "query-string";
 
 export default class Profile extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class Profile extends Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.editProfile = this.editProfile.bind(this);
   }
 
   componentDidMount() {
@@ -46,8 +48,33 @@ export default class Profile extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const isEdit = this.state.isEdit;
-    this.setState({ isEdit: !isEdit });
+    const data = {
+      token: localStorage.getItem("token"),
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      nickname: this.state.nickname,
+      displayName: this.state.displayName,
+      address: this.state.address,
+      phoneNumber: this.state.phoneNumber,
+      email: this.state.email,
+      contact: this.state.contact
+    };
+    return axios({
+      method: "POST",
+      url: "http://localhost:8000/api/edit_profile",
+      crossDomain: true,
+      data: querystring.stringify(data),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then(() => {
+      this.setState({ isEdit: false });
+    });
+  }
+
+  editProfile(e) {
+    e.preventDefault();
+    this.setState({ isEdit: true });
   }
 
   handleInputChange = e => {
@@ -176,6 +203,7 @@ export default class Profile extends Component {
                     required
                     maxLength="10"
                     minLength="10"
+                    pattern="[0-9]*"
                     value={phoneNumber}
                   />
                   {this.state.isEdit ? (
@@ -248,23 +276,24 @@ export default class Profile extends Component {
                     className="form-control"
                     id="username"
                     placeholder="username"
-                    onChange={this.handleInputChange}
                     name="username"
-                    maxLength="30"
-                    minLength="4"
-                    required
-                    pattern="[A-Za-z0-9]*"
-                    title="Must contain only english alphabet and number at least 4 and doesn't more than 30 characters"
+                    // onChange={this.handleInputChange}
+                    // maxLength="30"
+                    // minLength="4"
+                    // required
+                    // pattern="[A-Za-z0-9]*"
+                    // title="Must contain only english alphabet and number at least 4 and doesn't more than 30 characters"
                     value={username}
+                    disabled
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
 
                 <div className="form-group col-md-12 text-right">
                   {!this.state.isEdit ? (
-                    <button type="submit" class="btn btn-outline-danger">
+                    <button
+                      onClick={this.editProfile}
+                      class="btn btn-outline-danger"
+                    >
                       Edit
                     </button>
                   ) : null}
@@ -283,16 +312,4 @@ export default class Profile extends Component {
       </div>
     );
   }
-}
-
-{
-  /* <form onSubmit={this.onSubmit.bind(this)}>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={this.handleInputChange}
-          />
-          <button type="submit">Submit</button>
-        </form> */
 }
