@@ -1,4 +1,4 @@
-import datetime
+import pandas as pd
 import re
 import datetime
 import secrets
@@ -14,7 +14,9 @@ from django.views.decorators.http import require_http_methods
 from thrive.mongo_connection import mongo_db
 from pymongo.results import DeleteResult, UpdateResult
 
+ref_dt = datetime.datetime(1970, 1, 1)
 stripe.api_key = "sk_test_lIYIz0834Sfhkl9i6J9JmnK600wI1neDfw"
+
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
                  'fee', 'location', 'subject', 'tuition', 'img']
@@ -120,6 +122,8 @@ def register(request):
     email = request.POST.get("email", '')
     contact = request.POST.get("contact", '')
 
+    reg_dt = datetime.datetime.now()
+
     if username is None or password is None:
         return HttpResponseBadRequest('Please provide both username and password')
 
@@ -142,6 +146,8 @@ def register(request):
         'phone_number': phone_number,
         'email': email,
         'contact': contact,
+
+        'reg_dt': reg_dt,
     }
     collection.insert_one(record)
 
@@ -349,7 +355,7 @@ def get_tutors(request):
 def user(request):
     result_keys = {'user': 'username', 'first_name': 'firstName', 'last_name': 'lastName', 'nickname': 'nickname',
                    'display': 'displayName', 'address': 'address', 'phone_number': 'phoneNumber', 'email': 'email',
-                   'contact': 'contact'}
+                   'contact': 'contact', 'is_admin': 'isAdmin'}
 
     collection = mongo_db.get_collection('users')
 
@@ -466,10 +472,42 @@ def delete_course(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def get_courses_by_student(request):  # rename???
+def get_courses_by_learner(request):  # not done
     token = request.POST.get('token')
-    user = get_username_from_token(token)
-    pass
+    learner = get_username_from_token(token)
+
+    collection = mongo_db.get_collection('courses')
+
+    reserve_lookup_stage = {'from': 'reserve', 'let': {'course_id': '$_id'}, 'as': 'reserve',
+                            'pipeline': [{'$match': {'$and': [
+                                {'$expr': {'$and': [
+                                    {'$eq': ['$learner', learner]},
+                                    {'$eq': ['$courseId', '$$course_id']},
+                                ]}},
+                                {'flag': {'$regex': '.*s.*'}},
+                            ]}}]
+                           }
+
+    user_lookup_stage = {'as': 'tutor_detail', 'foreignField': 'user', 'from': 'users', 'localField': 'tutor'}
+
+    pipeline = [
+        {'$lookup': reserve_lookup_stage},
+        {'$match': {'reserve.0': {'$exists': True}}},
+        {'$project': {'reserve': False}},
+        {'$lookup': user_lookup_stage},
+    ]
+    query = collection.aggregate(pipeline)
+
+    courses = []
+    for record in query:
+        course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
+        course['tutor'] = record['tutor']
+        course['tutor_display'] = record['tutor_detail'][0]['display']
+        courses.append(course)
+
+    response = JsonResponse(dict(courses=courses))
+
+    return set_response_header(response)
 
 
 @csrf_exempt
@@ -492,7 +530,6 @@ def create_reserve(request):
     user = get_username_from_token(token)
 
     collection = mongo_db.get_collection('reserve')
-
     match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
 
     print(match)
@@ -503,7 +540,8 @@ def create_reserve(request):
     collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})
     return HttpResponse('Request sent')
-
+  
+  
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_learner_transactions(request):
@@ -589,6 +627,100 @@ def accept(request):
 
     collection = mongo_db.get_collection('reserve')
     collection.update({'_id': ObjectId(_id)}, {'$set': record})
+
+    return HttpResponse('')
+
+
+def is_admin(username):
+    collection = mongo_db.get_collection('users')
+    user = collection.find_one({'user': username})
+    return user['is_admin']
+
+
+def collection_count_doc_by_date(collection, date_field):
+    query = collection.aggregate([{'$group': {
+        '_id': {
+            '$subtract': [
+                {'$subtract': [f'${date_field}', ref_dt]},
+                {'$mod': [
+                    {'$subtract': [f'${date_field}', ref_dt]},
+                    1000 * 60 * 60 * 24
+                ]},
+            ]
+        },
+        'count': {'$sum': 1}
+    }}])
+
+    result = list({'date': (ref_dt + datetime.timedelta(seconds=t['_id']/1000)),
+                   'count': t['count']} for t in query)
+    return result
+
+
+def get_dashboard_chart_data():
+    collection_reserve = mongo_db.get_collection('reserve')
+    collection_users = mongo_db.get_collection('users')
+
+    history_request = collection_count_doc_by_date(collection_reserve, 'requestTimestamp')
+    history_register = collection_count_doc_by_date(collection_users, 'reg_dt')
+
+    today = datetime.datetime.now().date()
+
+    df_reg = pd.DataFrame(history_register).rename(columns={'count': 'register'})
+    df_req = pd.DataFrame(history_request).rename(columns={'count': 'request'})
+    df = df_reg.merge(df_req, on='date', how='outer')
+
+    dt_index = pd.date_range(freq='D', start=today - datetime.timedelta(days=30), end=today)
+    df = df.set_index('date').reindex(dt_index).fillna(0).applymap(int).reset_index()
+    df['index'] = df['index'].map(lambda t: t.to_pydatetime().strftime('%Y-%m-%d'))
+
+    return df.to_dict(orient='list')
+
+
+def get_dashboard_table_data(n_rows=None):
+    collection_reserve = mongo_db.get_collection('reserve')
+
+    lookup_stage = {
+        'from': 'courses',
+        'let': {'course_id': '$courseId'},
+        'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', '$$course_id']}}}],
+        'as': 'course',
+    }
+
+    pipeline = list()
+    pipeline.append({'$sort': {'requestTimestamp': -1}})
+
+    if n_rows:
+        pipeline.append({'$limit': n_rows})
+    pipeline.append({'$lookup': lookup_stage})
+    pipeline.append({'$unwind': '$course'})
+    pipeline.append({'$project': {'course_name': '$course.topic',
+                                  'requestTimestamp': 1,
+                                  'learner': 1, 'tutor': 1, '_id': 0}})
+    query = collection_reserve.aggregate(pipeline)
+    return list(query)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_dashboard_data(request):
+    token = request.POST.get('token')
+    n_rows = request.POST.get('nrows', None)
+    if n_rows:
+        n_rows = int(n_rows)
+
+    username = get_username_from_token(token)
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    if not is_admin(username):
+        return HttpResponseForbidden('the given user is not an admin')
+
+    chart_data = get_dashboard_chart_data()
+    table_data = get_dashboard_table_data(n_rows)
+
+    result = dict(chartData=chart_data, tableData=table_data)
+    response = JsonResponse(result)
+    return set_response_header(response)
 
     return HttpResponse('reserve was accepted')
 
