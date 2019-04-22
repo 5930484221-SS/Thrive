@@ -71,6 +71,39 @@ def get_username_from_token(token):
 
     return user
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def edit_profile(request):
+    token = request.POST.get('token', '')
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    first_name = request.POST.get("firstName", None)
+    last_name = request.POST.get("lastName", None)
+    nickname = request.POST.get("nickname", None)
+    display_name = request.POST.get("displayName", None)
+    address = request.POST.get("address", None)
+    phone_number = request.POST.get("phoneNumber", None)
+    email = request.POST.get("email", None)
+    contact = request.POST.get("contact", None)
+
+    filter_data = {'user': username}
+    update_data = dict()
+    if first_name: update_data['first_name'] = first_name
+    if last_name: update_data['last_name'] = last_name
+    if nickname: update_data['nickname'] = nickname
+    if display_name: update_data['display'] = display_name
+    if address: update_data['address'] = address
+    if phone_number: update_data['phone_number'] = phone_number
+    if email: update_data['email'] = email
+    if contact: update_data['contact'] = contact
+
+    collection = mongo_db.get_collection('users')
+    collection.update_one(filter_data, update_data)
+
+    return HttpResponse('')
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -505,40 +538,6 @@ def get_learner_transactions(request):
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def edit_profile(request):
-    token = request.POST.get('token', '')
-    username = get_username_from_token(token)
-
-    if username is None:
-        return HttpResponseForbidden("please login first")
-
-    first_name = request.POST.get("firstName", None)
-    last_name = request.POST.get("lastName", None)
-    nickname = request.POST.get("nickname", None)
-    display_name = request.POST.get("displayName", None)
-    address = request.POST.get("address", None)
-    phone_number = request.POST.get("phoneNumber", None)
-    email = request.POST.get("email", None)
-    contact = request.POST.get("contact", None)
-
-    filter_data = {'user': username}
-    update_data = dict()
-    if first_name: update_data['first_name'] = first_name
-    if last_name: update_data['last_name'] = last_name
-    if nickname: update_data['nickname'] = nickname
-    if display_name: update_data['display'] = display_name
-    if address: update_data['address'] = address
-    if phone_number: update_data['phone_number'] = phone_number
-    if email: update_data['email'] = email
-    if contact: update_data['contact'] = contact
-
-    collection = mongo_db.get_collection('users')
-    collection.update_one(filter_data, update_data)
-
-    return HttpResponse('')
 
 @csrf_exempt
 @require_http_methods(["POST"])
