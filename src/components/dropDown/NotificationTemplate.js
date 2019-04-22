@@ -5,13 +5,13 @@ import axios from "axios";
 import querystring from "query-string";
 
 export const NOTIFICATION_TYPE = {
-  REQUESTED: "REQUESTED",
-  ACCEPTED: "ACCEPTED",
-  DECLINED: "DECLINE",
-  PAID: "PAID"
+  wr: "wr",
+  wp: "wp",
+  d: "d",
+  s: "s"
 };
 
-const onAccept = _id => {
+const onResponse = (event, _id) => {
   axios({
     method: "POST",
     url: "http://127.0.0.1:8000/api/set_flag",
@@ -19,27 +19,7 @@ const onAccept = _id => {
     data: querystring.stringify({
       token: window.localStorage.token,
       id: _id,
-      flag: NOTIFICATION_TYPE.ACCEPTED
-    }),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(console.log)
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-const onDecline = _id => {
-  axios({
-    method: "POST",
-    url: "http://127.0.0.1:8000/api/set_flag",
-    crossDomain: true,
-    data: querystring.stringify({
-      token: window.localStorage.token,
-      id: _id,
-      flag: NOTIFICATION_TYPE.DECLINED
+      flag: event.target.name
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -55,7 +35,7 @@ export const TutorNotification = props => {
   const { learner, flag, course, _id } = props.info;
   const { img, topic } = course[0];
   switch (flag) {
-    case NOTIFICATION_TYPE.REQUESTED:
+    case NOTIFICATION_TYPE.wr:
       return (
         <div>
           <table style={{ marginBottom: "10px" }}>
@@ -90,14 +70,16 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-success btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => onAccept(_id)}
+                    onClick={event => onResponse(event, _id)}
+                    name={NOTIFICATION_TYPE.wp}
                   >
                     Accept
                   </button>
                   <button
                     className="btn btn btn-outline-danger btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => onDecline(_id)}
+                    onClick={event => onResponse(event, _id)}
+                    name={NOTIFICATION_TYPE.d}
                   >
                     Decline
                   </button>
@@ -109,7 +91,91 @@ export const TutorNotification = props => {
       );
       break;
 
-    case NOTIFICATION_TYPE.PAID:
+    case NOTIFICATION_TYPE.wp:
+      return (
+        <div>
+          <table style={{ marginBottom: "10px" }}>
+            <tbody>
+              <tr className="h5">
+                <td rowSpan="2" style={{ width: "10%" }}>
+                  <div
+                    className="circleBase type1"
+                    style={{
+                      margin: "auto",
+                      marginBottom: "10px",
+                      marginRight: "20px"
+                    }}
+                  >
+                    <img src={img} />
+                  </div>
+                </td>
+                <td style={{ textAlign: "left" }}>
+                  You had accepted request the
+                  <span className="text-info font-weight-bold">
+                    {" " + topic}
+                  </span>
+                  {" course from Learner "}
+                  <span className="text-success font-weight-bold">
+                    {learner}
+                  </span>
+                </td>
+                <td className="text-secondary text-right">
+                  <img src={clock} className="timeClk" />
+                  _time_
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+      break;
+
+    case NOTIFICATION_TYPE.d:
+      return (
+        <div>
+          <table style={{ marginBottom: "10px" }}>
+            <tbody>
+              <tr className="h5">
+                <td rowSpan="2" style={{ width: "10%" }}>
+                  <div
+                    className="circleBase type1"
+                    style={{
+                      margin: "auto",
+                      marginBottom: "10px",
+                      marginRight: "20px"
+                    }}
+                  >
+                    <img src={img} />
+                  </div>
+                </td>
+                <td style={{ textAlign: "left" }}>
+                  You had declined request the
+                  <span className="text-info font-weight-bold">
+                    {" " + topic}
+                  </span>
+                  {" course from Learner "}
+                  <span className="text-success font-weight-bold">
+                    {learner}
+                  </span>
+                </td>
+                <td className="text-secondary text-right">
+                  <img src={clock} className="timeClk" />
+                  _time_
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+      break;
+
+    case NOTIFICATION_TYPE.s:
       return (
         <div>
           {" "}
@@ -160,7 +226,7 @@ export const LearnerNotification = props => {
   const { tutor, flag, course } = props.info;
   const { img, topic } = course[0];
   switch (flag) {
-    case NOTIFICATION_TYPE.REQUESTED:
+    case NOTIFICATION_TYPE.wr:
       return (
         <div>
           <table style={{ marginBottom: "10px" }}>
@@ -199,7 +265,7 @@ export const LearnerNotification = props => {
       );
       break;
 
-    case NOTIFICATION_TYPE.ACCEPTED:
+    case NOTIFICATION_TYPE.wp:
       return (
         <div>
           <table style={{ marginBottom: "10px" }}>
@@ -219,7 +285,10 @@ export const LearnerNotification = props => {
                     {" " + tutor + " "}
                   </span>
                   had accepted
-                  <span className="text-info font-weight-bold">{" " + topic + " "}</span>course
+                  <span className="text-info font-weight-bold">
+                    {" " + topic + " "}
+                  </span>
+                  course
                 </td>
                 <td className="text-secondary text-right">
                   <img src={clock} className="timeClk" />
@@ -241,7 +310,7 @@ export const LearnerNotification = props => {
         </div>
       );
       break;
-    case NOTIFICATION_TYPE.DECLINED:
+    case NOTIFICATION_TYPE.d:
       return (
         <div>
           <table style={{ marginBottom: "10px" }}>
@@ -260,13 +329,15 @@ export const LearnerNotification = props => {
                   </div>
                 </td>
                 <td style={{ textAlign: "left" }}>
-                  Tutor<span className="text-success font-weight-bold">
+                  Tutor
+                  <span className="text-success font-weight-bold">
                     {` ${tutor} `}
                   </span>
                   had declined
                   <span className="text-info font-weight-bold">
                     {` ${topic} `}
-                  </span>course
+                  </span>
+                  course
                 </td>
                 <td className="text-secondary text-right">
                   <img src={clock} className="timeClk" />
@@ -281,6 +352,46 @@ export const LearnerNotification = props => {
         </div>
       );
       break;
+    
+    case NOTIFICATION_TYPE.s:
+      return (
+        <div>
+          <table style={{ marginBottom: "10px" }}>
+            <tbody>
+              <tr className="h5">
+                <td rowSpan="2" style={{ width: "10%" }}>
+                  <div
+                    className="circleBase type1"
+                    style={{
+                      margin: "auto",
+                      marginBottom: "10px",
+                      marginRight: "20px"
+                    }}
+                  >
+                    <img src={img} />
+                  </div>
+                </td>
+                <td style={{ textAlign: "left" }}>
+                  Paid successed
+                  <span className="text-info font-weight-bold">
+                    {" " + topic}
+                  </span>
+                  {" course"}
+                </td>
+                <td className="text-secondary text-right">
+                  <img src={clock} className="timeClk" />
+                  _time_
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+      break;
+    
 
     default:
       return null;
