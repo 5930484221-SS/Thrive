@@ -19,6 +19,7 @@ course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
 user_info_fields = ['user', 'display']
+course_info_in_request = ['topic', 'img']
 
 
 def safe_cast(dtype, value, default=None):
@@ -456,9 +457,17 @@ def create_request(request):
     user = get_username_from_token(token)
 
     collection = mongo_db.get_collection('requests')
-    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'REQUESTED',
+
+    match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
+
+    print(match)
+
+    if match and match['flag'] != 'd':
+        return HttpResponseNotFound('Request is in process')
+
+    collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None})
-    return HttpResponse('')
+    return HttpResponse('Request sent')
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -484,10 +493,14 @@ def get_learner_transactions(request):
     requests=[]
     for record in query:
         request = {field: str(record[field]) for field in ['_id']}
+
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
-        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
-        # print(record)
+
+        course = dict()
+        for field in course_info_in_request:
+            course[field] = str(record['course'][0][field])
+        record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
     return set_response_header(response)
