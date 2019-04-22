@@ -1,4 +1,4 @@
-# How to call request api
+# How to call reserve api
 
 ## api/create_reserve
 params list:
