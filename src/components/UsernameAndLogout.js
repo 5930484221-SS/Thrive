@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import querystring from 'query-string';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import axios from "axios";
+import querystring from "query-string";
+import swal from "sweetalert";
 
 class UsernameAndLogout extends Component {
   constructor(props) {
@@ -12,20 +13,21 @@ class UsernameAndLogout extends Component {
   onLogout = async e => {
     e.preventDefault();
     const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/logout',
+      method: "POST",
+      url: "http://localhost:8000/api/logout",
       crossDomain: true,
       data: querystring.stringify({
-        token: localStorage.getItem('token')
+        token: localStorage.getItem("token")
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     });
 
-    localStorage.removeItem('token');
-    alert('logged out');
-    window.location = '/';
+    localStorage.removeItem("token");
+    const success = await swal("logged out");
+    // alert("logged out");
+    window.location = "/";
   };
 
   render() {
@@ -38,17 +40,17 @@ class UsernameAndLogout extends Component {
             className="nav-link dropdown-toggle"
             data-toggle="dropdown"
           >
-            <i className="fas fa-user ml-2" />{' '}
-            {localStorage.getItem('username')}
+            <i className="fas fa-user ml-2" />{" "}
+            {localStorage.getItem("username")}
           </a>
           <div className="dropdown-menu">
             <a href="/profile" className="dropdown-item">
               <i className="fas fa-user-circle" /> Profile
             </a>
-            <a href="/myCourses" className="dropdown-item">
+            <a href="myCourses" className="dropdown-item">
               <i className="fas fa-clipboard-list" /> My Courses
             </a>
-            <a href="/setting" className="dropdown-item">
+            <a href="setting" className="dropdown-item">
               <i className="fas fa-cog" /> Settings
             </a>
             <a href="#" onClick={this.onLogout} className="dropdown-item">

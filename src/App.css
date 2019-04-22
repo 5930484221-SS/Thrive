@@ -1,5 +1,6 @@
 body {
   overflow-x: hidden;
+  width: 100%;
   margin-bottom: 5rem;
 }
 
@@ -28,7 +29,7 @@ body {
 
 /* NAVBAR */
 .navbar {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 
 .navbar-light-orange {
@@ -43,8 +44,8 @@ body {
 
 /* BUTTONS */
 .btn-rounded {
-  font-size: 1.4rem;
-  border-radius: 40px;
+  font-size: 1.6rem;
+  border-radius: 50px;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -68,10 +69,12 @@ body {
 }
 
 .btn-extra {
-  min-width: 16rem;
-  height: 4.5rem;
-  font-size: 2.2rem;
+  min-width: 20rem;
+  height: 6rem;
+  font-size: 2.6rem;
   font-weight: 500;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 /* TEXT */
@@ -114,12 +117,18 @@ body {
   /* SHOWCASE */
   .showcase-header {
     margin-top: 30px;
-    font-size: 35px;
+    /* font-size: 35px; */
     font-weight: 500;
   }
 
   .showcase-text {
     font-size: 1.3rem;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  #img-profile {
+    height: 230px;
   }
 }
 
@@ -130,7 +139,7 @@ body {
 
   .btn-extra {
     width: 10rem;
-    height: 3.4rem;
+    height: 4.5rem;
     font-size: 1.5rem;
     font-weight: 500;
   }
@@ -140,7 +149,7 @@ body {
   }
 
   .showcase-header {
-    font-size: 2rem;
+    /* font-size: 2rem; */
     font-weight: 500;
     text-align: center;
   }
@@ -153,4 +162,83 @@ body {
   #left1 {
     left: -50%;
   }
+}
+
+.footer {
+  height: auto;
+  margin-top: 50px;
+  color: white;
+}
+
+.copyR {
+  text-align: center;
+  font-size: 11px;
+}
+
+.edge {
+  /* border: 0.1px solid rgba(0, 0, 0, 0.411); */
+  background-color: rgba(255, 255, 255, 0.301);
+  padding: 10px 10px 10px 10px;
+}
+
+.underline-on-hover {
+  border-bottom: 4px solid salmon;
+  border-radius: 5px;
+}
+
+.mycoursePage {
+  /* background-color: rgba(196, 201, 252, 0.226); */
+  background-color: rgba(255, 255, 255, 0.226);
+}
+
+.courseCard {
+  border: 1px solid rgba(192, 192, 192, 0.404);
+  width: 100%;
+  display: flex;
+  overflow: inherit;
+}
+
+.text {
+  /* display: block; */
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+table {
+  width: 100%;
+  /* border: 1px solid black; */
+  text-align: center;
+  height: 90px;
+  border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.circleBase {
+  border-radius: 50%;
+}
+
+.type1 {
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(170, 170, 170, 0.616);
+  overflow: hidden;
+  position: relative;
+}
+
+.type1 img {
+  position: absolute;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+  width: 150%;
+  height: 150%;
+}
+
+.timeClk {
+  width: 30px;
+  margin-right: 5%;
 }
