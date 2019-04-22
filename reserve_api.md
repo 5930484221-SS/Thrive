@@ -18,7 +18,7 @@ params list:
 
 return object:
 
-Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a learner.
+Return a list of reserve that contain field like reserve record but add course field, which is a object of course that relate to the reserve. Reserve that return are user's reserve as a learner.
 
 ## api/get_tutor_transactions
 params list:
@@ -29,7 +29,7 @@ params list:
 
 return object:
 
-Return a list of request that contain field like request record but add course field, which is a object of course that relate to the request. Request that return are user's request as a tutor.
+Return a list of reserve that contain field like reserve record but add course field, which is a object of course that relate to the reserve. Reserve that return are user's reserve as a tutor.
 
 ## api/accept
 params list:
@@ -37,7 +37,7 @@ params list:
 | param | describe |
 | --- | --- |
 | token | tutor's usertoken |
-| id | object id of request that want to accept (set flag tp 'wp' and set responseTimestamp) |
+| id | object id of reserve that want to accept (set flag tp 'wp' and set responseTimestamp) |
 
 ## api/decline
 params list:
@@ -45,7 +45,7 @@ params list:
 | param | describe |
 | --- | --- |
 | token | tutor's usertoken |
-| id | object id of request that want to decline (set flag tp 'd' and set responseTimestamp) |
+| id | object id of reserve that want to decline (set flag tp 'd' and set responseTimestamp) |
 
 ## api/charge
 params list:
@@ -64,7 +64,7 @@ params list:
 | param | describe |
 | --- | --- |
 | token | user's token |
-| id | object id of request that want to set flag |
+| id | object id of reserve that want to set flag |
 | flag | flag text that want to be set |
 
 flags list:
@@ -74,7 +74,7 @@ flags list:
 | wr | wait for response - initial flag |
 | wp | wait for payment - deposit 30% of full price |
 | s | success - everything finish include pay deposit |
-| d | declined - tutor decline the request |
+| d | declined - tutor decline the reserve |
 | x | the course is delete |
 | c | the course is closed |
-| cs | the course is closed but request had been success before |
+| cs | the course is closed but reserve had been success before |
