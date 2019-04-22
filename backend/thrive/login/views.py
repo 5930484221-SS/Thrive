@@ -176,6 +176,8 @@ def create_course(request):
             value = safe_cast(float, value, 0)
         record[field] = value
 
+    course_fields['status'] = 'open'
+
     record['rating_1'] = 0
     record['rating_2'] = 0
     record['rating_3'] = 0
@@ -280,7 +282,7 @@ def get_courses(request):
 
     courses = []
     for record in query:
-        course = {field: str(record[field]) for field in course_fields + ['_id']}
+        course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
         courses.append(course)
