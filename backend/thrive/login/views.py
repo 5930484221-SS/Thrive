@@ -1,4 +1,4 @@
-import datetime
+import pandas as pd
 import re
 import datetime
 import secrets
@@ -14,6 +14,7 @@ from django.views.decorators.http import require_http_methods
 from thrive.mongo_connection import mongo_db
 from pymongo.results import DeleteResult, UpdateResult
 
+ref_dt = datetime.datetime(1970, 1, 1)
 stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
@@ -635,17 +636,86 @@ def is_admin(username):
     return user['is_admin']
 
 
+def collection_count_doc_by_date(collection, date_field):
+    query = collection.aggregate([{'$group': {
+        '_id': {
+            '$subtract': [
+                {'$subtract': [f'${date_field}', ref_dt]},
+                {'$mod': [
+                    {'$subtract': [f'${date_field}', ref_dt]},
+                    1000 * 60 * 60 * 24
+                ]},
+            ]
+        },
+        'count': {'$sum': 1}
+    }}])
+
+    result = list({'date': (ref_dt + datetime.timedelta(seconds=t['_id']/1000)),
+                   'count': t['count']} for t in query)
+    return result
+
+
+def get_dashboard_chart_data():
+    collection_reserve = mongo_db.get_collection('reserve')
+    collection_users = mongo_db.get_collection('users')
+
+    history_request = collection_count_doc_by_date(collection_reserve, 'requestTimestamp')
+    history_register = collection_count_doc_by_date(collection_users, 'reg_dt')
+
+    today = datetime.datetime.now().date()
+
+    df_reg = pd.DataFrame(history_register).rename(columns={'count': 'register'})
+    df_req = pd.DataFrame(history_request).rename(columns={'count': 'request'})
+    df = df_reg.merge(df_req, on='date', how='outer')
+
+    dt_index = pd.date_range(freq='D', start=today - datetime.timedelta(days=30), end=today)
+    df = df.set_index('date').reindex(dt_index).fillna(0).applymap(int).reset_index()
+    df['index'] = df['index'].map(lambda t: t.to_pydatetime().strftime('%Y-%m-%d'))
+
+    return df.to_dict(orient='list')
+
+
+def get_dashboard_table_data(n_rows=None):
+    collection_reserve = mongo_db.get_collection('reserve')
+
+    lookup_stage = {
+        'from': 'courses',
+        'let': {'course_id': '$courseId'},
+        'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', '$$course_id']}}}],
+        'as': 'course',
+    }
+
+    pipeline = list()
+    pipeline.append({'$sort': {'requestTimestamp': -1}})
+
+    if n_rows:
+        pipeline.append({'$limit': n_rows})
+    pipeline.append({'$lookup': lookup_stage})
+    pipeline.append({'$unwind': '$course'})
+    pipeline.append({'$project': {'course_name': '$course.topic',
+                                  'requestTimestamp': 1,
+                                  'learner': 1, 'tutor': 1, '_id': 0}})
+    query = collection_reserve.aggregate(pipeline)
+    return list(query)
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_dashboard_data(request):
     token = request.POST.get('token')
+    n_rows = request.POST.get('nrows', None)
+
     username = get_username_from_token(token)
+    if username is None:
+        return HttpResponseForbidden("please login first")
 
     if not is_admin(username):
         return HttpResponseForbidden('the given user is not an admin')
 
-    result = dict()
+    chart_data = get_dashboard_chart_data()
+    table_data = get_dashboard_table_data(n_rows)
 
+    result = dict(chartData=chart_data, tableData=table_data)
     response = JsonResponse(result)
     return set_response_header(response)
 
