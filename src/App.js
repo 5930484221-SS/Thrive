@@ -14,7 +14,8 @@ import NavBar from './components/NavBar';
 import Dashboard from './components/admin/Dashboard';
 import SearchUser from './components/admin/SearchUser';
 import PrivateRoute from './components/admin/PrivateRoute';
-import Register from "./components/Register";
+import NavAdmin from './components/admin/NavAdmin';
+import Register from './components/Register';
 
 import './App.css';
 import { store } from './configStore';
@@ -26,7 +27,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            {localStorage.getItem("token") === null ? (
+            {localStorage.getItem('token') === null ? (
               <NavBar auth={false} />
             ) : (
               <NavBar auth={true} />
@@ -47,7 +48,7 @@ class App extends Component {
                 />
                 <PrivateRoute
                   path="/admin/searchUser"
-                  condition={false}
+                  condition={true}
                   component={SearchUser}
                 />
                 <Route path="/" component={Login} />
