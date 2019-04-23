@@ -574,7 +574,8 @@ def get_learner_transactions(request):
 
         course = dict()
         for field in course_info_in_reserve:
-            course[field] = str(record['course'][0][field])
+            if len(record['course']) > 0:
+                course[field] = str(record['course'][0][field])
         record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
@@ -606,7 +607,8 @@ def get_tutor_transactions(request):  # rename???
         request = {field: str(record[field]) for field in ['_id']}
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
-        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
+        if len(record['course']) > 0:
+            record['course'][0]['_id'] =  str(record['course'][0]['_id'])
         # print(record)
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
