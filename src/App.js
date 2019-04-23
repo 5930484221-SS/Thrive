@@ -15,6 +15,7 @@ import Dashboard from './components/admin/Dashboard';
 import SearchUser from './components/admin/SearchUser';
 import PrivateRoute from './components/admin/PrivateRoute';
 import NavAdmin from './components/admin/NavAdmin';
+import Register from './components/Register';
 
 import './App.css';
 import { store } from './configStore';
@@ -27,8 +28,7 @@ class App extends Component {
         <Router>
           <div className="App">
             {localStorage.getItem('token') === null ? (
-              // <NavBar auth={false} />
-              <NavAdmin />
+              <NavBar auth={false} />
             ) : (
               <NavBar auth={true} />
             )}
@@ -40,6 +40,7 @@ class App extends Component {
                 <Route path="/profile" component={Profile} />
                 <Route path="/myCourses" component={MyCourses} />
                 <Route path="/setting" component={Setting} />
+                <Route path="/register" component={Register} />
                 <PrivateRoute
                   path="/admin/dashboard"
                   condition={true}

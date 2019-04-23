@@ -174,3 +174,71 @@ body {
   text-align: center;
   font-size: 11px;
 }
+
+.edge {
+  /* border: 0.1px solid rgba(0, 0, 0, 0.411); */
+  background-color: rgba(255, 255, 255, 0.301);
+  padding: 10px 10px 10px 10px;
+}
+
+.underline-on-hover {
+  border-bottom: 4px solid salmon;
+  border-radius: 5px;
+}
+
+.mycoursePage {
+  /* background-color: rgba(196, 201, 252, 0.226); */
+  background-color: rgba(255, 255, 255, 0.226);
+}
+
+.courseCard {
+  border: 1px solid rgba(192, 192, 192, 0.404);
+  width: 100%;
+  display: flex;
+  overflow: inherit;
+}
+
+.text {
+  /* display: block; */
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+table {
+  width: 100%;
+  /* border: 1px solid black; */
+  text-align: center;
+  height: 90px;
+  border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.circleBase {
+  border-radius: 50%;
+}
+
+.type1 {
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(170, 170, 170, 0.616);
+  overflow: hidden;
+  position: relative;
+}
+
+.type1 img {
+  position: absolute;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+  width: 150%;
+  height: 150%;
+}
+
+.timeClk {
+  width: 30px;
+  margin-right: 5%;
+}

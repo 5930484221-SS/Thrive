@@ -16,9 +16,11 @@
     "react-scripts": "^2.1.8",
     "react-select": "^2.3.0",
     "reactstrap": "^8.0.0",
+    "react-stripe-checkout": "^2.6.3",
     "redux": "^4.0.1",
     "redux-auth-wrapper": "^2.1.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sweetalert": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

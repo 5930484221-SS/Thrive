@@ -299,7 +299,7 @@ class Listing extends Component {
           </div>
         </div>
         <div className="row">
-          {/* {console.log(courseList)} */}
+          {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => (
               <CourseContainer key={index} info={c} index={index} />

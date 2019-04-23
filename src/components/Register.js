@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import CowBg from "../CowBg";
+import CowBg from "./CowBg";
 import axios from "axios";
 import querystring from "query-string";
+import swal from "sweetalert";
 
-export default class Profile extends Component {
+export default class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: localStorage.username,
+      username: "",
+      password: "",
       firstName: "",
       lastName: "",
       nickname: "",
@@ -15,41 +17,27 @@ export default class Profile extends Component {
       address: "",
       phoneNumber: "",
       email: "",
-      contact: "",
-      isEdit: false
+      contact: ""
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.editProfile = this.editProfile.bind(this);
   }
 
-  componentDidMount() {
-    return axios({
-      method: "GET",
-      url: "http://localhost:8000/api/user?username=" + this.state.username,
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then(resp => {
-      const obj = resp.data;
-      this.setState({
-        firstName: obj.firstName,
-        lastName: obj.lastName,
-        nickname: obj.nickname,
-        displayName: obj.displayName,
-        address: obj.address,
-        phoneNumber: obj.phoneNumber,
-        email: obj.email,
-        contact: obj.contact
-      });
+  handleInputChange = e => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
     });
-  }
+  };
 
-  onSubmit(e) {
+  onSubmit = async e => {
     e.preventDefault();
+
     const data = {
-      token: localStorage.getItem("token"),
+      username: this.state.username,
+      password: this.state.password,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       nickname: this.state.nickname,
@@ -59,55 +47,38 @@ export default class Profile extends Component {
       email: this.state.email,
       contact: this.state.contact
     };
+
     return axios({
       method: "POST",
-      url: "http://localhost:8000/api/edit_profile",
+      url: "http://localhost:8000/api/register",
       crossDomain: true,
       data: querystring.stringify(data),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
-    }).then(() => {
-      this.setState({ isEdit: false });
-    });
-  }
-
-  editProfile(e) {
-    e.preventDefault();
-    this.setState({ isEdit: true });
-  }
-
-  handleInputChange = e => {
-    if (this.state.isEdit) {
-      const target = e.target;
-      const value = target.value;
-      const name = target.name;
-
-      this.setState({
-        [name]: value
+    })
+      .then(() => {
+        swal(
+          "Welcome to THRIVE. Your registration has been done successfully."
+        );
+        // alert(
+        //   "Welcome to THRIVE. Your registration has been done successfully."
+        // );
+        return this.props.history.push("/");
+      })
+      .catch(ere => {
+        swal("There are invalid data. Please try again.");
+        // alert("There are invalid data. Please try again.");
       });
-    }
   };
-
   render() {
-    const {
-      username,
-      firstName,
-      lastName,
-      nickname,
-      displayName,
-      address,
-      phoneNumber,
-      email,
-      contact
-    } = this.state;
     return (
       <div>
         <br />
         <hr />
         <div className="container">
           <h1 className="display-4">
-            <b>Profile</b>{" "}
+            <b>Register</b>
           </h1>
         </div>
         <hr />
@@ -115,6 +86,9 @@ export default class Profile extends Component {
           <form onSubmit={this.onSubmit}>
             <div className="form-row">
               <div className="form-group col-md-6">
+                <div className="form-group col-md-12">
+                  <h1> Profile </h1>
+                </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="firstName">First Name</label>
                   <input
@@ -128,11 +102,7 @@ export default class Profile extends Component {
                     required
                     pattern="[A-Za-z]*"
                     title="Must contain only english alphabet"
-                    value={firstName}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="lastName">Last Name</label>
@@ -147,11 +117,7 @@ export default class Profile extends Component {
                     required
                     pattern="[A-Za-z]*"
                     title="Must contain only english alphabet"
-                    value={lastName}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="nickname">Nickname</label>
@@ -166,13 +132,8 @@ export default class Profile extends Component {
                     required
                     pattern="[A-Za-z]*"
                     title="Must contain only english alphabet"
-                    value={nickname}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
-
                 <div className="form-group col-md-12">
                   <label htmlFor="address">Address</label>
                   <textarea
@@ -185,11 +146,7 @@ export default class Profile extends Component {
                     required
                     pattern="[A-Za-z0-9]*"
                     title="Must contain only english alphabet and number"
-                    value={address}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="phone number">Phone number</label>
@@ -204,11 +161,7 @@ export default class Profile extends Component {
                     maxLength="10"
                     minLength="10"
                     pattern="[0-9]*"
-                    value={phoneNumber}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
               </div>
               <div className="form-group col-md-6">
@@ -222,11 +175,7 @@ export default class Profile extends Component {
                     onChange={this.handleInputChange}
                     name="email"
                     required
-                    value={email}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="contact">Contact</label>
@@ -238,11 +187,7 @@ export default class Profile extends Component {
                     onChange={this.handleInputChange}
                     name="contact"
                     required
-                    value={contact}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <br />
                 <div className="form-group col-md-12">
@@ -263,11 +208,7 @@ export default class Profile extends Component {
                     required
                     pattern="[A-Za-z0-9]*"
                     title="Must contain only english alphabet and number"
-                    value={displayName}
                   />
-                  {this.state.isEdit ? (
-                    <b style={{ color: "red" }}>Allowed to edit!</b>
-                  ) : null}
                 </div>
                 <div className="form-group col-md-12">
                   <label htmlFor="username">Username</label>
@@ -276,32 +217,34 @@ export default class Profile extends Component {
                     className="form-control"
                     id="username"
                     placeholder="username"
+                    onChange={this.handleInputChange}
                     name="username"
-                    // onChange={this.handleInputChange}
-                    // maxLength="30"
-                    // minLength="4"
-                    // required
-                    // pattern="[A-Za-z0-9]*"
-                    // title="Must contain only english alphabet and number at least 4 and doesn't more than 30 characters"
-                    value={username}
-                    disabled
+                    maxLength="30"
+                    minLength="4"
+                    required
+                    pattern="[A-Za-z0-9]*"
+                    title="Must contain only english alphabet and number at least 4 and doesn't more than 30 characters"
                   />
                 </div>
-
+                <div className="form-group col-md-12">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    placeholder="password"
+                    onChange={this.handleInputChange}
+                    name="password"
+                    maxLength="30"
+                    minLength="6"
+                    required
+                    title="Must contain 6 or more character but not more than 30 character"
+                  />
+                </div>
                 <div className="form-group col-md-12 text-right">
-                  {!this.state.isEdit ? (
-                    <button
-                      onClick={this.editProfile}
-                      class="btn btn-outline-danger"
-                    >
-                      Edit
-                    </button>
-                  ) : null}
-                  {this.state.isEdit ? (
-                    <button type="submit" class="btn btn-outline-warning">
-                      Sumbit
-                    </button>
-                  ) : null}
+                  <button type="submit" class="btn btn-outline-warning">
+                    Sumbit
+                  </button>
                 </div>
               </div>
             </div>
