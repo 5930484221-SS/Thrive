@@ -42,6 +42,7 @@ export default class Notification extends Component {
           <TutorNotification info={noti} key={noti._id} />
         ));
         this.setState({ tutorTransactions });
+        console.log(response.data.requests)
       })
       .catch(error => {
         console.log(error);
@@ -65,6 +66,7 @@ export default class Notification extends Component {
           return <LearnerNotification info={noti} key={noti._id} />;
         });
         this.setState({ learnerTransactions });
+        console.log(response.data.requests)
       })
       .catch(error => {
         console.log(error);
@@ -74,6 +76,7 @@ export default class Notification extends Component {
   sortTransactions() {}
 
   render() {
+    console.log(this.state)
     const { tutorTransactions, learnerTransactions, isLoading } = this.state;
     return (
       <div>
