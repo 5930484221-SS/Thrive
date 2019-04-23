@@ -62,7 +62,7 @@ export default class Notification extends Component {
     })
       .then(response => {
         const learnerTransactions = response.data.requests.map(noti => {
-          return <LearnerNotification info={noti} key={noti._id} />;
+          return <LearnerNotification reload ={this.componentDidMount} info={noti} key={noti._id} />;
         });
         this.setState({ learnerTransactions });
       })

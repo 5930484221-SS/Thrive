@@ -1,29 +1,53 @@
 import React, { Component } from "react";
 import "./CourseContainer.css";
+import swal from "sweetalert";
+import loaderIcon from "../../img/loaderIcon.gif";
 
 import axios from "axios";
 import querystring from "query-string";
 
 class CourseContainer extends Component {
-  onRequest = () => {
-    axios({
-      method: "POST",
-      url: "http://127.0.0.1:8000/api/create_request",
-      crossDomain: true,
-      data: querystring.stringify({
-        token: window.localStorage.token,
-        tutor: this.props.info.tutor,
-        courseId: this.props.info._id
-      }),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+  onRequest = async () => {
+    try {
+      swal({
+        text: "Sending the request to Tutor...",
+        icon: loaderIcon,
+        buttons: false
+      });
+      await axios({
+        method: "POST",
+        url: "http://127.0.0.1:8000/api/create_reserve",
+        crossDomain: true,
+        data: querystring.stringify({
+          token: window.localStorage.token,
+          tutor: this.props.info.tutor,
+          courseId: this.props.info._id
+        }),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+      await swal({
+        text:
+          "Your request is sent successfully to the tutor.\n You can check the request/response in My Course page",
+        icon: "success"
+      });
+    } catch (error) {
+      swal.stopLoading();
+      swal.close();
+      console.log(error.response)
+      if (error.response.status === 404) {
+        swal({
+          text: "You already requested to this course",
+          icon: "error"
+        });
+      } else {
+        swal({
+          text: error.response.status+" " + error.response.statusText,
+          icon: "error"
+        });
       }
-    })
-      .then(console.log)
-      // .catch(error => {
-      //   alert("Failed to Delete the course\n" + error);
-      //   console.log(error);
-      // });
+    }
   };
 
   render() {
@@ -81,7 +105,10 @@ class CourseContainer extends Component {
                 <div className="modal-footer">
                   <button className="btn btn-orange">See more review</button>
 
-                  <button className="btn btn-secondary" onClick = {this.onRequest}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={this.onRequest}
+                  >
                     Request reservation
                   </button>
                 </div>

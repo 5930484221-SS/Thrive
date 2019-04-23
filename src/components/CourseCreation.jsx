@@ -2,6 +2,7 @@ import axios from "axios";
 import querystring from "query-string";
 import React, { Component } from "react";
 import CowBg from "./CowBg";
+import swal from "sweetalert";
 
 import "./courseCreate.css";
 
@@ -15,7 +16,9 @@ class CourseCreation extends Component {
   field_subject = React.createRef();
   field_tuition = React.createRef();
   state = {};
-
+  async componentDidMount(){
+    await swal("Login sucessfully! Welcome to THRIVE.")
+  }
   onSubmit = async e => {
     e.preventDefault();
     axios({
