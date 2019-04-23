@@ -167,7 +167,9 @@ def login(request):
     if not token:
         return HttpResponseNotFound('Invalid Credentials')
 
-    return JsonResponse(dict(token=token))
+    is_admin_ = is_admin(username)
+
+    return JsonResponse(dict(token=token, is_admin=is_admin_))
 
 
 @csrf_exempt
