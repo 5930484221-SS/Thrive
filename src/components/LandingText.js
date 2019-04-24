@@ -30,9 +30,12 @@ export default props => {
                     SIGN UP
                   </a>
                 ) : (
-                  <button className="btn btn-danger btn-rounded btn-extra mt-4">
+                  <a
+                    href="/listing"
+                    className="btn btn-danger btn-rounded btn-extra mt-4"
+                  >
                     GET STARTED
-                  </button>
+                  </a>
                 )}
               </div>
             </div>

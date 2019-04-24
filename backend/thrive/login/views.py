@@ -57,11 +57,11 @@ def now():
 
 def authenticate(username, password):
     collection = mongo_db.get_collection('users')
-    match = collection.find_one({'user': username, 'password': password})
+    match = collection.find_one({'user': username, 'password': password, 'active': True})
 
     if match:
-        return get_or_create_token(username)
-    return None
+        return get_or_create_token(username), match
+    return None, None
 
 
 def get_username_from_token(token):
@@ -148,8 +148,32 @@ def register(request):
         'contact': contact,
 
         'reg_dt': reg_dt,
+        'active': True,
     }
     collection.insert_one(record)
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def delete_user(request):
+    token = request.POST.get('token', None)
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'active': False}})
 
     return HttpResponse('')
 
@@ -162,15 +186,12 @@ def login(request):
     if username is None or password is None:
         return HttpResponseBadRequest('Please provide both username and password')
 
-    token = authenticate(username=username, password=password)
+    token, user = authenticate(username=username, password=password)
 
     if not token:
         return HttpResponseNotFound('Invalid Credentials')
 
-    is_admin_ = is_admin(username)
-
-    collection = mongo_db.get_collection('users')
-    user = collection.find_one({'user': username})
+    is_admin_ = user['is_admin']
 
     return JsonResponse(dict(token=token, is_admin=is_admin_, displayName=user['display']))
 
@@ -298,6 +319,7 @@ def get_courses(request):
         course = {field: str(record[field]) for field in course_fields + ['_id']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
+        course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6))
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))
@@ -410,6 +432,29 @@ def logout(request):
     return HttpResponse('')
 
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def add_admin(request):
+    token = request.POST.get("token")
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'is_admin': True}})
+
+    return HttpResponse('')
+
+
 # sprint2
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -454,7 +499,7 @@ def close_course(request):
     ret = collection_course.update_one(filter_data, update_data)  # type: UpdateResult
 
     if ret.modified_count:
-        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x']}}
+        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x', 'xs']}}
         update_data = {'status': 'c'}
         collection_reserve.update_many(filter_data, {'$set': update_data})
 
@@ -488,12 +533,22 @@ def delete_course(request):
             return HttpResponseForbidden('the action is not allowed')
         return HttpResponseForbidden('the course has been reserved')
 
-    filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    if not is_admin(user):
+        filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    else:
+        filter_data = {'_id': ObjectId(_id)}
+
     ret = collection_course.delete_one(filter_data)
     if not ret.deleted_count:
         return HttpResponseForbidden('the action is not allowed')
 
-    collection_reserve.update_many({'course_id': ObjectId(_id)}, {'$set': {'status': 'x'}})
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['s', 'cs', 'xs']}}
+    update_data = {'status': 'x'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
+
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['x']}}
+    update_data = {'status': 'xs'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
 
     return HttpResponse('')
 
@@ -594,6 +649,9 @@ def get_learner_transactions(request):
 
     requests=[]
     for record in query:
+        if not record['course']:
+            continue
+
         request = {field: str(record[field]) for field in ['_id']}
 
         record['_id'] =  str(record['_id'])
@@ -601,8 +659,8 @@ def get_learner_transactions(request):
 
         course = dict()
         for field in course_info_in_reserve:
-            if len(record['course']) > 0:
-                course[field] = str(record['course'][0][field])
+            course[field] = str(record['course'][0][field])
+        
         record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
@@ -631,11 +689,13 @@ def get_tutor_transactions(request):  # rename???
 
     requests=[]
     for record in query:
+        if not record['course']:
+            continue
+
         request = {field: str(record[field]) for field in ['_id']}
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
-        if len(record['course']) > 0:
-            record['course'][0]['_id'] =  str(record['course'][0]['_id'])
+        record['course'][0]['_id'] =  str(record['course'][0]['_id'])
         # print(record)
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
