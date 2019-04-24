@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import Select from 'react-select';
-import querystring from 'query-string';
+import React, { Component } from "react";
+import axios from "axios";
+import Select from "react-select";
+import querystring from "query-string";
 
-import CowBg from '../CowBg';
-import CourseContainer from './CourseContainer';
-import SearchBar from './SearchBar';
+import CowBg from "../CowBg";
+import CourseContainer from "./CourseContainer";
+import SearchBar from "./SearchBar";
 
-import Loader from '../loader/Loader';
+import Loader from "../loader/Loader";
 
 import {
   subjects,
@@ -15,7 +15,7 @@ import {
   tuitionFees,
   joiningFees,
   ratings
-} from './filterLists';
+} from "./filterLists";
 
 class Listing extends Component {
   constructor() {
@@ -23,12 +23,12 @@ class Listing extends Component {
     this.state = {
       courseList: [],
       isLoading: true,
-      search: '',
+      search: "",
       subject: [],
-      location: '',
-      tuitionMax: '',
-      feeMax: '',
-      rating: '',
+      location: "",
+      tuitionMax: "",
+      feeMax: "",
+      rating: "",
       isFilterOn: false
     };
   }
@@ -36,17 +36,17 @@ class Listing extends Component {
   async componentDidMount() {
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         crossDomain: true,
-        url: 'http://localhost:8000/api/get_courses',
+        url: "http://localhost:8000/api/get_courses",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded"
           // "Access-Control-Allow-Origin": "*"
         }
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log('fetch fails, please refresh the page');
+      console.log("fetch fails, please refresh the page");
     }
   }
 
@@ -63,7 +63,7 @@ class Listing extends Component {
   }
 
   genQueryString(name, arr) {
-    let str = '';
+    let str = "";
     for (let i = 0; i < arr.length; i++) {
       str += `&${name}=${arr[i].value}`;
     }
@@ -78,9 +78,9 @@ class Listing extends Component {
       isLoading: true
     });
 
-    let queryString = '';
+    let queryString = "";
 
-    if (subject) queryString += this.genQueryString('subject', subject);
+    if (subject) queryString += this.genQueryString("subject", subject);
     if (location) queryString += `&location=${location}`;
     if (tuitionMax) queryString += `&tuitionMax=${tuitionMax.value}`;
     if (feeMax) queryString += `&feeMax=${feeMax.value}`;
@@ -89,13 +89,13 @@ class Listing extends Component {
 
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         crossDomain: true,
         url: `http://localhost:8000/api/get_courses?${queryString}`
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log('fail to search, please try again');
+      console.log("fail to search, please try again");
     }
   }
 
@@ -109,16 +109,16 @@ class Listing extends Component {
     });
     try {
       const response = await axios({
-        method: 'GET',
+        method: "GET",
         url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
       });
       this.setState(
         { courseList: response.data.courses, isLoading: false },
-        () => console.log('courseList: ', this.state.courseList)
+        () => console.log("courseList: ", this.state.courseList)
       );
     } catch (error) {
       console.log(error);
-      console.log('search fails, please try again');
+      console.log("search fails, please try again");
     }
   }
 
@@ -197,7 +197,7 @@ class Listing extends Component {
                       href="#"
                       className="h5 card-title text-center"
                     >
-                      Filters <i className="fas fa-angle-up" />{' '}
+                      Filters <i className="fas fa-angle-up" />{" "}
                     </a>
                   </div>
                   <form onSubmit={this.onFilterSubmit.bind(this)}>

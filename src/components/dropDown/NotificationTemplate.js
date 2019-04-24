@@ -102,10 +102,6 @@ export const TutorNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2">
@@ -166,10 +162,6 @@ export const TutorNotification = props => {
                     {learner}
                   </span>
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -206,10 +198,6 @@ export const TutorNotification = props => {
                   <span className="text-success font-weight-bold">
                     {learner}
                   </span>
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -249,10 +237,6 @@ export const TutorNotification = props => {
                     {" " + topic + " "}
                   </span>
                   course
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -297,10 +281,6 @@ export const LearnerNotification = props => {
                   </span>
                   {" course"}
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -334,10 +314,6 @@ export const LearnerNotification = props => {
                     {" " + topic + " "}
                   </span>
                   course
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -398,10 +374,6 @@ export const LearnerNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -435,10 +407,6 @@ export const LearnerNotification = props => {
                     {" " + topic}
                   </span>
                   {" course has been successfully processed"}
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
