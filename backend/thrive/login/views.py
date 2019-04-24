@@ -431,6 +431,29 @@ def logout(request):
     return HttpResponse('')
 
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def add_admin(request):
+    token = request.POST.get("token")
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'is_admin': True}})
+
+    return HttpResponse('')
+
+
 # sprint2
 @csrf_exempt
 @require_http_methods(["POST"])
