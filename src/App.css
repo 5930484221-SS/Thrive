@@ -32,6 +32,11 @@ body {
   font-size: 1.6rem;
 }
 
+.navbar-light-green {
+  background-color: #1e1e2f;
+  box-shadow: 0px 1pxgreen 6px rgba(0, 0, 0, 0.2);
+}
+
 .navbar-light-orange {
   background-color: #fff0b3;
   box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);

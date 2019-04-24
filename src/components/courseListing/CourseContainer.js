@@ -35,10 +35,9 @@ class CourseContainer extends Component {
     } catch (error) {
       swal.stopLoading();
       swal.close();
-      console.log(error.response)
-      if (error.response.status === 404) {
+      if (error.response.status === 403) {
         swal({
-          text: "You already requested to this course",
+          text: error.response.data,
           icon: "error"
         });
       } else {
