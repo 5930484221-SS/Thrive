@@ -65,3 +65,7 @@ h5 .card-title {
 .card:hover {
   cursor: pointer;
 }
+
+.disabled-hover {
+  pointer-events: none;
+}
