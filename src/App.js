@@ -24,11 +24,11 @@ import * as Actions from "./actions";
 class App extends Component {
   render() {
     let nav;
-    const is_admin = localStorage.getItem('is_admin') === 'true';
-    console.log('is_admin', is_admin);
+    const is_admin = localStorage.getItem("is_admin") === "true";
+    console.log("is_admin", is_admin);
     if (is_admin) {
       nav = <NavAdmin />;
-    } else if (localStorage.getItem('token') === null) {
+    } else if (localStorage.getItem("token") === null) {
       nav = <NavBar auth={false} />;
     } else {
       nav = <NavBar auth={true} />;

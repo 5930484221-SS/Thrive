@@ -103,14 +103,14 @@ class Dashboard extends React.Component {
       url: "http://localhost:8000/api/dashboard",
       data: querystring.stringify({
         token: window.localStorage.token,
-        nrows: 5
+        nrows: 10
       }),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
         // "Access-Control-Allow-Origin": "*"
       }
     });
-    console.log(response);
+    //console.log(response);
     this.setState({
       index: response.data.chartData.index,
       register: response.data.chartData.register,
