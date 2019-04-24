@@ -2,10 +2,22 @@ import React, { Component } from 'react';
 import '../courseListing/CourseContainer.css';
 
 class UserContainer extends Component {
-  //mock-up
   constructor(props) {
     super(props);
   }
+
+  async deleteUser(user) {
+    // call deleteUser API
+
+    this.props.refresh();
+  }
+
+  async grantAdmin(user) {
+    // call grantAdmin API
+
+    this.props.refresh();
+  }
+
   render() {
     const {
       username,
@@ -20,7 +32,7 @@ class UserContainer extends Component {
       isAdmin
     } = this.props.info;
 
-    const { index, refresh } = this.props;
+    const { index } = this.props;
     console.log('rerender');
     return (
       <div>
