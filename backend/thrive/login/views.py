@@ -57,11 +57,11 @@ def now():
 
 def authenticate(username, password):
     collection = mongo_db.get_collection('users')
-    match = collection.find_one({'user': username, 'password': password})
+    match = collection.find_one({'user': username, 'password': password, 'active': True})
 
     if match:
-        return get_or_create_token(username)
-    return None
+        return get_or_create_token(username), match
+    return None, None
 
 
 def get_username_from_token(token):
@@ -148,8 +148,32 @@ def register(request):
         'contact': contact,
 
         'reg_dt': reg_dt,
+        'active': True,
     }
     collection.insert_one(record)
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def delete_user(request):
+    token = request.POST.get('token', None)
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'active': False}})
 
     return HttpResponse('')
 
@@ -162,15 +186,12 @@ def login(request):
     if username is None or password is None:
         return HttpResponseBadRequest('Please provide both username and password')
 
-    token = authenticate(username=username, password=password)
+    token, user = authenticate(username=username, password=password)
 
     if not token:
         return HttpResponseNotFound('Invalid Credentials')
 
-    is_admin_ = is_admin(username)
-
-    collection = mongo_db.get_collection('users')
-    user = collection.find_one({'user': username})
+    is_admin_ = user['is_admin']
 
     return JsonResponse(dict(token=token, is_admin=is_admin_, displayName=user['display']))
 
