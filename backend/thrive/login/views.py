@@ -366,16 +366,18 @@ def user(request):
 
     collection = mongo_db.get_collection('users')
 
-    username = request.GET.get('username')
+    username = request.GET.get('username', '')
 
-    match = collection.find_one({'user': username})
+    matches = collection.find({'user': re.compile(rf'^.*{username}.*', re.I)})
 
-    if not match:
+    users = []
+    for match in matches:
+        result = {v: match[k] for k, v in result_keys.items()}
+        users.append(result)
+    if not users:
         return HttpResponseNotFound('The given username does not exist')
 
-    result = {v: match[k] for k, v in result_keys.items()}
-    response = JsonResponse(result)
-
+    response = JsonResponse({'users': users})
     return set_response_header(response)
 
 
