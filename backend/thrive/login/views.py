@@ -195,6 +195,8 @@ def create_course(request):
     record['rating_4'] = 0
     record['rating_5'] = 0
 
+    record['status'] = 'open'
+
     collection = mongo_db.get_collection('courses')
     collection.insert_one(record)
 
