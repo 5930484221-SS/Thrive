@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import querystring from "query-string";
 import { loginUserSuccess } from "../actions";
+import swal from "sweetalert";
 
 class LoginAndSignUp extends Component {
   constructor(props) {
@@ -42,7 +43,8 @@ class LoginAndSignUp extends Component {
 
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("username", this.state.username);
-    alert("ok");
+    const success = await swal("Login sucessfully! Welcome to THRIVE.");
+    // alert("ok");
     window.location = "/";
   };
 
@@ -167,7 +169,11 @@ class LoginAndSignUp extends Component {
             </div>
           </div>
         </li>
-        <button className="nav-item btn btn-orange btn-rounded">SIGN UP</button>
+        <a href="/register">
+          <button className="nav-item btn btn-orange btn-rounded">
+            SIGN UP
+          </button>
+        </a>
       </ul>
     );
   }

@@ -9,14 +9,13 @@ import SearchBar from '../courseListing/SearchBar';
 
 import Loader from '../loader/Loader';
 
-
 class SearchUser extends Component {
   constructor() {
     super();
     this.state = {
-      userList:[],
+      userList: [],
       isLoading: true,
-      search: '',
+      search: ''
     };
   }
 
@@ -25,7 +24,7 @@ class SearchUser extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: 'http://localhost:8000/api/get_user',//require get_user (in db)
+        url: 'http://localhost:8000/api/get_user', //require get_user (in db)
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
@@ -33,24 +32,20 @@ class SearchUser extends Component {
       });
       this.setState({ userList: response.data.user, isLoading: false });
     } catch (error) {
-      console.log('fetch fails, please refresh the page');
+      console.log(error);
     }
   }
 
-  onSearchChange(e) { 
+  onSearchChange(e) {
     this.setState({
       search: e.target.value
     });
   }
 
   render() {
-    const {
-      isLoading,
-      search,
-      userList
-    } = this.state;
+    const { isLoading, search, userList } = this.state;
     // take a look at the states in the console!
-    console.log({ isLoading,search,userList });
+    console.log({ isLoading, search, userList });
 
     return (
       <div>
@@ -63,7 +58,7 @@ class SearchUser extends Component {
             onChange={this.onSearchChange.bind(this)}
             searchValue={search}
           />
-      </div>
+        </div>
         <div className="row">
           {userList.length > 0 || isLoading ? (
             userList.map((c, index) => (
@@ -82,4 +77,3 @@ class SearchUser extends Component {
 }
 
 export default SearchUser;
-

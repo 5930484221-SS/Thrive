@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import querystring from "query-string";
+import swal from "sweetalert";
 
 class UsernameAndLogout extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class UsernameAndLogout extends Component {
     });
 
     localStorage.removeItem("token");
-    alert("logged out");
+    const success = await swal("logged out");
+    // alert("logged out");
     window.location = "/";
   };
 

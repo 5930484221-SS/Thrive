@@ -13,8 +13,9 @@ import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import Dashboard from "./components/admin/Dashboard";
 import SearchUser from "./components/admin/SearchUser";
-import NavAdmin from "./components/admin/NavAdmin";
 import PrivateRoute from "./components/admin/PrivateRoute";
+import NavAdmin from "./components/admin/NavAdmin";
+import Register from "./components/Register";
 
 import "./App.css";
 import { store } from "./configStore";
@@ -40,6 +41,7 @@ class App extends Component {
                 <Route path="/profile" component={Profile} />
                 <Route path="/myCourses" component={MyCourses} />
                 <Route path="/setting" component={Setting} />
+                <Route path="/register" component={Register} />
                 <PrivateRoute
                   path="/admin/dashboard"
                   condition={true}
@@ -47,7 +49,7 @@ class App extends Component {
                 />
                 <PrivateRoute
                   path="/admin/searchUser"
-                  condition={false}
+                  condition={true}
                   component={SearchUser}
                 />
                 <Route path="/" component={Login} />

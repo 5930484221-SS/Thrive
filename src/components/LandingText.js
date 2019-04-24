@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import rocketWithShadow from "../img/rocket with shadow.svg";
+import { Link } from "react-router-dom";
 
 export default props => {
   return (
@@ -22,9 +23,12 @@ export default props => {
               </p>
               <div id="big-button">
                 {localStorage.getItem("token") === null ? (
-                  <button className="btn btn-primary btn-rounded btn-extra mt-4">
+                  <a
+                    href="/register"
+                    className="btn btn-primary btn-rounded btn-extra mt-4"
+                  >
                     SIGN UP
-                  </button>
+                  </a>
                 ) : (
                   <button className="btn btn-danger btn-rounded btn-extra mt-4">
                     GET STARTED
