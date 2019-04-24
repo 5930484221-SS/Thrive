@@ -43,7 +43,7 @@ class LoginAndSignUp extends Component {
 
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('username', this.state.username);
-    // for is_admin
+    localStorage.setItem('displayName', response.data.displayName);
     localStorage.setItem('is_admin', response.data.is_admin);
     const success = await swal('Login sucessfully! Welcome to THRIVE.');
     // alert("ok");

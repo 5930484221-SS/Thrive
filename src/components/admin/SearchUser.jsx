@@ -24,7 +24,7 @@ class SearchUser extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: 'http://localhost:8000/api/user?username=""', //require get_user (in db)
+        url: 'http://localhost:8000/api/user?username', //require get_user (in db)
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
