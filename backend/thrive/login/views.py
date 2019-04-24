@@ -195,6 +195,8 @@ def create_course(request):
     record['rating_4'] = 0
     record['rating_5'] = 0
 
+    record['status'] = 'open'
+
     collection = mongo_db.get_collection('courses')
     collection.insert_one(record)
 
@@ -569,7 +571,7 @@ def get_learner_transactions(request):
     for record in query:
         if not record['course']:
             continue
-    
+
         request = {field: str(record[field]) for field in ['_id']}
 
         record['_id'] =  str(record['_id'])
@@ -578,7 +580,7 @@ def get_learner_transactions(request):
         course = dict()
         for field in course_info_in_reserve:
             course[field] = str(record['course'][0][field])
-
+        
         record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
