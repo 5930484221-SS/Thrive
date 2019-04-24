@@ -23,15 +23,19 @@ import * as Actions from './actions';
 
 class App extends Component {
   render() {
+    let nav;
+    if (localStorage.getItem('is_admin')) {
+      nav = <NavAdmin />;
+    } else if (localStorage.getItem('token') === null) {
+      nav = <NavBar auth={false} />;
+    } else {
+      nav = <NavBar auth={true} />;
+    }
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
-            {localStorage.getItem('token') === null ? (
-              <NavBar auth={false} />
-            ) : (
-              <NavBar auth={true} />
-            )}
+            {nav}
 
             <div className="container">
               <Switch>
@@ -43,12 +47,12 @@ class App extends Component {
                 <Route path="/register" component={Register} />
                 <PrivateRoute
                   path="/admin/dashboard"
-                  condition={true}
+                  condition={localStorage.getItem('is_admin')}
                   component={Dashboard}
                 />
                 <PrivateRoute
                   path="/admin/searchUser"
-                  condition={true}
+                  condition={localStorage.getItem('is_admin')}
                   component={SearchUser}
                 />
                 <Route path="/" component={Login} />

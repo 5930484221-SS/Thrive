@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import rocketWithShadow from "../img/rocket with shadow.svg";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import rocketWithShadow from '../img/rocket with shadow.svg';
+import { Link } from 'react-router-dom';
 
 export default props => {
   return (
@@ -11,10 +11,10 @@ export default props => {
             <div className="col-md-2" />
             <div className="col-lg-6 col-md-8">
               <h1 className="showcase-header">
-                The{" "}
+                The{' '}
                 <span className="text-orange">
                   <strong>BEST</strong>
-                </span>{" "}
+                </span>{' '}
                 Tutor & Learner Matching System
               </h1>
               <p className="text-muted mt-3 showcase-text">
@@ -22,7 +22,7 @@ export default props => {
                 you want
               </p>
               <div id="big-button">
-                {localStorage.getItem("token") === null ? (
+                {localStorage.getItem('token') === null ? (
                   <a
                     href="/register"
                     className="btn btn-primary btn-rounded btn-extra mt-4"
