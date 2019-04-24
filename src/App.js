@@ -38,7 +38,6 @@ class App extends Component {
         <Router>
           <div className="App">
             {nav}
-
             <div className="container">
               <Switch>
                 <Route path="/listing" component={Listing} />

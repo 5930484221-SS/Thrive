@@ -319,6 +319,7 @@ def get_courses(request):
         course = {field: str(record[field]) for field in course_fields + ['_id','status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
+        course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6))
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))
@@ -498,7 +499,7 @@ def close_course(request):
     ret = collection_course.update_one(filter_data, update_data)  # type: UpdateResult
 
     if ret.modified_count:
-        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x']}}
+        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x', 'xs']}}
         update_data = {'status': 'c'}
         collection_reserve.update_many(filter_data, {'$set': update_data})
 
@@ -532,12 +533,22 @@ def delete_course(request):
             return HttpResponseForbidden('the action is not allowed')
         return HttpResponseForbidden('the course has been reserved')
 
-    filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    if not is_admin(user):
+        filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    else:
+        filter_data = {'_id': ObjectId(_id)}
+
     ret = collection_course.delete_one(filter_data)
     if not ret.deleted_count:
         return HttpResponseForbidden('the action is not allowed')
 
-    collection_reserve.update_many({'course_id': ObjectId(_id)}, {'$set': {'status': 'x'}})
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['s', 'cs', 'xs']}}
+    update_data = {'status': 'x'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
+
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['x']}}
+    update_data = {'status': 'xs'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
 
     return HttpResponse('')
 

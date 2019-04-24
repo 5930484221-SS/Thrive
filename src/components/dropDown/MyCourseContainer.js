@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
 import MyCourseContentError from "./MyCourseContentError";
 import Loader from "../loader/Loader";
+
+import StarRatings from "react-star-ratings";
 import swal from "sweetalert";
 
 //query
@@ -203,8 +205,60 @@ export class LearningCourseContainer extends Component {
     super();
     this.state = {
       coursesAsLearner: [],
-      isLoading: false
+      isLoading: false,
+      rating: 0,
+      review: "",
+      courseID: ""
     };
+    this.onSubmit = this.onSubmit.bind(this);
+    this.changeRating = this.changeRating.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.setID = this.setID.bind(this);
+  }
+
+  setID(id) {
+    this.setState({ courseID: id });
+  }
+
+  changeRating(newRating, name) {
+    this.setState({
+      rating: newRating
+    });
+  }
+
+  handleInputChange = e => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  onSubmit(e) {
+    e.preventDefault();
+    if (this.state.rating === 0) {
+      return swal("Please rating");
+    }
+    const data = {
+      token: localStorage.getItem("token"),
+      review: this.state.review,
+      rating: this.state.rating,
+      courseID: this.state.courseID
+    };
+    console.log(data);
+    // return axios({
+    //   method: "POST",
+    //   url: "http://localhost:8000/api/",
+    //   crossDomain: true,
+    //   data: querystring.stringify(data),
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   }
+    // }).then(() => {
+    //   this.setState({ isEdit: false });
+    // });
   }
 
   async componentDidMount() {
@@ -238,8 +292,88 @@ export class LearningCourseContainer extends Component {
           {coursesAsLearner.map(course => (
             <MyCourseContainerTemplate info={course} key={course._id}>
               <div>
-                {" "}
-                <button className="btn btn-success">Review</button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  data-toggle="modal"
+                  data-target="#review"
+                  style={{ marginBottom: "5px" }}
+                  onClick={() => this.setID(course._id)}
+                >
+                  Review
+                </button>
+                <div
+                  className="modal"
+                  id="review"
+                  tabIndex="-1"
+                  role="dialog"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">
+                          Review Course{"  "}
+                          <span style={{ color: "orange", fontWeight: "bold" }}>
+                            {course.topic}
+                          </span>
+                        </h5>
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form onSubmit={this.onSubmit}>
+                        <div className="modal-body">
+                          <textarea
+                            className="form-control rounded-0"
+                            id="review"
+                            rows="10"
+                            name="review"
+                            onChange={this.handleInputChange}
+                            placeholder="Write review detail here."
+                            required
+                          />
+                          <br />
+                          <h5
+                            style={{
+                              display: "inline-block",
+                              marginRight: "20px"
+                            }}
+                          >
+                            Rating
+                          </h5>
+                          <StarRatings
+                            rating={this.state.rating}
+                            starRatedColor="orange"
+                            changeRating={this.changeRating}
+                            numberOfStars={5}
+                            name="rating"
+                            starHoverColor="orange"
+                          />
+                        </div>
+
+                        <div className="modal-footer">
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button type="submit" className="btn btn-warning">
+                            Send
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
             </MyCourseContainerTemplate>
           ))}
