@@ -50,7 +50,7 @@ class Listing extends Component {
     }
   }
 
-  onSearchChange(e) { 
+  onSearchChange(e) {
     this.setState({
       search: e.target.value
     });
@@ -119,6 +119,7 @@ class Listing extends Component {
         () => console.log('courseList: ', this.state.courseList)
       );
     } catch (error) {
+      console.log(error);
       console.log('search fails, please try again');
     }
   }
