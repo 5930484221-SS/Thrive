@@ -38,7 +38,7 @@ const onDecline = _id => {
     crossDomain: true,
     data: querystring.stringify({
       token: window.localStorage.token,
-      id: _id,
+      // id: _id,
       currency: "THB"
     }),
     headers: {
@@ -52,7 +52,7 @@ const onDecline = _id => {
 };
 
 const onCheckout = (checkoutToken, _id, fee) => {
-  axios({
+  return axios({
     method: "POST",
     url: "http://127.0.0.1:8000/api/charge",
     crossDomain: true,
@@ -71,7 +71,6 @@ const onCheckout = (checkoutToken, _id, fee) => {
     .catch(error => {
       console.log(error.response);
     });
-  console.log(checkoutToken);
 };
 
 export const TutorNotification = props => {
@@ -103,17 +102,16 @@ export const TutorNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2">
                   <button
                     className="btn btn btn-outline-success btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => onAccept(_id)}
+                    onClick={() => {
+                      onAccept(_id);
+                      props.reload();
+                    }}
                     name={NOTIFICATION_TYPE.wp}
                   >
                     Accept
@@ -121,7 +119,10 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-danger btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => onDecline(_id)}
+                    onClick={() => {
+                      onDecline(_id);
+                      props.reload();
+                    }}
                     name={NOTIFICATION_TYPE.d}
                   >
                     Decline
@@ -132,7 +133,6 @@ export const TutorNotification = props => {
           </table>
         </div>
       );
-      break;
 
     case NOTIFICATION_TYPE.wp:
       return (
@@ -162,10 +162,6 @@ export const TutorNotification = props => {
                     {learner}
                   </span>
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -174,7 +170,6 @@ export const TutorNotification = props => {
           </table>
         </div>
       );
-      break;
 
     case NOTIFICATION_TYPE.d:
       return (
@@ -204,10 +199,6 @@ export const TutorNotification = props => {
                     {learner}
                   </span>
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -216,7 +207,6 @@ export const TutorNotification = props => {
           </table>
         </div>
       );
-      break;
 
     case NOTIFICATION_TYPE.s:
       return (
@@ -248,10 +238,6 @@ export const TutorNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -260,10 +246,9 @@ export const TutorNotification = props => {
           </table>
         </div>
       );
-      break;
+
     default:
       return null;
-      break;
   }
 };
 
@@ -296,10 +281,6 @@ export const LearnerNotification = props => {
                   </span>
                   {" course"}
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -308,7 +289,6 @@ export const LearnerNotification = props => {
           </table>
         </div>
       );
-      break;
 
     case NOTIFICATION_TYPE.wp:
       return (
@@ -335,10 +315,6 @@ export const LearnerNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2">
@@ -347,7 +323,10 @@ export const LearnerNotification = props => {
                     amount={fee * 100}
                     image={img}
                     currency="THB"
-                    token={token => onCheckout(token, _id, fee)}
+                    token={async token => {
+                      await onCheckout(token, _id, fee);
+                      props.reload();
+                    }}
                     name={"Buy " + topic + " course"}
                     description={"Instruction by " + tutor}
                     ComponentClass="form-group"
@@ -365,7 +344,7 @@ export const LearnerNotification = props => {
           </table>
         </div>
       );
-      break;
+
     case NOTIFICATION_TYPE.d:
       return (
         <div>
@@ -395,10 +374,6 @@ export const LearnerNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -407,7 +382,6 @@ export const LearnerNotification = props => {
           </table>
         </div>
       );
-      break;
 
     case NOTIFICATION_TYPE.s:
       return (
@@ -434,10 +408,6 @@ export const LearnerNotification = props => {
                   </span>
                   {" course has been successfully processed"}
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -446,10 +416,8 @@ export const LearnerNotification = props => {
           </table>
         </div>
       );
-      break;
 
     default:
       return null;
-      break;
   }
 };

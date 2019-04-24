@@ -56,7 +56,8 @@ params list:
 | card_token | card token which obtain from stripe |
 | amount | amount of money that want to charge |
 | currency | money currency ref https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts |
-
+| request_id | reserve id that want to pay |
+| course_id | course id that want to pay |
 
 ## Flag list
 | flag | describe |

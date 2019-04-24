@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import {TeachingCourseContainer,LearningCourseContainer} from "./MyCourseContainer";
+import {
+  TeachingCourseContainer,
+  LearningCourseContainer
+} from "./MyCourseContainer";
 import MyCourseContentError from "./MyCourseContentError";
 import Noti from "./Notifications";
 import Loader from "../loader/Loader";
@@ -25,18 +28,18 @@ class MyCourses extends Component {
     };
   }
 
-  onSubNavClick = async (event) => {
-    const currentSubPage = event.target.id
+  onSubNavClick = async event => {
+    const currentSubPage = event.target.id;
     await this.setState({ currentSubPage: null });
-    await this.setState({ currentSubPage});
+    await this.setState({ currentSubPage });
   };
 
   renderContent() {
     const currentSubPage = this.state.currentSubPage;
     if (currentSubPage === TUTOR) {
-      return <TeachingCourseContainer/>
+      return <TeachingCourseContainer />;
     } else if (currentSubPage === LEARNER) {
-      return <LearningCourseContainer/>
+      return <LearningCourseContainer />;
     } else if (currentSubPage === NOTIFICATION) {
       return <Noti />;
     } else {
@@ -46,7 +49,6 @@ class MyCourses extends Component {
 
   render() {
     const { isLoading, currentSubPage } = this.state;
-    console.log(this.state)
     return (
       <div>
         <CowBg />
@@ -64,7 +66,7 @@ class MyCourses extends Component {
             <div className="col border-right">
               <a className="display-4 topic btn">
                 {currentSubPage === TUTOR ? (
-                  <span   className="underline-on-hover" id={TUTOR} onClick={this.onSubNavClick}>As a tutor</span>
+                  <span className="underline-on-hover">As a tutor</span>
                 ) : (
                   <span id={TUTOR} onClick={this.onSubNavClick}>
                     As a tutor
@@ -101,9 +103,7 @@ class MyCourses extends Component {
           <hr />
 
           {/* Content */}
-          <div className="container">
-            {this.renderContent()}
-          </div>
+          <div className="container">{this.renderContent()}</div>
         </div>
 
         {isLoading ? Loader : null}

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-import rocketLogo from '../../img/rocket_logo.svg';
-import UsernameAndLogoutAdmin from './UsernameAndLogoutAdmin';
+import rocketLogo from "../../img/rocket_logo.svg";
+import UsernameAndLogoutAdmin from "./UsernameAndLogoutAdmin";
 
 class NavAdmin extends Component {
   render() {
@@ -23,6 +23,11 @@ class NavAdmin extends Component {
             </button>
             <div id="navbarNav" className="collapse navbar-collapse">
               <ul className="nav navbar-nav ">
+                <li className="nav-item ml-3">
+                  <Link to="/listing" className="nav-link text-white">
+                    Courses
+                  </Link>
+                </li>
                 <li className="nav-item ml-3">
                   <Link to="/admin/dashboard" className="nav-link text-white">
                     Dashboard

@@ -13,14 +13,14 @@ class UsernameAndLogoutAdmin extends Component {
   onLogout = async e => {
     e.preventDefault();
     const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/logout',
+      method: "POST",
+      url: "http://localhost:8000/api/logout",
       crossDomain: true,
       data: querystring.stringify({
-        token: localStorage.getItem('token')
+        token: localStorage.getItem("token")
       }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     });
 
@@ -40,7 +40,7 @@ class UsernameAndLogoutAdmin extends Component {
             className="nav-link dropdown-toggle text-white"
             data-toggle="dropdown"
           >
-            <i className="fas fa-user ml-3 text-white" />{' '}
+            <i className="fas fa-user ml-3 text-white" />{" "}
             {/* {localStorage.getItem("username")} */}
             Admin
           </a>

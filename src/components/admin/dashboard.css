@@ -15,13 +15,13 @@
   -ms-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
 }
-.content .main-panel[data=blue] {
+.content .main-panel[data="blue"] {
   border-top: 2px solid #1d8cf8;
 }
-.content .main-panel[data=green] {
+.content .main-panel[data="green"] {
   border-top: 2px solid #00f2c3;
 }
-.content .main-panel[data=primary] {
+.content .main-panel[data="primary"] {
   border-top: 2px solid #e14eca;
 }
 .content .main-panel > .content {
@@ -179,11 +179,11 @@
     border-bottom-right-radius: 0;
   }
   .content .card-group > .card:first-child .card-img-top,
-.content .card-group > .card:first-child .card-header {
+  .content .card-group > .card:first-child .card-header {
     border-top-right-radius: 0;
   }
   .content .card-group > .card:first-child .card-img-bottom,
-.content .card-group > .card:first-child .card-footer {
+  .content .card-group > .card:first-child .card-footer {
     border-bottom-right-radius: 0;
   }
   .content .card-group > .card:last-child {
@@ -191,33 +191,47 @@
     border-bottom-left-radius: 0;
   }
   .content .card-group > .card:last-child .card-img-top,
-.content .card-group > .card:last-child .card-header {
+  .content .card-group > .card:last-child .card-header {
     border-top-left-radius: 0;
   }
   .content .card-group > .card:last-child .card-img-bottom,
-.content .card-group > .card:last-child .card-footer {
+  .content .card-group > .card:last-child .card-footer {
     border-bottom-left-radius: 0;
   }
   .content .card-group > .card:only-child {
     border-radius: 0.2857rem;
   }
   .content .card-group > .card:only-child .card-img-top,
-.content .card-group > .card:only-child .card-header {
+  .content .card-group > .card:only-child .card-header {
     border-top-left-radius: 0.2857rem;
     border-top-right-radius: 0.2857rem;
   }
   .content .card-group > .card:only-child .card-img-bottom,
-.content .card-group > .card:only-child .card-footer {
+  .content .card-group > .card:only-child .card-footer {
     border-bottom-right-radius: 0.2857rem;
     border-bottom-left-radius: 0.2857rem;
   }
-  .content .card-group > .card:not(:first-child):not(:last-child):not(:only-child) {
+  .content
+    .card-group
+    > .card:not(:first-child):not(:last-child):not(:only-child) {
     border-radius: 0;
   }
-  .content .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-top,
-.content .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-img-bottom,
-.content .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-header,
-.content .card-group > .card:not(:first-child):not(:last-child):not(:only-child) .card-footer {
+  .content
+    .card-group
+    > .card:not(:first-child):not(:last-child):not(:only-child)
+    .card-img-top,
+  .content
+    .card-group
+    > .card:not(:first-child):not(:last-child):not(:only-child)
+    .card-img-bottom,
+  .content
+    .card-group
+    > .card:not(:first-child):not(:last-child):not(:only-child)
+    .card-header,
+  .content
+    .card-group
+    > .card:not(:first-child):not(:last-child):not(:only-child)
+    .card-footer {
     border-radius: 0;
   }
 }
@@ -311,7 +325,11 @@
 .content .white-content .card:not(.card-white) .card-header {
   color: #222a42;
 }
-.content .white-content .card:not(.card-white) .card-header a[data-toggle=collapse] {
+.content
+  .white-content
+  .card:not(.card-white)
+  .card-header
+  a[data-toggle="collapse"] {
   color: #222a42;
 }
 .content .white-content .card:not(.card-white) .card-header .card-title,
@@ -329,10 +347,18 @@
   color: #444444;
   background-color: rgba(222, 222, 222, 0.3);
 }
-.content .white-content .card:not(.card-white).nav-pills .nav-item .nav-link:not(.active):hover {
+.content
+  .white-content
+  .card:not(.card-white).nav-pills
+  .nav-item
+  .nav-link:not(.active):hover {
   background: rgba(222, 222, 222, 0.5);
 }
-.content .white-content .card:not(.card-white).nav-pills .nav-item .nav-link.active {
+.content
+  .white-content
+  .card:not(.card-white).nav-pills
+  .nav-item
+  .nav-link.active {
   color: #ffffff;
 }
 .content .white-content .card:not(.card-white) .tab-content .tab-pane {
@@ -454,57 +480,229 @@
   color: #344675;
 }
 .content .card.card-white .form-group.no-border .form-control,
-.content .card.card-white .form-group.no-border .form-control + .input-group-prepend .input-group-text,
-.content .card.card-white .form-group.no-border .form-control + .input-group-append .input-group-text,
-.content .card.card-white .form-group.no-border .input-group-prepend .input-group-text,
-.content .card.card-white .form-group.no-border .input-group-append .input-group-text,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-append
+  .input-group-text,
 .content .card.card-white .input-group.no-border .form-control,
-.content .card.card-white .input-group.no-border .form-control + .input-group-prepend .input-group-text,
-.content .card.card-white .input-group.no-border .form-control + .input-group-append .input-group-text,
-.content .card.card-white .input-group.no-border .input-group-prepend .input-group-text,
-.content .card.card-white .input-group.no-border .input-group-append .input-group-text {
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-append
+  .input-group-text {
   background-color: rgba(222, 222, 222, 0.3);
 }
 .content .card.card-white .form-group.no-border .form-control:focus,
 .content .card.card-white .form-group.no-border .form-control:active,
 .content .card.card-white .form-group.no-border .form-control:active,
-.content .card.card-white .form-group.no-border .form-control + .input-group-prepend .input-group-text:focus,
-.content .card.card-white .form-group.no-border .form-control + .input-group-prepend .input-group-text:active,
-.content .card.card-white .form-group.no-border .form-control + .input-group-prepend .input-group-text:active,
-.content .card.card-white .form-group.no-border .form-control + .input-group-append .input-group-text:focus,
-.content .card.card-white .form-group.no-border .form-control + .input-group-append .input-group-text:active,
-.content .card.card-white .form-group.no-border .form-control + .input-group-append .input-group-text:active,
-.content .card.card-white .form-group.no-border .input-group-prepend .input-group-text:focus,
-.content .card.card-white .form-group.no-border .input-group-prepend .input-group-text:active,
-.content .card.card-white .form-group.no-border .input-group-prepend .input-group-text:active,
-.content .card.card-white .form-group.no-border .input-group-append .input-group-text:focus,
-.content .card.card-white .form-group.no-border .input-group-append .input-group-text:active,
-.content .card.card-white .form-group.no-border .input-group-append .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-prepend
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-append
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .form-group.no-border
+  .input-group-append
+  .input-group-text:active,
 .content .card.card-white .input-group.no-border .form-control:focus,
 .content .card.card-white .input-group.no-border .form-control:active,
 .content .card.card-white .input-group.no-border .form-control:active,
-.content .card.card-white .input-group.no-border .form-control + .input-group-prepend .input-group-text:focus,
-.content .card.card-white .input-group.no-border .form-control + .input-group-prepend .input-group-text:active,
-.content .card.card-white .input-group.no-border .form-control + .input-group-prepend .input-group-text:active,
-.content .card.card-white .input-group.no-border .form-control + .input-group-append .input-group-text:focus,
-.content .card.card-white .input-group.no-border .form-control + .input-group-append .input-group-text:active,
-.content .card.card-white .input-group.no-border .form-control + .input-group-append .input-group-text:active,
-.content .card.card-white .input-group.no-border .input-group-prepend .input-group-text:focus,
-.content .card.card-white .input-group.no-border .input-group-prepend .input-group-text:active,
-.content .card.card-white .input-group.no-border .input-group-prepend .input-group-text:active,
-.content .card.card-white .input-group.no-border .input-group-append .input-group-text:focus,
-.content .card.card-white .input-group.no-border .input-group-append .input-group-text:active,
-.content .card.card-white .input-group.no-border .input-group-append .input-group-text:active {
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control
+  + .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-prepend
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-prepend
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-append
+  .input-group-text:focus,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-append
+  .input-group-text:active,
+.content
+  .card.card-white
+  .input-group.no-border
+  .input-group-append
+  .input-group-text:active {
   background-color: rgba(222, 222, 222, 0.5);
 }
-.content .card.card-white .form-group.no-border .form-control:focus + .input-group-prepend .input-group-text,
-.content .card.card-white .form-group.no-border .form-control:focus + .input-group-append .input-group-text,
-.content .card.card-white .input-group.no-border .form-control:focus + .input-group-prepend .input-group-text,
-.content .card.card-white .input-group.no-border .form-control:focus + .input-group-append .input-group-text {
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control:focus
+  + .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .form-group.no-border
+  .form-control:focus
+  + .input-group-append
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control:focus
+  + .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group.no-border
+  .form-control:focus
+  + .input-group-append
+  .input-group-text {
   background-color: transparent;
 }
-.content .card.card-white .input-group[disabled] .input-group-prepend .input-group-text,
-.content .card.card-white .input-group[disabled] .input-group-append .input-group-text {
+.content
+  .card.card-white
+  .input-group[disabled]
+  .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group[disabled]
+  .input-group-append
+  .input-group-text {
   background-color: #222a42;
 }
 .content .card.card-white .form-control[disabled],
@@ -513,14 +711,30 @@
   background: #e3e3e3;
   border-color: rgba(29, 37, 59, 0.3);
 }
-.content .card.card-white .input-group-focus .input-group-prepend .input-group-text,
-.content .card.card-white .input-group-focus .input-group-append .input-group-text,
+.content
+  .card.card-white
+  .input-group-focus
+  .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group-focus
+  .input-group-append
+  .input-group-text,
 .content .card.card-white .input-group-focus .form-control {
   background-color: #ffffff;
   border-color: #e14eca;
 }
-.content .card.card-white .input-group-focus.no-border .input-group-prepend .input-group-text,
-.content .card.card-white .input-group-focus.no-border .input-group-append .input-group-text {
+.content
+  .card.card-white
+  .input-group-focus.no-border
+  .input-group-prepend
+  .input-group-text,
+.content
+  .card.card-white
+  .input-group-focus.no-border
+  .input-group-append
+  .input-group-text {
   background-color: rgba(222, 222, 222, 0.5);
 }
 .content .card.card-white .input-group-prepend .input-group-text {
@@ -530,13 +744,29 @@
   border-left: none;
 }
 .content .card.card-white .has-danger .form-control:focus,
-.content .card.card-white .has-success.input-group-focus .input-group-append .input-group-text,
-.content .card.card-white .has-success.input-group-focus .input-group-prepend .input-group-text {
+.content
+  .card.card-white
+  .has-success.input-group-focus
+  .input-group-append
+  .input-group-text,
+.content
+  .card.card-white
+  .has-success.input-group-focus
+  .input-group-prepend
+  .input-group-text {
   border-color: #ec250d;
 }
 .content .card.card-white .has-success .form-control:focus,
-.content .card.card-white .has-success.input-group-focus .input-group-append .input-group-text,
-.content .card.card-white .has-success.input-group-focus .input-group-prepend .input-group-text {
+.content
+  .card.card-white
+  .has-success.input-group-focus
+  .input-group-append
+  .input-group-text,
+.content
+  .card.card-white
+  .has-success.input-group-focus
+  .input-group-prepend
+  .input-group-text {
   border-color: #00bf9a;
 }
 .content .card.card-plain {
@@ -547,12 +777,7 @@
   overflow: hidden;
   height: 200px;
   position: relative;
-}
-.content .card .avatar {
-  width: 30px;
-  height: 30px;
   overflow: hidden;
-  border-radius: 50%;
   margin-bottom: 15px;
 }
 .content .card label {
@@ -662,10 +887,26 @@
 }
 .content .card-user .author .block.block-one {
   background: rgba(225, 78, 202, 0.6);
-  background: -webkit-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -o-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -moz-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -o-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -moz-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=10);
   -webkit-transform: rotate(150deg);
   -moz-transform: rotate(150deg);
@@ -677,10 +918,26 @@
 }
 .content .card-user .author .block.block-two {
   background: rgba(225, 78, 202, 0.6);
-  background: -webkit-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -o-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -moz-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -o-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -moz-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=10);
   -webkit-transform: rotate(30deg);
   -moz-transform: rotate(30deg);
@@ -692,10 +949,26 @@
 }
 .content .card-user .author .block.block-three {
   background: rgba(225, 78, 202, 0.6);
-  background: -webkit-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -o-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -moz-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -o-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -moz-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=10);
   -webkit-transform: rotate(170deg);
   -moz-transform: rotate(170deg);
@@ -707,10 +980,26 @@
 }
 .content .card-user .author .block.block-four {
   background: rgba(225, 78, 202, 0.6);
-  background: -webkit-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -o-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: -moz-linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
-  background: linear-gradient(to right, rgba(225, 78, 202, 0.6) 0%, rgba(225, 78, 202, 0) 100%);
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -o-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: -moz-linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(225, 78, 202, 0.6) 0%,
+    rgba(225, 78, 202, 0) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=10);
   -webkit-transform: rotate(150deg);
   -moz-transform: rotate(150deg);
