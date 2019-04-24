@@ -12,6 +12,7 @@ urlpatterns = [
     path('get_courses_by_learner', views.get_courses_by_learner, name='get_courses_by_learner'),
     path('get_tutors', views.get_tutors, name='get_tutors'),
     path('user', views.user, name='user'),
+    path('users', views.users, name='users'),
     path('logout', views.logout, name='logout'),
     path('delete_course', views.delete_course, name='delete_course'),
     path('create_reserve', views.create_reserve, name='create_reserve'),

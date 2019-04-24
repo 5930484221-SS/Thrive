@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./CourseContainer.css";
 import swal from "sweetalert";
 import loaderIcon from "../../img/loaderIcon.gif";
+import StarRatings from "react-star-ratings";
 
 import axios from "axios";
 import querystring from "query-string";
@@ -35,7 +36,7 @@ class CourseContainer extends Component {
     } catch (error) {
       swal.stopLoading();
       swal.close();
-      console.log(error.response)
+      console.log(error.response);
       if (error.response.status === 404) {
         swal({
           text: "You already requested to this course",
@@ -43,7 +44,7 @@ class CourseContainer extends Component {
         });
       } else {
         swal({
-          text: error.response.status+" " + error.response.statusText,
+          text: error.response.status + " " + error.response.statusText,
           icon: "error"
         });
       }
@@ -129,9 +130,14 @@ class CourseContainer extends Component {
             <span className="card-text"> {tutor_display} </span>
             <hr />
             <strong className="card-text limitP">Score: </strong>
-
-            <i className="star icon" />
-            <i className="half star icon" />
+            <StarRatings
+              rating={3.5}
+              starDimension="25px"
+              starSpacing="1px"
+              starRatedColor="darkred"
+            />
+            {/* <i className="star icon" />
+            <i className="half star icon" /> */}
             <br />
           </div>
 
