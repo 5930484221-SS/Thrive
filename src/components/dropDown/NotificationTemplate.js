@@ -51,7 +51,7 @@ const onDecline = _id => {
     });
 };
 
-const onCheckout = (checkoutToken, _id, fee) => {
+const onCheckout = (checkoutToken, _id, fee, courseId) => {
   return axios({
     method: "POST",
     url: "http://127.0.0.1:8000/api/charge",
@@ -62,6 +62,7 @@ const onCheckout = (checkoutToken, _id, fee) => {
       card_token: checkoutToken.id,
       amount: fee * 100,
       currency: "THB"
+      // course_id:courseId
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -254,7 +255,7 @@ export const TutorNotification = props => {
 
 export const LearnerNotification = props => {
   const { tutor, flag, course, _id } = props.info;
-  const { img, topic, fee } = course;
+  const { img, topic, fee, courseId } = course;
   switch (flag) {
     case NOTIFICATION_TYPE.wr:
       return (
@@ -324,7 +325,7 @@ export const LearnerNotification = props => {
                     image={img}
                     currency="THB"
                     token={async token => {
-                      await onCheckout(token, _id, fee);
+                      await onCheckout(token, _id, fee, courseId);
                       props.reload();
                     }}
                     name={"Buy " + topic + " course"}

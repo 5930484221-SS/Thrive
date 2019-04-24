@@ -38,7 +38,6 @@ class TeachingContainer extends Component {
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
-      console.log(courses.courses);
     } catch (error) {
       console.log(error);
     }
@@ -168,7 +167,6 @@ class TeachingContainer extends Component {
           </div>
         );
       case "closed":
-        console.log("wsfsdfhgjhk")
         return(<p>The course had been closed</p>)
       default:
         return null;
