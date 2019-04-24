@@ -23,7 +23,7 @@ course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
 user_info_fields = ['user', 'display']
-course_info_in_reserve = ['topic', 'img','fee']
+course_info_in_reserve = ['topic', 'img','fee','_id']
 
 
 def safe_cast(dtype, value, default=None):
