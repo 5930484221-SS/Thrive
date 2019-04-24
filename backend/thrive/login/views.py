@@ -319,6 +319,7 @@ def get_courses(request):
         course = {field: str(record[field]) for field in course_fields + ['_id']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
+        course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6))
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))
