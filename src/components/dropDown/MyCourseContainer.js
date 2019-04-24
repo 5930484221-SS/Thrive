@@ -38,6 +38,7 @@ class TeachingContainer extends Component {
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
+      console.log(courses.courses)
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +47,7 @@ class TeachingContainer extends Component {
   onCloseCourse = info => {
     swal({
       title: "Are you sure?",
-      text: "Once closed, learner will not be able to request the course",
+      text: "Once the course closed, learners will not be able to request this course",
       icon: "warning",
       buttons: true,
       dangerMode: true
@@ -85,7 +86,7 @@ class TeachingContainer extends Component {
     swal({
       title: "Are you sure?",
       text:
-        "Once deleted, you will not be able to recover the course and the course request will be deleted",
+        "Once the course deleted, you will not be able to recover the course and all course request will be deleted",
       icon: "warning",
       buttons: true,
       dangerMode: true
