@@ -70,7 +70,7 @@ class TeachingContainer extends Component {
         {" "}
         <MyCourseContentError>
           {coursesAsTutor.map(course => (
-            <MyCourseContainerTemplate info={course}>
+            <MyCourseContainerTemplate info={course} key={course._id}>
               <div>
                 <button
                   className="btn btn-orange"
