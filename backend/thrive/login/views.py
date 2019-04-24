@@ -169,7 +169,10 @@ def login(request):
 
     is_admin_ = is_admin(username)
 
-    return JsonResponse(dict(token=token, is_admin=is_admin_))
+    collection = mongo_db.get_collection('users')
+    user = collection.find_one({'user': username})
+
+    return JsonResponse(dict(token=token, is_admin=is_admin_, displayName=user['display']))
 
 
 @csrf_exempt
