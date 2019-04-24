@@ -538,19 +538,20 @@ def create_reserve(request):
     courseId = request.POST.get('courseId')
     user = get_username_from_token(token)
 
+    if tutor == user:
+        return HttpResponseForbidden('Can not reserve your own course.')
+
     collection = mongo_db.get_collection('reserve')
     match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
 
-    print(match)
-
     if match and match['flag'] != 'd':
-        return HttpResponseForbidden('Request is in process')
+        return HttpResponseForbidden('Request is in process.')
 
     collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})
     return HttpResponse('Request sent')
-  
-  
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_learner_transactions(request):
