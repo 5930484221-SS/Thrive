@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-import rocketLogo from '../../img/rocket_logo.svg';
-import UsernameAndLogoutAdmin from './UsernameAndLogoutAdmin';
+import rocketLogo from "../../img/rocket_logo.svg";
+import UsernameAndLogoutAdmin from "./UsernameAndLogoutAdmin";
 
 class NavAdmin extends Component {
   render() {
