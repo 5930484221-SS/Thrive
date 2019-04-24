@@ -24,7 +24,7 @@ class SearchUser extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: 'http://localhost:8000/api/get_user', //require get_user (in db)
+        url: 'http://localhost:8000/api/user?username=""', //require get_user (in db)
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
@@ -42,6 +42,23 @@ class SearchUser extends Component {
     });
   }
 
+  async onSearch(e) {
+    e.preventDefault();
+
+    this.setState({
+      courseList: [],
+      isLoading: true
+    });
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/user?username=${this.state.search.trim()}`
+      );
+      this.setState({ userList: response.data.users, isLoading: false });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
     const { isLoading, search, userList } = this.state;
     // take a look at the states in the console!
@@ -57,6 +74,7 @@ class SearchUser extends Component {
             placeHolder="Search User"
             onChange={this.onSearchChange.bind(this)}
             searchValue={search}
+            onSearch={this.onSearch.bind(this)}
           />
         </div>
         <div className="row">

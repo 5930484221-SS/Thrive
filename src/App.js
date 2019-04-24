@@ -24,7 +24,9 @@ import * as Actions from './actions';
 class App extends Component {
   render() {
     let nav;
-    if (localStorage.getItem('is_admin')) {
+    const is_admin = localStorage.getItem('is_admin') === 'true';
+    console.log('is_admin', is_admin);
+    if (is_admin) {
       nav = <NavAdmin />;
     } else if (localStorage.getItem('token') === null) {
       nav = <NavBar auth={false} />;
@@ -47,12 +49,12 @@ class App extends Component {
                 <Route path="/register" component={Register} />
                 <PrivateRoute
                   path="/admin/dashboard"
-                  condition={localStorage.getItem('is_admin')}
+                  condition={is_admin}
                   component={Dashboard}
                 />
                 <PrivateRoute
                   path="/admin/searchUser"
-                  condition={localStorage.getItem('is_admin')}
+                  condition={is_admin}
                   component={SearchUser}
                 />
                 <Route path="/" component={Login} />
