@@ -12,18 +12,19 @@ export default class Notification extends Component {
     this.state = {
       tutorTransactions: [],
       learnerTransactions: [],
-      isLoading: false
+      isLoading: false,
+      Notifications: []
     };
   }
 
-  componentDidMount() {
-    this.setState({ isLoading: true });
+  componentDidMount = () => {
+    this.setState({ isLoading: true});
     Promise.all([
       this.fetchTutorTransactions(),
       this.fetchLearnerTransactions()
-    ]).then(() => this.setState({ isLoading: false }));
-    this.sortTransactions();
-  }
+    ])
+      .then(()=>this.sortNotification())
+  };
 
   fetchTutorTransactions() {
     return axios({
@@ -39,10 +40,15 @@ export default class Notification extends Component {
     })
       .then(response => {
         const tutorTransactions = response.data.requests.map(noti => (
-          <TutorNotification info={noti} key={noti._id} />
+          <TutorNotification
+            info={noti}
+            reload={this.componentDidMount}
+            key={noti._id}
+            lastest={this.getLatestNotiTime(noti)}
+          />
         ));
         this.setState({ tutorTransactions });
-        console.log(response.data.requests)
+        console.log(tutorTransactions);
       })
       .catch(error => {
         console.log(error);
@@ -63,26 +69,55 @@ export default class Notification extends Component {
     })
       .then(response => {
         const learnerTransactions = response.data.requests.map(noti => {
-          return <LearnerNotification info={noti} key={noti._id} />;
+          return (
+            <LearnerNotification
+              info={noti}
+              reload={this.componentDidMount}
+              key={noti._id}
+              lastest={this.getLatestNotiTime(noti)}
+            />
+          );
         });
         this.setState({ learnerTransactions });
-        console.log(response.data.requests)
+        console.log(learnerTransactions);
       })
       .catch(error => {
         console.log(error);
       });
   }
 
-  sortTransactions() {}
+  getLatestNotiTime(info) {
+    return Math.max.apply(
+      NaN,
+      [
+        Date.parse(info.requestTimestamp),
+        Date.parse(info.responseTimestamp),
+        Date.parse(info.paymentTimestamp)
+      ].filter(value => {
+        return !Number.isNaN(value);
+      })
+    );
+  }
+
+  async sortNotification() {
+    await this.setState({Notifications:[]})
+    const { tutorTransactions, learnerTransactions } = this.state;
+    this.setState({
+      Notifications: tutorTransactions
+        .concat(learnerTransactions)
+        .sort((left, right) => {
+          return right.props.lastest - left.props.lastest;
+        }),
+      isLoading: false
+    });
+  }
 
   render() {
-    console.log(this.state)
-    const { tutorTransactions, learnerTransactions, isLoading } = this.state;
+    const { Notifications, isLoading } = this.state;
+    console.log(this.state);
     return (
       <div>
-        <MyCourseContentError>
-          {tutorTransactions.concat(learnerTransactions)}
-        </MyCourseContentError>
+        <MyCourseContentError>{Notifications}</MyCourseContentError>
         {isLoading ? Loader : null}
       </div>
     );

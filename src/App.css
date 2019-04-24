@@ -75,11 +75,12 @@ body {
 
 .btn-extra {
   min-width: 20rem;
-  height: 6rem;
   font-size: 2.6rem;
   font-weight: 500;
   padding-left: 2rem;
   padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 /* TEXT */

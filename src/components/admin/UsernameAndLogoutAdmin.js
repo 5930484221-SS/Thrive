@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import axios from "axios";
-import querystring from "query-string";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import querystring from 'query-string';
+import swal from 'sweetalert';
 
 class UsernameAndLogoutAdmin extends Component {
   constructor(props) {
@@ -23,9 +24,10 @@ class UsernameAndLogoutAdmin extends Component {
       }
     });
 
-    localStorage.removeItem("token");
-    alert("logged out");
-    window.location = "/";
+    localStorage.removeItem('token');
+    localStorage.removeItem('is_admin');
+    await swal('logged out');
+    window.location = '/';
   };
 
   render() {

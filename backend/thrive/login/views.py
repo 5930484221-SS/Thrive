@@ -57,11 +57,11 @@ def now():
 
 def authenticate(username, password):
     collection = mongo_db.get_collection('users')
-    match = collection.find_one({'user': username, 'password': password})
+    match = collection.find_one({'user': username, 'password': password, 'active': True})
 
     if match:
-        return get_or_create_token(username)
-    return None
+        return get_or_create_token(username), match
+    return None, None
 
 
 def get_username_from_token(token):
@@ -148,8 +148,32 @@ def register(request):
         'contact': contact,
 
         'reg_dt': reg_dt,
+        'active': True,
     }
     collection.insert_one(record)
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def delete_user(request):
+    token = request.POST.get('token', None)
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'active': False}})
 
     return HttpResponse('')
 
@@ -162,12 +186,14 @@ def login(request):
     if username is None or password is None:
         return HttpResponseBadRequest('Please provide both username and password')
 
-    token = authenticate(username=username, password=password)
+    token, user = authenticate(username=username, password=password)
 
     if not token:
         return HttpResponseNotFound('Invalid Credentials')
 
-    return JsonResponse(dict(token=token))
+    is_admin_ = user['is_admin']
+
+    return JsonResponse(dict(token=token, is_admin=is_admin_, displayName=user['display']))
 
 
 @csrf_exempt
@@ -192,6 +218,8 @@ def create_course(request):
     record['rating_3'] = 0
     record['rating_4'] = 0
     record['rating_5'] = 0
+
+    record['status'] = 'open'
 
     collection = mongo_db.get_collection('courses')
     collection.insert_one(record)
@@ -352,15 +380,37 @@ def get_tutors(request):
 
 @csrf_exempt
 @require_http_methods(["GET"])
-def user(request):
+def users(request):
     result_keys = {'user': 'username', 'first_name': 'firstName', 'last_name': 'lastName', 'nickname': 'nickname',
                    'display': 'displayName', 'address': 'address', 'phone_number': 'phoneNumber', 'email': 'email',
                    'contact': 'contact', 'is_admin': 'isAdmin'}
 
     collection = mongo_db.get_collection('users')
 
-    username = request.GET.get('username')
+    username = request.GET.get('username', '')
 
+    matches = collection.find({'user': re.compile(rf'^.*{username}.*', re.I)})
+
+    users = []
+    for match in matches:
+        result = {v: match[k] for k, v in result_keys.items()}
+        users.append(result)
+    if not users:
+        return HttpResponseNotFound('The given username does not exist')
+
+    response = JsonResponse({'users': users})
+    return set_response_header(response)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def user(request):
+    result_keys = {'user': 'username', 'first_name': 'firstName', 'last_name': 'lastName', 'nickname': 'nickname',
+                   'display': 'displayName', 'address': 'address', 'phone_number': 'phoneNumber', 'email': 'email',
+                   'contact': 'contact', 'is_admin': 'isAdmin'}
+
+    collection = mongo_db.get_collection('users')
+    username = request.GET.get('username')
     match = collection.find_one({'user': username})
 
     if not match:
@@ -368,7 +418,6 @@ def user(request):
 
     result = {v: match[k] for k, v in result_keys.items()}
     response = JsonResponse(result)
-
     return set_response_header(response)
 
 
@@ -378,6 +427,29 @@ def logout(request):
     token = request.POST.get("token")
     collection = mongo_db.get_collection('active_token')
     collection.delete_many({'token': token})
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def add_admin(request):
+    token = request.POST.get("token")
+    username_target = request.POST.get('username', None)
+    if not token or not username_target:
+        return HttpResponseBadRequest('invalid parameters')
+
+    username = get_username_from_token(token)
+
+    if username is None:
+        return HttpResponseForbidden("please login first")
+
+    is_admin_ = is_admin(username)
+    if not is_admin_:
+        return HttpResponseForbidden('you are not an admin')
+
+    collection = mongo_db.get_collection('users')
+    collection.update_many({'user': username_target}, {'$set': {'is_admin': True}})
 
     return HttpResponse('')
 
@@ -529,19 +601,20 @@ def create_reserve(request):
     courseId = request.POST.get('courseId')
     user = get_username_from_token(token)
 
+    if tutor == user:
+        return HttpResponseForbidden('Can not reserve your own course.')
+
     collection = mongo_db.get_collection('reserve')
     match = collection.find_one({'courseId': ObjectId(courseId), 'learner': user})
 
-    print(match)
-
     if match and match['flag'] != 'd':
-        return HttpResponseForbidden('Request is in process')
+        return HttpResponseForbidden('Request is in process.')
 
     collection.insert_one({'courseId': ObjectId(courseId), 'learner': user, 'tutor': tutor, 'flag': 'wr',
     'requestTimestamp': datetime.datetime.now(), 'responseTimestamp': None, 'paymentTimestamp': None, 'chargeId': None})
     return HttpResponse('Request sent')
-  
-  
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_learner_transactions(request):
@@ -565,6 +638,9 @@ def get_learner_transactions(request):
 
     requests=[]
     for record in query:
+        if not record['course']:
+            continue
+
         request = {field: str(record[field]) for field in ['_id']}
 
         record['_id'] =  str(record['_id'])
@@ -573,6 +649,7 @@ def get_learner_transactions(request):
         course = dict()
         for field in course_info_in_reserve:
             course[field] = str(record['course'][0][field])
+        
         record['course'] = course
         requests.append(record)
     response = JsonResponse(dict(requests=requests))
@@ -601,6 +678,9 @@ def get_tutor_transactions(request):  # rename???
 
     requests=[]
     for record in query:
+        if not record['course']:
+            continue
+
         request = {field: str(record[field]) for field in ['_id']}
         record['_id'] =  str(record['_id'])
         record['courseId'] =  str(record['courseId'])
