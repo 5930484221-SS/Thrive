@@ -858,14 +858,22 @@ def charge(request):
     except Exception as e:
         return HttpResponseForbidden(e)
 
-    collection = mongo_db.get_collection('reserve')
-    request_id = request.POST.get('request_id')
+    try:
+        collection = mongo_db.get_collection('reserve')
+        request_id = request.POST.get('request_id')
+        record = dict()
+        record['flag'] = 's'
+        record['chargeId'] = charge['id']
+        record['paymentTimestamp'] = datetime.datetime.now()
+        collection.update({'_id': ObjectId(request_id)}, {'$set': record})
 
-    record = dict()
-    record['flag'] = 's'
-    record['chargeId'] = charge['id']
-    record['paymentTimestamp'] = datetime.datetime.now()
-    collection.update({'_id': ObjectId(request_id)}, {'$set': record})
+        collection = mongo_db.get_collection('courses')
+        course_id = request.POST.get('course_id')
+        record = dict()
+        record['status'] = 'reserved'
+        collection.update({'_id': ObjectId(course_id)}, {'$set': record})
+    except Exception as e:
+        return HttpResponseForbidden(e)
 
     response = JsonResponse(dict(charge=charge))
     return HttpResponse(response)
