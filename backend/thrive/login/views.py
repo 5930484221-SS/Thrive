@@ -316,7 +316,7 @@ def get_courses(request):
 
     courses = []
     for record in query:
-        course = {field: str(record[field]) for field in course_fields + ['_id']}
+        course = {field: str(record[field]) for field in course_fields + ['_id','status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
         courses.append(course)
