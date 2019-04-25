@@ -390,7 +390,7 @@ def users(request):
 
     username = request.GET.get('username', '')
 
-    matches = collection.find({'user': re.compile(rf'^.*{username}.*', re.I)})
+    matches = collection.find({'user': re.compile(rf'^.*{username}.*', re.I), 'active': True})
 
     users = []
     for match in matches:
@@ -412,7 +412,7 @@ def user(request):
 
     collection = mongo_db.get_collection('users')
     username = request.GET.get('username')
-    match = collection.find_one({'user': username})
+    match = collection.find_one({'user': username, 'active': True})
 
     if not match:
         return HttpResponseNotFound('The given username does not exist')
