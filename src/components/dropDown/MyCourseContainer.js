@@ -38,7 +38,7 @@ class TeachingContainer extends Component {
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
-      console.log(courses.courses)
+      console.log(courses.courses);
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +47,8 @@ class TeachingContainer extends Component {
   onCloseCourse = info => {
     swal({
       title: "Are you sure?",
-      text: "Once the course closed, learners will not be able to request this course",
+      text:
+        "Once the course closed, learners will not be able to request this course",
       icon: "warning",
       buttons: true,
       dangerMode: true
@@ -168,7 +169,7 @@ class TeachingContainer extends Component {
           </div>
         );
       case "closed":
-        return(<p>The course had been closed</p>)
+        return <p>The course had been closed</p>;
       default:
         return null;
     }
@@ -196,7 +197,6 @@ export const TeachingCourseContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(TeachingContainer);
-
 
 //------------------Learner--------------------
 export class LearningCourseContainer extends Component {

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import "./CourseContainer.css";
+import "../courseListing/CourseContainer.css";
 import swal from "sweetalert";
 import loaderIcon from "../../img/loaderIcon.gif";
 
 import axios from "axios";
 import querystring from "query-string";
-import RateReviewContainer from "./RateReviewContainer";
 
 class CourseContainer extends Component {
   constructor() {
@@ -33,29 +32,26 @@ class CourseContainer extends Component {
     }
   }
 
-  onRequest = async () => {
+  onDelete = async () => {
     try {
       swal({
-        text: "Sending the request to Tutor...",
+        text: "Deleting this course...",
         icon: loaderIcon,
         buttons: false
       });
       await axios({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/create_reserve",
+        url: "http://127.0.0.1:8000/api/delete_course", //delete_course(request) on database
         crossDomain: true,
         data: querystring.stringify({
-          token: window.localStorage.token,
-          tutor: this.props.info.tutor,
-          courseId: this.props.info._id
+          token: window.localStorage.token
         }),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       });
       await swal({
-        text:
-          "Your request is sent successfully to the tutor.\n You can check the request/response in My Course page",
+        text: "Delete successfully",
         icon: "success"
       });
     } catch (error) {
@@ -174,48 +170,8 @@ class CourseContainer extends Component {
                 >
                   See more review
                 </button>
-                <button className="btn btn-secondary" onClick={this.onRequest}>
-                  Request reservation
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* rating modal */}
-        <div
-          className="modal fade"
-          id="rating"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="card-title pt-3 pb-3">
-                  Rate and Review
-                  <br />
-                  {topic}
-                </h5>
-              </div>
-              <div
-                className="modal-body"
-                style={{ height: "400px", width: "100%", overflow: "auto" }}
-              >
-                {console.log("this", this.state.courseList)}
-                {/* {courseList.map((c, index) => (
-                <RateReviewContainer key={index} info={c} index={index} /> ))} */}
-                <RateReviewContainer />
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Close
+                <button className="btn btn-primary" onClick={this.onDelete}>
+                  Delete this course
                 </button>
               </div>
             </div>

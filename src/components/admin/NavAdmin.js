@@ -24,7 +24,7 @@ class NavAdmin extends Component {
             <div id="navbarNav" className="collapse navbar-collapse">
               <ul className="nav navbar-nav ">
                 <li className="nav-item ml-3">
-                  <Link to="/listing" className="nav-link text-white">
+                  <Link to="/admin/listing" className="nav-link text-white">
                     Courses
                   </Link>
                 </li>
