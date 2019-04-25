@@ -1,6 +1,7 @@
 import React from "react";
 import clock from "../../img/clock.svg";
 import StripeCheckout from "react-stripe-checkout";
+import swal from "sweetalert";
 
 import axios from "axios";
 import querystring from "query-string";
@@ -25,9 +26,17 @@ const onAccept = _id => {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(console.log)
+    .then(() => {
+      swal({
+        text: "You have accepted the request",
+        icon: "success"
+      });
+    })
     .catch(error => {
-      console.log(error);
+      swal({
+        text: "Failed to accepted\n" + error,
+        icon: "error"
+      });
     });
 };
 
@@ -45,13 +54,29 @@ const onDecline = _id => {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(console.log)
+    .then(() => {
+      swal({
+        text: "You have accepted the request",
+        icon: "success"
+      });
+    })
     .catch(error => {
-      console.log(error);
+      swal({
+        text: "Failed to decline\n" + error,
+        icon: "error"
+      });
     });
 };
 
-const onCheckout = (checkoutToken, _id, fee) => {
+const onCheckout = (checkoutToken, _id, fee, courseId) => {
+  console.log({
+    token: window.localStorage.token,
+    request_id: _id,
+    card_token: checkoutToken.id,
+    amount: fee * 100,
+    currency: "THB",
+    course_id: courseId
+  })
   return axios({
     method: "POST",
     url: "http://127.0.0.1:8000/api/charge",
@@ -61,18 +86,28 @@ const onCheckout = (checkoutToken, _id, fee) => {
       request_id: _id,
       card_token: checkoutToken.id,
       amount: fee * 100,
-      currency: "THB"
+      currency: "THB",
+      course_id: courseId
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(console.log)
+    .then(() => {
+      swal({
+        text: "The payment has been successfully processed",
+        icon: "success"
+      });
+    })
     .catch(error => {
-      console.log(error.response);
+      swal({
+        text: "Failed to pay fee\n" + error,
+        icon: "error"
+      });
     });
 };
 
+//--------- Tutor-----------------------
 export const TutorNotification = props => {
   const { learner, flag, course, _id } = props.info;
   const { img, topic } = course[0];
@@ -101,10 +136,6 @@ export const TutorNotification = props => {
                     {" " + course[0].topic + " "}
                   </span>
                   course
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -166,10 +197,6 @@ export const TutorNotification = props => {
                     {learner}
                   </span>
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -206,10 +233,6 @@ export const TutorNotification = props => {
                   <span className="text-success font-weight-bold">
                     {learner}
                   </span>
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -250,10 +273,6 @@ export const TutorNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -268,6 +287,7 @@ export const TutorNotification = props => {
   }
 };
 
+//---------- Learner--------------------
 export const LearnerNotification = props => {
   const { tutor, flag, course, _id } = props.info;
   const { img, topic, fee } = course;
@@ -296,10 +316,6 @@ export const LearnerNotification = props => {
                     {" " + topic}
                   </span>
                   {" course"}
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>
@@ -335,10 +351,6 @@ export const LearnerNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2">
@@ -348,7 +360,7 @@ export const LearnerNotification = props => {
                     image={img}
                     currency="THB"
                     token={async token => {
-                      await onCheckout(token, _id, fee);
+                      await onCheckout(token, _id, fee, course._id);
                       props.reload();
                     }}
                     name={"Buy " + topic + " course"}
@@ -398,10 +410,6 @@ export const LearnerNotification = props => {
                   </span>
                   course
                 </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
-                </td>
               </tr>
               <tr>
                 <td colSpan="2" />
@@ -435,10 +443,6 @@ export const LearnerNotification = props => {
                     {" " + topic}
                   </span>
                   {" course has been successfully processed"}
-                </td>
-                <td className="text-secondary text-right">
-                  <img src={clock} className="timeClk" />
-                  _time_
                 </td>
               </tr>
               <tr>

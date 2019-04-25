@@ -50,7 +50,7 @@ class Listing extends Component {
     }
   }
 
-  onSearchChange(e) {
+  onSearchChange(e) { 
     this.setState({
       search: e.target.value
     });
@@ -87,6 +87,7 @@ class Listing extends Component {
     if (rating) queryString += `&ratingMin=${rating.value}`;
     queryString = queryString.slice(1);
 
+    console.log('queryString: ', queryString);
     try {
       const response = await axios({
         method: 'GET',
@@ -112,12 +113,12 @@ class Listing extends Component {
         method: 'GET',
         url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
       });
+      console.log('courses fetched from search: ', response.data.courses);
       this.setState(
         { courseList: response.data.courses, isLoading: false },
         () => console.log('courseList: ', this.state.courseList)
       );
     } catch (error) {
-      console.log(error);
       console.log('search fails, please try again');
     }
   }
@@ -165,6 +166,7 @@ class Listing extends Component {
       courseList
     } = this.state;
     // take a look at the states in the console!
+    console.log({ search, subject, location, tuitionMax, feeMax, rating });
 
     return (
       <div>
@@ -297,6 +299,7 @@ class Listing extends Component {
           </div>
         </div>
         <div className="row">
+          {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => (
               <CourseContainer key={index} info={c} index={index} />

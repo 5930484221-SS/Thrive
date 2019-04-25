@@ -23,7 +23,7 @@ course_fields = ['topic', 'description', 'descriptionProfile', 'duration',
 user_detail_fields = ['user', 'display']
 course_number_fields = ['fee', 'tuition', 'rating']
 user_info_fields = ['user', 'display']
-course_info_in_reserve = ['topic', 'img','fee']
+course_info_in_reserve = ['topic', 'img','fee','_id']
 
 
 def safe_cast(dtype, value, default=None):
@@ -316,9 +316,10 @@ def get_courses(request):
 
     courses = []
     for record in query:
-        course = {field: str(record[field]) for field in course_fields + ['_id']}
+        course = {field: str(record[field]) for field in course_fields + ['_id','status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
+        course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6))
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))
@@ -498,7 +499,7 @@ def close_course(request):
     ret = collection_course.update_one(filter_data, update_data)  # type: UpdateResult
 
     if ret.modified_count:
-        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x']}}
+        filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['c', 's', 'cs', 'x', 'xs']}}
         update_data = {'status': 'c'}
         collection_reserve.update_many(filter_data, {'$set': update_data})
 
@@ -532,12 +533,22 @@ def delete_course(request):
             return HttpResponseForbidden('the action is not allowed')
         return HttpResponseForbidden('the course has been reserved')
 
-    filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    if not is_admin(user):
+        filter_data = {'_id': ObjectId(_id), 'tutor': user}
+    else:
+        filter_data = {'_id': ObjectId(_id)}
+
     ret = collection_course.delete_one(filter_data)
     if not ret.deleted_count:
         return HttpResponseForbidden('the action is not allowed')
 
-    collection_reserve.update_many({'course_id': ObjectId(_id)}, {'$set': {'status': 'x'}})
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['s', 'cs', 'xs']}}
+    update_data = {'status': 'x'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
+
+    filter_data = {'course_id': ObjectId(_id), 'status': {'$nin': ['x']}}
+    update_data = {'status': 'xs'}
+    collection_reserve.update_many(filter_data, {'$set': update_data})
 
     return HttpResponse('')
 
@@ -847,14 +858,22 @@ def charge(request):
     except Exception as e:
         return HttpResponseForbidden(e)
 
-    collection = mongo_db.get_collection('reserve')
-    request_id = request.POST.get('request_id')
+    try:
+        collection = mongo_db.get_collection('reserve')
+        request_id = request.POST.get('request_id')
+        record = dict()
+        record['flag'] = 's'
+        record['chargeId'] = charge['id']
+        record['paymentTimestamp'] = datetime.datetime.now()
+        collection.update({'_id': ObjectId(request_id)}, {'$set': record})
 
-    record = dict()
-    record['flag'] = 's'
-    record['chargeId'] = charge['id']
-    record['paymentTimestamp'] = datetime.datetime.now()
-    collection.update({'_id': ObjectId(request_id)}, {'$set': record})
+        collection = mongo_db.get_collection('courses')
+        course_id = request.POST.get('course_id')
+        record = dict()
+        record['status'] = 'reserved'
+        collection.update({'_id': ObjectId(course_id)}, {'$set': record})
+    except Exception as e:
+        return HttpResponseForbidden(e)
 
     response = JsonResponse(dict(charge=charge))
     return HttpResponse(response)
