@@ -42,7 +42,7 @@ class CourseContainer extends Component {
         });
       } else {
         swal({
-          text: error.response.status+" " + error.response.statusText,
+          text: error.response.status + " " + error.response.statusText,
           icon: "error"
         });
       }
@@ -103,7 +103,6 @@ class CourseContainer extends Component {
 
                 <div className="modal-footer">
                   <button className="btn btn-orange">See more review</button>
-
                   <button
                     className="btn btn-secondary"
                     onClick={this.onRequest}
