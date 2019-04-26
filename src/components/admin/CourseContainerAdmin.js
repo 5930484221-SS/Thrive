@@ -44,7 +44,8 @@ class CourseContainer extends Component {
         url: "http://127.0.0.1:8000/api/delete_course", //delete_course(request) on database
         crossDomain: true,
         data: querystring.stringify({
-          token: window.localStorage.token
+          token: window.localStorage.token,
+          id: this.props.info._id
         }),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -57,7 +58,7 @@ class CourseContainer extends Component {
     } catch (error) {
       swal.stopLoading();
       swal.close();
-      console.log(error.response);
+      console.log(error);
       if (error.response.status === 403) {
         swal({
           text: error.response.data,
@@ -170,7 +171,11 @@ class CourseContainer extends Component {
                 >
                   See more review
                 </button>
-                <button className="btn btn-primary" onClick={this.onDelete}>
+                <button
+                  data-dismiss="modal"
+                  className="btn btn-danger"
+                  onClick={this.onDelete}
+                >
                   Delete this course
                 </button>
               </div>
