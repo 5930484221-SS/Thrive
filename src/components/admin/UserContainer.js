@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import querystring from 'query-string';
+import swal from 'sweetalert';
+import loaderIcon from '../../img/loaderIcon.gif';
 import '../courseListing/CourseContainer.css';
 
 class UserContainer extends Component {
@@ -11,6 +13,11 @@ class UserContainer extends Component {
   async deleteUser(username, refresh) {
     // call deleteUser API
     try {
+      swal({
+        text: 'Deleteing...',
+        icon: loaderIcon,
+        buttons: false
+      });
       await axios({
         method: 'POST',
         url: 'http://localhost:8000/api/delete_user',
@@ -23,8 +30,14 @@ class UserContainer extends Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
+      await swal({
+        text: 'Delete Successful!',
+        icon: 'success'
+      });
       refresh();
     } catch (ex) {
+      swal.stopLoading();
+      swal.close();
       console.log(ex);
     }
   }
@@ -32,6 +45,11 @@ class UserContainer extends Component {
   async grantAdmin(username, refresh) {
     // call grantAdmin API
     try {
+      swal({
+        text: 'Granting...',
+        icon: loaderIcon,
+        buttons: false
+      });
       await axios({
         method: 'POST',
         url: 'http://localhost:8000/api/add_admin',
@@ -44,8 +62,14 @@ class UserContainer extends Component {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
+      await swal({
+        text: 'Delete Successful!',
+        icon: 'success'
+      });
       refresh();
     } catch (ex) {
+      swal.stopLoading();
+      swal.close();
       console.log(ex);
     }
   }
