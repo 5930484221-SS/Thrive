@@ -1,34 +1,34 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
 
-import Listing from './components/courseListing/Listing';
-import CourseCreation from './components/courseCreation/CourseCreation';
-import Login from './components/Login';
-import NotFound from './components/NotFound';
-import Profile from './components/dropDown/Profile';
-import MyCourses from './components/dropDown/MyCourses';
-import Setting from './components/dropDown/Setting';
-import Footer from './components/Footer';
-import NavBar from './components/NavBar';
-import Dashboard from './components/admin/Dashboard';
-import SearchUser from './components/admin/SearchUser';
-import PrivateRoute from './components/admin/PrivateRoute';
-import NavAdmin from './components/admin/NavAdmin';
-import Register from './components/Register';
-
-import './App.css';
-import { store } from './configStore';
-import * as Actions from './actions';
+import Listing from "./components/courseListing/Listing";
+import CourseCreation from "./components/courseCreation/CourseCreation";
+import Login from "./components/Login";
+import NotFound from "./components/NotFound";
+import Profile from "./components/dropDown/Profile";
+import MyCourses from "./components/dropDown/MyCourses";
+import Setting from "./components/dropDown/Setting";
+import Footer from "./components/Footer";
+import NavBar from "./components/NavBar";
+import Dashboard from "./components/admin/Dashboard";
+import SearchUser from "./components/admin/SearchUser";
+import PrivateRoute from "./components/admin/PrivateRoute";
+import NavAdmin from "./components/admin/NavAdmin";
+import Register from "./components/Register";
+import ListingAdmin from "./components/admin/ListingAdmin";
+import "./App.css";
+import { store } from "./configStore";
+import * as Actions from "./actions";
 
 class App extends Component {
   render() {
     let nav;
-    const is_admin = localStorage.getItem('is_admin') === 'true';
-    console.log('is_admin', is_admin);
+    const is_admin = localStorage.getItem("is_admin") === "true";
+    console.log("is_admin", is_admin);
     if (is_admin) {
       nav = <NavAdmin />;
-    } else if (localStorage.getItem('token') === null) {
+    } else if (localStorage.getItem("token") === null) {
       nav = <NavBar auth={false} />;
     } else {
       nav = <NavBar auth={true} />;
@@ -55,6 +55,11 @@ class App extends Component {
                   path="/admin/searchUser"
                   condition={is_admin}
                   component={SearchUser}
+                />
+                <PrivateRoute
+                  path="/admin/listing"
+                  condition={is_admin}
+                  component={ListingAdmin}
                 />
                 <Route path="/" component={Login} />
                 <Route component={NotFound} />
