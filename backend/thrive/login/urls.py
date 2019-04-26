@@ -25,5 +25,8 @@ urlpatterns = [
     path('dashboard', views.get_dashboard_data, name='dashboard'),
     path('accept', views.accept, name='accept'),
     path('decline', views.decline, name='decline'),
-    path('charge', views.charge, name='charge')
+    path('charge', views.charge, name='charge'),
+
+    path('review', views.submit_review, name='review'),
+    path('get_reviews', views.get_reviews, name='get_reviews'),
 ]
