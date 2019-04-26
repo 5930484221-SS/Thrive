@@ -524,15 +524,17 @@ def delete_course(request):
     collection_reserve = mongo_db.get_collection('reserve')
     collection_course = mongo_db.get_collection('courses')
 
-    filter_data = {'course_id': ObjectId(_id), 'status': 's'}
-    reservation_sample = collection_reserve.find_one(filter_data)
-    is_reserved = bool(reservation_sample)
-    if is_reserved:
-        if reservation_sample['tutor'] != user:
-            return HttpResponseForbidden('the action is not allowed')
-        return HttpResponseForbidden('the course has been reserved')
+    is_admin_ = is_admin(user)
 
-    if not is_admin(user):
+    if not is_admin_:
+        filter_data = {'course_id': ObjectId(_id), 'status': 's'}
+        reservation_sample = collection_reserve.find_one(filter_data)
+        is_reserved = bool(reservation_sample)
+        if is_reserved:
+            if reservation_sample['tutor'] != user:
+                return HttpResponseForbidden('the action is not allowed')
+            return HttpResponseForbidden('the course has been reserved')
+
         filter_data = {'_id': ObjectId(_id), 'tutor': user}
     else:
         filter_data = {'_id': ObjectId(_id)}
