@@ -883,7 +883,7 @@ def charge(request):
 
 def is_learner_of(user, course_id):
     collection = mongo_db.get_collection('reserve')
-    match = collection.find_one({'courseId': course_id, 'learner': user})
+    match = collection.find_one({'courseId': course_id, 'learner': user, 'flag': 's'})
     return bool(match)
 
 
