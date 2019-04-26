@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import querystring from 'query-string';
+import swal from 'sweetalert';
+import loaderIcon from '../../img/loaderIcon.gif';
 import '../courseListing/CourseContainer.css';
 
 class UserContainer extends Component {
@@ -6,34 +10,88 @@ class UserContainer extends Component {
     super(props);
   }
 
-  async deleteUser(user) {
+  async deleteUser(username, refresh) {
     // call deleteUser API
-
-    this.props.refresh();
+    try {
+      swal({
+        text: 'Deleteing...',
+        icon: loaderIcon,
+        buttons: false
+      });
+      await axios({
+        method: 'POST',
+        url: 'http://localhost:8000/api/delete_user',
+        crossDomain: true,
+        data: querystring.stringify({
+          token: localStorage.getItem('token'),
+          username
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      await swal({
+        text: 'Delete Successful!',
+        icon: 'success'
+      });
+      refresh();
+    } catch (ex) {
+      swal.stopLoading();
+      swal.close();
+      console.log(ex);
+    }
   }
 
-  async grantAdmin(user) {
+  async grantAdmin(username, refresh) {
     // call grantAdmin API
-
-    this.props.refresh();
+    try {
+      swal({
+        text: 'Granting...',
+        icon: loaderIcon,
+        buttons: false
+      });
+      await axios({
+        method: 'POST',
+        url: 'http://localhost:8000/api/add_admin',
+        crossDomain: true,
+        data: querystring.stringify({
+          token: localStorage.getItem('token'),
+          username
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      await swal({
+        text: 'Delete Successful!',
+        icon: 'success'
+      });
+      refresh();
+    } catch (ex) {
+      swal.stopLoading();
+      swal.close();
+      console.log(ex);
+    }
   }
 
   render() {
     const {
-      username,
-      firstName,
-      lastName,
-      nickname,
-      displayName,
-      address,
-      phoneNumber,
-      email,
-      contact,
-      isAdmin
-    } = this.props.info;
+      index,
+      refresh,
+      info: {
+        username,
+        firstName,
+        lastName,
+        nickname,
+        displayName,
+        address,
+        phoneNumber,
+        email,
+        contact,
+        isAdmin
+      }
+    } = this.props;
 
-    const { index } = this.props;
-    console.log('rerender');
     return (
       <div>
         <div>
@@ -99,10 +157,22 @@ class UserContainer extends Component {
 
                 <div className="modal-footer">
                   {!isAdmin && (
-                    <button className="btn btn-primary">Grant Admin</button>
+                    <button
+                      data-dismiss="modal"
+                      onClick={() => this.grantAdmin(username, refresh)}
+                      className="btn btn-primary"
+                    >
+                      Grant Admin
+                    </button>
                   )}
 
-                  <button className="btn btn-danger">Delete User</button>
+                  <button
+                    data-dismiss="modal"
+                    onClick={() => this.deleteUser(username, refresh)}
+                    className="btn btn-danger"
+                  >
+                    Delete User
+                  </button>
                 </div>
               </div>
             </div>
