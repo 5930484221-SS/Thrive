@@ -6,13 +6,15 @@ import loaderIcon from "../../img/loaderIcon.gif";
 import axios from "axios";
 import querystring from "query-string";
 import RateReviewContainer from "./RateReviewContainer";
+import StarRatings from "react-star-ratings";
 
 class CourseContainer extends Component {
   constructor() {
     super();
     this.state = {
       sendingRequest: false,
-      courseList: []
+      courseList: [],
+      reviewList: []
     };
   }
 
@@ -87,9 +89,11 @@ class CourseContainer extends Component {
       tuition,
       tutor_display,
       fee,
-      img
+      img,
+      rating
     } = this.props.info;
     const { courseList } = this.state;
+    const { reviewList } = this.state;
 
     const index = this.props.index;
 
@@ -112,10 +116,15 @@ class CourseContainer extends Component {
             <strong className="card-text">Instructor: </strong>
             <span className="card-text"> {tutor_display} </span>
             <hr />
-            <strong className="card-text limitP">Score: </strong>
-
-            <i className="star icon" />
-            <i className="half star icon" />
+            <strong className="card-text limitP" style={{ marginRight: "8px" }}>
+              Score:
+            </strong>
+            <StarRatings
+              rating={rating}
+              starDimension="25px"
+              starSpacing="1px"
+              starRatedColor="darkred"
+            />
             <br />
           </div>
 
@@ -171,6 +180,7 @@ class CourseContainer extends Component {
                   data-toggle="modal"
                   data-target="#rating"
                   data-dismiss="modal"
+                  onClick={this.seeMoreReview}
                 >
                   See more review
                 </button>
@@ -204,10 +214,7 @@ class CourseContainer extends Component {
                 className="modal-body"
                 style={{ height: "400px", width: "100%", overflow: "auto" }}
               >
-                {console.log("this", this.state.courseList)}
-                {/* {courseList.map((c, index) => (
-                <RateReviewContainer key={index} info={c} index={index} /> ))} */}
-                <RateReviewContainer />
+                <RateReviewContainer id={this.props.info._id} />
               </div>
               <div className="modal-footer">
                 <button

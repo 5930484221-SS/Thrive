@@ -244,20 +244,20 @@ export class LearningCourseContainer extends Component {
       token: localStorage.getItem("token"),
       review: this.state.review,
       rating: this.state.rating,
-      courseID: this.state.courseID
+      course_id: this.state.courseID
     };
     console.log(data);
-    // return axios({
-    //   method: "POST",
-    //   url: "http://localhost:8000/api/",
-    //   crossDomain: true,
-    //   data: querystring.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded"
-    //   }
-    // }).then(() => {
-    //   this.setState({ isEdit: false });
-    // });
+    return axios({
+      method: "POST",
+      url: "http://localhost:8000/api/review",
+      crossDomain: true,
+      data: querystring.stringify(data),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then(() => {
+      swal("Good job!", "Thank you for your review", "success");
+    });
   }
 
   async componentDidMount() {
