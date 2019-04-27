@@ -235,7 +235,7 @@ export class LearningCourseContainer extends Component {
     });
   };
 
-  onSubmit(e) {
+  async onSubmit(e) {
     e.preventDefault();
     if (this.state.rating === 0) {
       return swal("Please rating");
@@ -247,17 +247,20 @@ export class LearningCourseContainer extends Component {
       course_id: this.state.courseID
     };
     console.log(data);
-    return axios({
-      method: "POST",
-      url: "http://localhost:8000/api/review",
-      crossDomain: true,
-      data: querystring.stringify(data),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then(() => {
+    try {
+      await axios({
+        method: "POST",
+        url: "http://localhost:8000/api/review",
+        crossDomain: true,
+        data: querystring.stringify(data),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
       swal("Good job!", "Thank you for your review", "success");
-    });
+    } catch (error) {
+      swal("There are error. Please try again");
+    }
   }
 
   async componentDidMount() {

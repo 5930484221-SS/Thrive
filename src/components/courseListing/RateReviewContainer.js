@@ -8,43 +8,29 @@ import StarRatings from "react-star-ratings";
 class RateReviewContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      reviewList: []
-    };
-  }
-
-  async componentWillMount() {
-    try {
-      console.log("see more review");
-      const response = await axios({
-        method: "GET",
-        url: "http://localhost:8000/api/get_reviews?course_id=" + this.props.id,
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      });
-      this.setState({ reviewList: response.data["reviews"] });
-      console.log(this.state.reviewList);
-      // console.log(this.state.reviewList[0].rating);
-    } catch {}
   }
 
   render() {
+    const rating = parseInt(this.props.item.rating);
     return (
       <div>
+        <br />
         <div className="card disabled-hover">
-          <h5 className="card-body pt-3 pb-3">
+          <h6 className="card-body pt-3 pb-3">
             Score: {"  "}
             <StarRatings
-              rating={2}
+              rating={rating}
               starDimension="30px"
               starSpacing="1px"
               starRatedColor="darkred"
             />
-          </h5>
-          <h5 className="card-body pt-3 pb-3">Review: </h5>
-          <h5 className="card-footer pt-3 pb-3">Reviewed by:</h5>
+          </h6>
+          <h6 className="card-body pt-3 pb-3">
+            Review: {this.props.item.review}
+          </h6>
+          <h6 className="card-footer pt-3 pb-3">
+            Reviewed by: {this.props.item.display_name}
+          </h6>
         </div>
       </div>
     );
