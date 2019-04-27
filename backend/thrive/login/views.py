@@ -927,7 +927,7 @@ def submit_review(request):
         'rating': rating,
         'review_dt': datetime.datetime.now(),
     }
-    filter_data = {'reviewer': user, 'course_id': course_id}
+    filter_data = {'learner': user, 'course_id': course_id}
 
     inc_data = {f'rating_{rating}': 1}
     match = collection.find_one(filter_data)
