@@ -17,11 +17,14 @@ export default class TutorCourseContainer extends Component {
       tuition,
       tutor_display,
       fee,
-      img
+      img,
+      status
     } = this.props.info;
-
     return (
-      <div className="courseCard container">
+      <div
+        className="courseCard container"
+        style={{ opacity: status === "closed" ? "0.5" : "1" }}
+      >
         <div className="col-3">
           <img
             className="card-img-top img-fluid"

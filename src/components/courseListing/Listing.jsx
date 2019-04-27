@@ -301,9 +301,10 @@ class Listing extends Component {
         <div className="row">
           {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
-            courseList.map((c, index) => (
+            courseList.map((c, index) => {
+              return c.status === "closed"? null:(
               <CourseContainer key={index} info={c} index={index} />
-            ))
+            )})
           ) : (
             <div className="display-4 m-auto">
               No <span className="text-orange">Results</span>
