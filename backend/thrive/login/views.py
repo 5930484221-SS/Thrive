@@ -148,6 +148,7 @@ def register(request):
         'contact': contact,
 
         'reg_dt': reg_dt,
+        'is_admin': False,
         'active': True,
     }
     collection.insert_one(record)
