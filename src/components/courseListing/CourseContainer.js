@@ -7,6 +7,7 @@ import axios from "axios";
 import querystring from "query-string";
 import RateReviewContainer from "./RateReviewContainer";
 import StarRatings from "react-star-ratings";
+import { inherits } from "util";
 
 class CourseContainer extends Component {
   constructor() {
@@ -14,24 +15,34 @@ class CourseContainer extends Component {
     this.state = {
       sendingRequest: false,
       courseList: [],
-      reviewList: []
+      reviewList: [],
+      isSeeMore: false
     };
+    this.seeMoreReview = this.seeMoreReview.bind(this);
   }
 
-  async componentDidMount() {
+  seeMoreReview() {
+    this.setState({ isSeeMore: !this.state.isSeeMore });
+  }
+
+  async componentWillMount() {
     try {
+      console.log("see more review");
       const response = await axios({
         method: "GET",
+        url:
+          "http://localhost:8000/api/get_reviews?course_id=" +
+          this.props.info._id,
         crossDomain: true,
-        url: "http://localhost:8000/api/get_courses",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
-          // "Access-Control-Allow-Origin": "*"
         }
       });
-      this.setState({ courseList: response.data.courses, isLoading: false });
+      this.setState({ reviewList: response.data["reviews"] });
+      console.log(this.state.reviewList);
+      // console.log(this.state.reviewList[0].rating);
     } catch (error) {
-      console.log("fetch fails, please refresh the page");
+      swal("There are some error occur.");
     }
   }
 
@@ -152,7 +163,10 @@ class CourseContainer extends Component {
                 </button>
               </div>
 
-              <div className="modal-body">
+              <div
+                className="modal-body"
+                style={{ height: "300px", width: "100%", overflow: "auto" }}
+              >
                 <p className="modal-text"> {description} </p>
                 <hr />
                 <strong className="modal-text">Instructor: </strong>
@@ -160,7 +174,7 @@ class CourseContainer extends Component {
                 <a className="modal-text" href="#">
                   {tutor_display}
                 </a>
-                <p className="modal-text"> {descriptionProfile} </p>
+                <p className="modal-text"> {descriptionProfile}</p>
                 <hr />
                 <strong className="modal-text">location: </strong>
                 <span className="modal-text"> {location}</span>
@@ -171,58 +185,44 @@ class CourseContainer extends Component {
 
                 <strong className="modal-text">Fee: </strong>
                 <span className="modal-text">฿{fee}</span>
+                <br />
+                {this.state.isSeeMore ? (
+                  this.state.reviewList.length > 0 ? (
+                    <div className="model-header">
+                      <hr />
+                      <h5 className="modal-title pt-3 pb-3">
+                        Review & Ratings{" "}
+                      </h5>
+                      {this.state.reviewList.map(item => (
+                        <div>
+                          <RateReviewContainer item={item} key={item._id} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div>
+                      <hr />
+                      <h5 className="modal-title pt-3 pb-3">
+                        Review & Ratings{" "}
+                      </h5>
+                      <div className="display-5 m-auto">
+                        No <span className="text-orange">Review</span>
+                      </div>
+                    </div>
+                  )
+                ) : null}
               </div>
 
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-orange"
-                  data-toggle="modal"
-                  data-target="#rating"
-                  data-dismiss="modal"
                   onClick={this.seeMoreReview}
                 >
                   See more review
                 </button>
                 <button className="btn btn-secondary" onClick={this.onRequest}>
                   Request reservation
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* rating modal */}
-        <div
-          className="modal fade"
-          id="rating"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="card-title pt-3 pb-3">
-                  Rate and Review
-                  <br />
-                  {topic}
-                </h5>
-              </div>
-              <div
-                className="modal-body"
-                style={{ height: "400px", width: "100%", overflow: "auto" }}
-              >
-                <RateReviewContainer id={this.props.info._id} />
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Close
                 </button>
               </div>
             </div>
