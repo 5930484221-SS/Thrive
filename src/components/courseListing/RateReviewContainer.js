@@ -3,47 +3,36 @@ import "./CourseContainer.css";
 
 import axios from "axios";
 import querystring from "query-string";
+import StarRatings from "react-star-ratings";
 
 class RateReviewContainer extends Component {
   constructor(props) {
     super(props);
   }
 
-
   render() {
-    
-
+    const rating = parseInt(this.props.item.rating);
     return (
       <div>
+        <br />
         <div className="card disabled-hover">
-          <h5 className="card-body pt-3 pb-3">Score: 
-          <i className="star icon" />
-          <i className="star icon" />
-          <i className="star icon" />
-          </h5>
-          <h5 className="card-body pt-3 pb-3">Review: สอนดีมากก เข้าใจในเนื้อหา</h5>
-          <h5 className="card-footer pt-3 pb-3">Reviewed by: Beambeam</h5>
+          <h6 className="card-body pt-3 pb-3">
+            Score: {"  "}
+            <StarRatings
+              rating={rating}
+              starDimension="30px"
+              starSpacing="1px"
+              starRatedColor="darkred"
+            />
+          </h6>
+          <h6 className="card-body pt-3 pb-3">
+            Review: {this.props.item.review}
+          </h6>
+          <h6 className="card-footer pt-3 pb-3">
+            Reviewed by: {this.props.item.display_name}
+          </h6>
         </div>
-
-        <div className="card disabled-hover">
-          <h5 className="card-body pt-3 pb-3">Score: 
-          <i className="star icon" />
-          <i className="star icon" />
-          <i className="half star icon" />
-          </h5>
-          <h5 className="card-body pt-3 pb-3">Review: ไม่ค่อยตรงเวลา และไม่ชดเวลาให้ สรุปเนื้อหากระชับ</h5>
-          <h5 className="card-footer pt-3 pb-3">Reviewed by: Patja</h5>
-        </div>
-
-        <div className="card disabled-hover">
-          <h5 className="card-body pt-3 pb-3">Score: 
-          <i className="star icon" />
-          </h5>
-          <h5 className="card-body pt-3 pb-3">Review: ไม่ประทับใจ</h5>
-          <h5 className="card-footer pt-3 pb-3">Reviewed by: TamTam</h5>
-        </div>
-
-  </div>
+      </div>
     );
   }
 }

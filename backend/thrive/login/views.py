@@ -148,6 +148,7 @@ def register(request):
         'contact': contact,
 
         'reg_dt': reg_dt,
+        'is_admin': False,
         'active': True,
     }
     collection.insert_one(record)
@@ -319,7 +320,11 @@ def get_courses(request):
         course = {field: str(record[field]) for field in course_fields + ['_id','status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
-        course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6))
+        n_ratings = sum(record[f'rating_{i}'] for i in range(1, 6))
+        if n_ratings:
+          course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6)) / n_ratings
+        else:
+          course['rating'] = 0
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))
@@ -882,3 +887,92 @@ def charge(request):
 
     response = JsonResponse(dict(charge=charge))
     return HttpResponse(response)
+
+
+def is_learner_of(user, course_id):
+    collection = mongo_db.get_collection('reserve')
+    match = collection.find_one({'courseId': course_id, 'learner': user, 'flag': 's'})
+    return bool(match)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_review(request):
+    token = request.POST.get('token')
+    review = request.POST.get('review')
+    rating = request.POST.get('rating')
+    course_id = request.POST.get('course_id')
+
+    rating = safe_cast(int, rating, None)
+
+    if any([token is None, review is None,
+            rating is None, course_id is None, rating is None]):
+        return HttpResponseBadRequest('invalid request parameters')
+
+    user = get_username_from_token(token)
+    course_id = ObjectId(course_id)
+
+    if user is None:
+        return HttpResponseForbidden("please login first")
+
+    if not is_learner_of(user, course_id):
+        return HttpResponseForbidden('non-learner reviewing is not allowed')
+
+    if not (1 <= rating <= 5):
+        return HttpResponseBadRequest('invalid request parameters')
+
+    collection = mongo_db.get_collection('review')
+
+    data = {
+        'learner': user,
+        'course_id': course_id,
+        'context': review,
+        'rating': rating,
+        'review_dt': datetime.datetime.now(),
+    }
+    filter_data = {'learner': user, 'course_id': course_id}
+
+    inc_data = {f'rating_{rating}': 1}
+    match = collection.find_one(filter_data)
+    if match:
+        old_rating = match['rating']
+        inc_data[f'rating_{old_rating}'] = -1
+
+    collection.update_one(filter_data, {'$set': data}, upsert=True)
+
+    collection = mongo_db.get_collection('courses')
+    collection.update_one({'_id': course_id}, {'$inc': inc_data})
+
+    return HttpResponse('')
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_reviews(request):
+    # token = request.POST.get('token')
+    # course_id = request.POST.get('course_id')
+    course_id = request.GET.get('course_id')
+
+    # user = get_username_from_token(token)
+    #
+    # if user is None:
+    #     return HttpResponseForbidden("please login first")
+
+    course_id = ObjectId(course_id)
+
+    collection = mongo_db.get_collection('review')
+    lookup_stage = {'from': 'users', 'as': 'reviewer', 'let': {'learner': '$learner'},
+                    'pipeline': [{'$match': {'$expr': {'$eq': ['$user', '$$learner']}}}]
+                    }
+
+    pipeline = [
+        {'$match': {'course_id': course_id}},
+        {'$lookup': lookup_stage},
+        {'$unwind': '$reviewer'},
+        {'$project': {'display_name': '$reviewer.display', 'review': '$context',
+                      'course_id': 1, 'rating': 1, 'username': '$learner', 'review_dt': 1}},
+    ]
+    query = collection.aggregate(pipeline)
+    result = [{k: str(v) for k, v in d.items()} for d in list(query)]
+    response = JsonResponse(dict(reviews=result))
+    return set_response_header(response)

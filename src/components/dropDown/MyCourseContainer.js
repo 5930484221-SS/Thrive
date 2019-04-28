@@ -38,7 +38,6 @@ class TeachingContainer extends Component {
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
-      console.log(courses.courses);
     } catch (error) {
       console.log(error);
     }
@@ -169,7 +168,11 @@ class TeachingContainer extends Component {
           </div>
         );
       case "closed":
-        return <p>The course had been closed</p>;
+        return (
+          <p style={{ color: "orange", fontWeight: "bold" }}>
+            The course had been closed
+          </p>
+        );
       default:
         return null;
     }
@@ -235,7 +238,7 @@ export class LearningCourseContainer extends Component {
     });
   };
 
-  onSubmit(e) {
+  async onSubmit(e) {
     e.preventDefault();
     if (this.state.rating === 0) {
       return swal("Please rating");
@@ -244,20 +247,23 @@ export class LearningCourseContainer extends Component {
       token: localStorage.getItem("token"),
       review: this.state.review,
       rating: this.state.rating,
-      courseID: this.state.courseID
+      course_id: this.state.courseID
     };
     console.log(data);
-    // return axios({
-    //   method: "POST",
-    //   url: "http://localhost:8000/api/",
-    //   crossDomain: true,
-    //   data: querystring.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded"
-    //   }
-    // }).then(() => {
-    //   this.setState({ isEdit: false });
-    // });
+    try {
+      await axios({
+        method: "POST",
+        url: "http://localhost:8000/api/review",
+        crossDomain: true,
+        data: querystring.stringify(data),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+      swal("Good job!", "Thank you for your review", "success");
+    } catch (error) {
+      swal("There are error. Please try again");
+    }
   }
 
   async componentDidMount() {
@@ -291,16 +297,22 @@ export class LearningCourseContainer extends Component {
           {coursesAsLearner.map(course => (
             <MyCourseContainerTemplate info={course} key={course._id}>
               <div>
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  data-toggle="modal"
-                  data-target="#review"
-                  style={{ marginBottom: "5px" }}
-                  onClick={() => this.setID(course._id)}
-                >
-                  Review
-                </button>
+                {course.status === "closed" ? (
+                  <p style={{ color: "orange", fontWeight: "bold" }}>
+                    The course had been closed
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-success"
+                    data-toggle="modal"
+                    data-target="#review"
+                    style={{ marginBottom: "5px" }}
+                    onClick={() => this.setID(course._id)}
+                  >
+                    Review
+                  </button>
+                )}
                 <div
                   className="modal"
                   id="review"
