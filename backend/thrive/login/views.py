@@ -538,6 +538,9 @@ def delete_course(request):
 
         filter_data = {'_id': ObjectId(_id), 'tutor': user}
     else:
+        print(
+            _id
+        )
         filter_data = {'_id': ObjectId(_id)}
 
     ret = collection_course.delete_one(filter_data)
