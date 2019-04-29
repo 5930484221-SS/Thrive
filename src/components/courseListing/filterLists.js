@@ -1,12 +1,25 @@
 const subjects = [
   {
     value: 'gat-eng',
-    label: 'GAT-ENG'
+    label: 'GAT-Eng'
+  },
+  {
+    value: 'gat-thai',
+    label: 'GAT-Thai'
   },
   {
     value: 'english',
     label: 'ENG'
   },
+  {
+    value: 'thai',
+    label: 'Thai'
+  },
+  {
+    value: 'social',
+    label: 'Social'
+  },
+
   {
     value: 'mathematics',
     label: 'Mathemetics'
@@ -33,7 +46,31 @@ const subjects = [
   },
   {
     value: 'tu-get',
-    label: 'TU-GET'
+    label: 'TU GET'
+  },
+  {
+    value: 'science',
+    label: 'Science'
+  },
+  {
+    value: 'physics',
+    label: 'Physics'
+  },
+  {
+    value: 'chemical',
+    label: 'Chemistry'
+  },
+  {
+    value: 'biology',
+    label: 'Biology'
+  },
+  {
+    value: 'astronomy',
+    label: 'Astronomy'
+  },
+  {
+    value: 'basic science',
+    label: 'Basic Science'
   }
 ];
 
@@ -108,12 +145,20 @@ const ratings = [
     label: '-none-'
   },
   {
+    value: '1',
+    label: '1'
+  },
+  {
     value: '2',
     label: '2'
   },
   {
     value: '3',
     label: '3'
+  },
+  {
+    value: '4',
+    label: '4'
   },
   {
     value: '5',
