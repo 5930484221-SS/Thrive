@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { LearnerNotification, TutorNotification } from "./NotificationTemplate";
 import MyCourseContentError from "./MyCourseContentError";
 import Loader from "../loader/Loader";
+import ipAddress from "../../configIpAddress"
 
 import axios from "axios";
 import querystring from "query-string";
@@ -29,7 +30,7 @@ export default class Notification extends Component {
   fetchTutorTransactions() {
     return axios({
       method: "POST",
-      url: "http://127.0.0.1:8000/api/get_tutor_transactions",
+      url: ipAddress + "/api/get_tutor_transactions",
       crossDomain: true,
       data: querystring.stringify({
         token: window.localStorage.token
@@ -58,7 +59,7 @@ export default class Notification extends Component {
   fetchLearnerTransactions() {
     return axios({
       method: "POST",
-      url: "http://127.0.0.1:8000/api/get_learner_transactions",
+      url: ipAddress + "/api/get_learner_transactions",
       crossDomain: true,
       data: querystring.stringify({
         token: window.localStorage.token

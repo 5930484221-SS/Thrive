@@ -1,7 +1,8 @@
-import axios from 'axios';
-import querystring from 'query-string';
-import React, { Component } from 'react';
-import CowBg from './CowBg';
+import axios from "axios";
+import querystring from "query-string";
+import React, { Component } from "react";
+import CowBg from "./CowBg";
+import ipAddress from "../../configIpAddress"
 
 import './courseCreate.css';
 
@@ -19,8 +20,8 @@ class CourseCreation extends Component {
   onSubmit = async e => {
     e.preventDefault();
     axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/create_course',
+      method: "POST",
+      url: ipAddress + "/api/create_course",
       crossDomain: true,
       data: querystring.stringify({
         token: localStorage.getItem('token'),

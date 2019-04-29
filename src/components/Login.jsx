@@ -1,6 +1,7 @@
 import axios from "axios";
 import querystring from "query-string";
 import React, { Component } from "react";
+import ipAddress from "../configIpAddress"
 
 import LandingText from "./LandingText";
 
@@ -16,7 +17,7 @@ class Login extends Component {
     e.preventDefault();
     const response = await axios({
       method: "POST",
-      url: "http://localhost:8000/api/login",
+      url: ipAddress + "/api/login",
       crossDomain: true,
       data: querystring.stringify({
         username: this.username.current.value,

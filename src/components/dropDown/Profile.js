@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CowBg from "../CowBg";
 import axios from "axios";
 import querystring from "query-string";
+import ipAddress from "../../configIpAddress"
 
 export default class Profile extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class Profile extends Component {
   componentDidMount() {
     return axios({
       method: "GET",
-      url: "http://localhost:8000/api/user?username=" + this.state.username,
+      url: ipAddress + "/api/user?username=" + this.state.username,
       crossDomain: true,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -61,7 +62,7 @@ export default class Profile extends Component {
     };
     return axios({
       method: "POST",
-      url: "http://localhost:8000/api/edit_profile",
+      url: ipAddress + "/api/edit_profile",
       crossDomain: true,
       data: querystring.stringify(data),
       headers: {
