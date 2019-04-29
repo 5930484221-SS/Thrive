@@ -3,6 +3,7 @@ import CowBg from "./CowBg";
 import axios from "axios";
 import querystring from "query-string";
 import swal from "sweetalert";
+import ipAddress from "../configIpAddress"
 
 export default class Register extends Component {
   constructor(props) {
@@ -50,7 +51,7 @@ export default class Register extends Component {
 
     return axios({
       method: "POST",
-      url: "http://localhost:8000/api/register",
+      url: ipAddress + "/api/register",
       crossDomain: true,
       data: querystring.stringify(data),
       headers: {
@@ -206,7 +207,7 @@ export default class Register extends Component {
                     name="displayName"
                     maxLength="30"
                     required
-                    pattern="[A-Za-z0-9]*"
+                    pattern="[A-Za-z0-9 ]*"
                     title="Must contain only english alphabet and number"
                   />
                 </div>

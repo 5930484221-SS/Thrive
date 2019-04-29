@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import axios from "axios";
-import querystring from "query-string";
-import swal from "sweetalert";
-import loaderIcon from "../../img/loaderIcon.gif";
-import "../courseListing/CourseContainer.css";
+import React, { Component } from 'react';
+import axios from 'axios';
+import querystring from 'query-string';
+import swal from 'sweetalert';
+import loaderIcon from '../../img/loaderIcon.gif';
+import '../courseListing/CourseContainer.css';
+import ipAddress from "../../configIpAddress"
 
 class UserContainer extends Component {
   constructor(props) {
     super(props);
   }
 
-  async deleteUser(username, refresh) {
+  async deleteUser() {
     // call deleteUser API
     try {
       swal({
@@ -19,12 +20,12 @@ class UserContainer extends Component {
         buttons: false
       });
       await axios({
-        method: "POST",
-        url: "http://localhost:8000/api/delete_user",
+        method: 'POST',
+        url: ipAddress + '/api/delete_user',
         crossDomain: true,
         data: querystring.stringify({
-          token: localStorage.getItem("token"),
-          username
+          token: localStorage.getItem('token'),
+          username: this.props.info.username
         }),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -34,7 +35,7 @@ class UserContainer extends Component {
         text: "Delete Successful!",
         icon: "success"
       });
-      refresh();
+      this.props.refresh();
     } catch (ex) {
       swal.stopLoading();
       swal.close();
@@ -42,7 +43,7 @@ class UserContainer extends Component {
     }
   }
 
-  async grantAdmin(username, refresh) {
+  async grantAdmin() {
     // call grantAdmin API
     try {
       swal({
@@ -51,12 +52,12 @@ class UserContainer extends Component {
         buttons: false
       });
       await axios({
-        method: "POST",
-        url: "http://localhost:8000/api/add_admin",
+        method: 'POST',
+        url: ipAddress + '/api/add_admin',
         crossDomain: true,
         data: querystring.stringify({
-          token: localStorage.getItem("token"),
-          username
+          token: localStorage.getItem('token'),
+          username: this.props.info.username
         }),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -66,7 +67,7 @@ class UserContainer extends Component {
         text: "Grant Successful!",
         icon: "success"
       });
-      refresh();
+      this.props.refresh();
     } catch (ex) {
       swal.stopLoading();
       swal.close();

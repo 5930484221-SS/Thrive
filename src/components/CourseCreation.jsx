@@ -2,8 +2,9 @@ import axios from "axios";
 import querystring from "query-string";
 import React, { Component } from "react";
 import CowBg from "./CowBg";
+import ipAddress from "../../configIpAddress"
 
-import "./courseCreate.css";
+import './courseCreate.css';
 
 class CourseCreation extends Component {
   field_topic = React.createRef();
@@ -20,10 +21,10 @@ class CourseCreation extends Component {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://localhost:8000/api/create_course",
+      url: ipAddress + "/api/create_course",
       crossDomain: true,
       data: querystring.stringify({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
 
         topic: this.field_topic.current.value,
         description: this.field_description.current.value,
@@ -35,11 +36,11 @@ class CourseCreation extends Component {
         tuition: this.field_tuition.current.value
       }),
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
-      .then(response => alert("ok"))
-      .catch(error => alert("failed"));
+      .then(response => alert('ok'))
+      .catch(error => alert('failed'));
   };
 
   render() {
@@ -86,9 +87,9 @@ class CourseCreation extends Component {
               <br />
 
               <span className="topic">
-                {" "}
+                {' '}
                 <span className="text-orange text-extra">A</span>
-                bout <span className="text-orange text-slim">Course</span>{" "}
+                bout <span className="text-orange text-slim">Course</span>{' '}
               </span>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
@@ -100,7 +101,7 @@ class CourseCreation extends Component {
                   <option>Mathematics</option>
                   <option>Science</option>
                   <option>Physics</option>
-                  <option>Chemical</option>
+                  <option>Chemistry</option>
                   <option>Biology</option>
                   <option>Astronomy</option>
                   <option>Basic Science</option>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../courseListing/CourseContainer.css";
 import swal from "sweetalert";
 import loaderIcon from "../../img/loaderIcon.gif";
+import ipAddress from "../../configIpAddress"
 
 import axios from "axios";
 import querystring from "query-string";
@@ -20,7 +21,7 @@ class CourseContainer extends Component {
       const response = await axios({
         method: "GET",
         crossDomain: true,
-        url: "http://localhost:8000/api/get_courses",
+        url: ipAddress + "/api/get_courses",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
           // "Access-Control-Allow-Origin": "*"
@@ -41,7 +42,7 @@ class CourseContainer extends Component {
       });
       await axios({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/delete_course", //delete_course(request) on database
+        url: ipAddress + "/api/delete_course", //delete_course(request) on database
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token,

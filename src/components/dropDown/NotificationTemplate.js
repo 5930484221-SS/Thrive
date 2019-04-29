@@ -2,6 +2,7 @@ import React from "react";
 import clock from "../../img/clock.svg";
 import StripeCheckout from "react-stripe-checkout";
 import swal from "sweetalert";
+import ipAddress from "../../configIpAddress"
 
 import axios from "axios";
 import querystring from "query-string";
@@ -16,7 +17,7 @@ export const NOTIFICATION_TYPE = {
 const onAccept = _id => {
   axios({
     method: "POST",
-    url: "http://127.0.0.1:8000/api/accept",
+    url: ipAddress + "/api/accept",
     crossDomain: true,
     data: querystring.stringify({
       token: window.localStorage.token,
@@ -43,7 +44,7 @@ const onAccept = _id => {
 const onDecline = _id => {
   axios({
     method: "POST",
-    url: "http://127.0.0.1:8000/api/decline",
+    url: ipAddress + "/api/decline",
     crossDomain: true,
     data: querystring.stringify({
       token: window.localStorage.token,
@@ -79,7 +80,7 @@ const onCheckout = (checkoutToken, _id, fee, courseId) => {
   })
   return axios({
     method: "POST",
-    url: "http://127.0.0.1:8000/api/charge",
+    url: ipAddress + "/api/charge",
     crossDomain: true,
     data: querystring.stringify({
       token: window.localStorage.token,

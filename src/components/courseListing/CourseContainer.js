@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./CourseContainer.css";
 import swal from "sweetalert";
 import loaderIcon from "../../img/loaderIcon.gif";
+import ipAddress from "../../configIpAddress";
 
 import axios from "axios";
 import querystring from "query-string";
@@ -30,9 +31,7 @@ class CourseContainer extends Component {
       console.log("see more review");
       const response = await axios({
         method: "GET",
-        url:
-          "http://localhost:8000/api/get_reviews?course_id=" +
-          this.props.info._id,
+        url: ipAddress + "/api/get_reviews?course_id=" + this.props.info._id,
         crossDomain: true,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -55,7 +54,7 @@ class CourseContainer extends Component {
       });
       await axios({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/create_reserve",
+        url: ipAddress + "/api/create_reserve",
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token,
