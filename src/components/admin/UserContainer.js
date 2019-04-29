@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import querystring from 'query-string';
-import swal from 'sweetalert';
-import loaderIcon from '../../img/loaderIcon.gif';
-import '../courseListing/CourseContainer.css';
+import React, { Component } from "react";
+import axios from "axios";
+import querystring from "query-string";
+import swal from "sweetalert";
+import loaderIcon from "../../img/loaderIcon.gif";
+import "../courseListing/CourseContainer.css";
 
 class UserContainer extends Component {
   constructor(props) {
@@ -14,25 +14,25 @@ class UserContainer extends Component {
     // call deleteUser API
     try {
       swal({
-        text: 'Deleteing...',
+        text: "Deleteing...",
         icon: loaderIcon,
         buttons: false
       });
       await axios({
-        method: 'POST',
-        url: 'http://localhost:8000/api/delete_user',
+        method: "POST",
+        url: "http://localhost:8000/api/delete_user",
         crossDomain: true,
         data: querystring.stringify({
-          token: localStorage.getItem('token'),
+          token: localStorage.getItem("token"),
           username
         }),
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded"
         }
       });
       await swal({
-        text: 'Delete Successful!',
-        icon: 'success'
+        text: "Delete Successful!",
+        icon: "success"
       });
       refresh();
     } catch (ex) {
@@ -46,25 +46,25 @@ class UserContainer extends Component {
     // call grantAdmin API
     try {
       swal({
-        text: 'Granting...',
+        text: "Granting...",
         icon: loaderIcon,
         buttons: false
       });
       await axios({
-        method: 'POST',
-        url: 'http://localhost:8000/api/add_admin',
+        method: "POST",
+        url: "http://localhost:8000/api/add_admin",
         crossDomain: true,
         data: querystring.stringify({
-          token: localStorage.getItem('token'),
+          token: localStorage.getItem("token"),
           username
         }),
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded"
         }
       });
       await swal({
-        text: 'Delete Successful!',
-        icon: 'success'
+        text: "Grant Successful!",
+        icon: "success"
       });
       refresh();
     } catch (ex) {
