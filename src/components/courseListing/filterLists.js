@@ -195,4 +195,4 @@ const ratings = [
   }
 ];
 
-export { subjects, locations, tuitionFees, joiningFees, ratings };
+export { subjects, tuitionFees, joiningFees, ratings };
