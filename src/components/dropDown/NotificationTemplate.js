@@ -2,7 +2,8 @@ import React from "react";
 import clock from "../../img/clock.svg";
 import StripeCheckout from "react-stripe-checkout";
 import swal from "sweetalert";
-import ipAddress from "../../configIpAddress"
+import ipAddress from "../../configIpAddress";
+import loaderIcon from "../../img/loaderIcon.gif";
 
 import axios from "axios";
 import querystring from "query-string";
@@ -14,98 +15,109 @@ export const NOTIFICATION_TYPE = {
   s: "s"
 };
 
-const onAccept = _id => {
-  axios({
-    method: "POST",
-    url: ipAddress + "/api/accept",
-    crossDomain: true,
-    data: querystring.stringify({
-      token: window.localStorage.token,
-      id: _id
-    }),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(() => {
-      swal({
-        text: "You have accepted the request",
-        icon: "success"
-      });
-    })
-    .catch(error => {
-      swal({
-        text: "Failed to accepted\n" + error,
-        icon: "error"
-      });
+const onAccept = async _id => {
+  try {
+    swal({
+      text: "Processing...",
+      icon: loaderIcon,
+      buttons: false
     });
+    await axios({
+      method: "POST",
+      url: ipAddress + "/api/accept",
+      crossDomain: true,
+      data: querystring.stringify({
+        token: window.localStorage.token,
+        id: _id
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+    await swal({
+      text: "The request has been accepted",
+      icon: "success"
+    });
+  } catch (error) {
+    swal.stopLoading();
+    swal.close();
+    console.log(error.response);
+    swal({
+      text: error.response.status + " " + error.response.statusText,
+      icon: "error"
+    });
+  }
 };
 
-const onDecline = _id => {
-  axios({
-    method: "POST",
-    url: ipAddress + "/api/decline",
-    crossDomain: true,
-    data: querystring.stringify({
-      token: window.localStorage.token,
-      // id: _id,
-      currency: "THB"
-    }),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(() => {
-      swal({
-        text: "You have accepted the request",
-        icon: "success"
-      });
-    })
-    .catch(error => {
-      swal({
-        text: "Failed to decline\n" + error,
-        icon: "error"
-      });
+const onDecline = async _id => {
+  try {
+    swal({
+      text: "Processing...",
+      icon: loaderIcon,
+      buttons: false
     });
+    await axios({
+      method: "POST",
+      url: ipAddress + "/api/decline",
+      crossDomain: true,
+      data: querystring.stringify({
+        token: window.localStorage.token,
+        id: _id
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+    await swal({
+      text: "The request has been declined",
+      icon: "success"
+    });
+  } catch (error) {
+    swal.stopLoading();
+    swal.close();
+    swal({
+      text: error.response.status + " " + error.response.statusText,
+      icon: "error"
+    });
+  }
 };
 
-const onCheckout = (checkoutToken, _id, fee, courseId) => {
-  console.log({
-    token: window.localStorage.token,
-    request_id: _id,
-    card_token: checkoutToken.id,
-    amount: fee * 100,
-    currency: "THB",
-    course_id: courseId
-  })
-  return axios({
-    method: "POST",
-    url: ipAddress + "/api/charge",
-    crossDomain: true,
-    data: querystring.stringify({
-      token: window.localStorage.token,
-      request_id: _id,
-      card_token: checkoutToken.id,
-      amount: fee * 100,
-      currency: "THB",
-      course_id: courseId
-    }),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-    .then(() => {
-      swal({
-        text: "The payment has been successfully processed",
-        icon: "success"
-      });
-    })
-    .catch(error => {
-      swal({
-        text: "Failed to pay fee\n" + error,
-        icon: "error"
-      });
+const onCheckout = async(checkoutToken, _id, fee, courseId) => {
+  try {
+    swal({
+      text: "Processing...",
+      icon: loaderIcon,
+      buttons: false
     });
+    await axios({
+      method: "POST",
+      url: ipAddress + "/api/charge",
+      crossDomain: true,
+      data: querystring.stringify({
+        token: window.localStorage.token,
+        request_id: _id,
+        card_token: checkoutToken.id,
+        amount: fee * 100,
+        currency: "THB",
+        course_id: courseId
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+    await swal({
+      text: "The payment has been successfully processed",
+      icon: "success"
+    });
+  } catch (error) {
+    swal.stopLoading();
+    swal.close();
+    console.log(error.response);
+    swal({
+      text: error.response.status + " " + error.response.statusText,
+      icon: "error"
+    });
+  }   
 };
 
 //--------- Tutor-----------------------
@@ -144,8 +156,8 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-success btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => {
-                      onAccept(_id);
+                    onClick={async () => {
+                      await onAccept(_id);
                       props.reload();
                     }}
                     name={NOTIFICATION_TYPE.wp}
@@ -155,8 +167,8 @@ export const TutorNotification = props => {
                   <button
                     className="btn btn btn-outline-danger btn-lg"
                     style={{ margin: "20px 40px 20px 10px", width: "30%" }}
-                    onClick={() => {
-                      onDecline(_id);
+                    onClick={async () => {
+                      await onDecline(_id);
                       props.reload();
                     }}
                     name={NOTIFICATION_TYPE.d}
