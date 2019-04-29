@@ -207,7 +207,7 @@ export default class Register extends Component {
                     name="displayName"
                     maxLength="30"
                     required
-                    pattern="[A-Za-z0-9]*"
+                    pattern="[A-Za-z0-9 ]*"
                     title="Must contain only english alphabet and number"
                   />
                 </div>
@@ -244,7 +244,7 @@ export default class Register extends Component {
                 </div>
                 <div className="form-group col-md-12 text-right">
                   <button type="submit" class="btn btn-outline-warning">
-                    Sumbit
+                    Submit
                   </button>
                 </div>
               </div>
