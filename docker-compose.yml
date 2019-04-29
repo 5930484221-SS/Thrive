@@ -1,0 +1,18 @@
+version: "3.6"
+
+services:
+  frontend:
+    container_name: frontend
+    build: ./
+    working_dir: /src
+    command: npm start
+    ports:
+      - "3000:3000"
+
+  backend:
+    container_name: backend
+    build: ./backend
+    working_dir: /code/thrive
+    command: [sh, -c, "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+    ports:
+      - "8000:8000"

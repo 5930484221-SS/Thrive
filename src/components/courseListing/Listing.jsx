@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import Select from 'react-select';
+import React, { Component } from "react";
+import axios from "axios";
+import Select from "react-select";
+import querystring from "query-string";
+import ipAddress from "../../configIpAddress"
 
 import CowBg from '../CowBg';
 import CourseContainer from './CourseContainer';
@@ -31,7 +33,7 @@ class Listing extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: 'http://localhost:8000/api/get_courses',
+        url: ipAddress + "/api/get_courses",
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
@@ -85,7 +87,7 @@ class Listing extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: `http://localhost:8000/api/get_courses?${queryString}`
+        url: `${ipAddress}/api/get_courses?${queryString}`
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
@@ -103,8 +105,8 @@ class Listing extends Component {
     });
     try {
       const response = await axios({
-        method: 'GET',
-        url: `http://localhost:8000/api/get_courses?tutor=${search.trim()}`
+        method: "GET",
+        url: `${ipAddress}/api/get_courses?tutor=${search.trim()}`
       });
       console.log('courses fetched from search: ', response.data.courses);
       this.setState(
@@ -295,7 +297,8 @@ class Listing extends Component {
           {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => {
-              return c.status === 'closed' ? null : (
+              return c.status === "closed" ? null : (
+
                 <CourseContainer key={index} info={c} index={index} />
               );
             })

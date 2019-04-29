@@ -13,6 +13,7 @@ import {
   Row,
   Col
 } from 'reactstrap';
+import ipAddress from "../../configIpAddress"
 
 import { chart1_2_options } from './chart.js';
 
@@ -100,7 +101,7 @@ class Dashboard extends React.Component {
     const response = await axios({
       method: 'POST',
       crossDomain: true,
-      url: 'http://localhost:8000/api/dashboard',
+      url: ipAddress + '/api/dashboard',
       data: querystring.stringify({
         token: window.localStorage.token,
         nrows: 10

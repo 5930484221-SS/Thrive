@@ -6,6 +6,7 @@ import CowBg from '../CowBg';
 import UserContainer from './UserContainer';
 import SearchBar from '../courseListing/SearchBar';
 import Loader from '../loader/Loader';
+import ipAddress from "../../configIpAddress"
 
 class SearchUser extends Component {
   constructor() {
@@ -22,7 +23,7 @@ class SearchUser extends Component {
       const response = await axios({
         method: 'GET',
         crossDomain: true,
-        url: 'http://localhost:8000/api/users?username', //require get_user (in db)
+        url: ipAddress + '/api/users?username', //require get_user (in db)
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
@@ -54,7 +55,7 @@ class SearchUser extends Component {
     });
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/user?username=${this.state.search.trim()}`
+        `${ipAddress}/api/user?username=${this.state.search.trim()}`
       );
       this.setState({ userList: response.data.users, isLoading: false });
     } catch (error) {
