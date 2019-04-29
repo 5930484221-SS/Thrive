@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
-import MyCourseContentError from "./MyCourseContentError";
-import Loader from "../loader/Loader";
-import ipAddress from "../../configIpAddress";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import MyCourseContainerTemplate from './MyCourseContainerTemplate';
+import MyCourseContentError from './MyCourseContentError';
+import Loader from '../loader/Loader';
+import ipAddress from '../../configIpAddress';
+
 import StarRatings from "react-star-ratings";
 import swal from "sweetalert";
 
@@ -128,7 +129,7 @@ class TeachingContainer extends Component {
     switch (course.status) {
       case "open":
         return (
-          <div>
+          <div style={{ marginBottom: "5px"}}>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
@@ -148,7 +149,7 @@ class TeachingContainer extends Component {
         );
       case "reserved":
         return (
-          <div>
+          <div style={{ marginBottom: "5px"}}>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
