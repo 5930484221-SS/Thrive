@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
-import MyCourseContentError from "./MyCourseContentError";
-import Loader from "../loader/Loader";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import MyCourseContainerTemplate from './MyCourseContainerTemplate';
+import MyCourseContentError from './MyCourseContentError';
+import Loader from '../loader/Loader';
 
-import StarRatings from "react-star-ratings";
-import swal from "sweetalert";
+import StarRatings from 'react-star-ratings';
+import swal from 'sweetalert';
 
 //query
-import axios from "axios";
-import querystring from "query-string";
+import axios from 'axios';
+import querystring from 'query-string';
 
 //redux
-import { EditCourseAction } from "../../actions/EditCourseAction";
-import { connect } from "react-redux";
+import { EditCourseAction } from '../../actions/EditCourseAction';
+import { connect } from 'react-redux';
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
   setEditCourse: course => dispatch(EditCourseAction(course))
@@ -33,7 +33,7 @@ class TeachingContainer extends Component {
     try {
       await this.setState({ isLoading: true });
       const response = await fetch(
-        "http://127.0.0.1:8000/api/get_courses?tutor=" +
+        'http://127.0.0.1:8000/api/get_courses?tutor=' +
           window.localStorage.username
       );
       const courses = await response.json();
@@ -45,37 +45,37 @@ class TeachingContainer extends Component {
 
   onCloseCourse = info => {
     swal({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text:
-        "Once the course closed, learners will not be able to request this course",
-      icon: "warning",
+        'Once the course closed, learners will not be able to request this course',
+      icon: 'warning',
       buttons: true,
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: "http://127.0.0.1:8000/api/close_course",
+          method: 'POST',
+          url: 'http://127.0.0.1:8000/api/close_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
             id: info._id
           }),
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
           .then(() =>
             swal({
-              text: "The course has been closed successfully",
-              icon: "success"
+              text: 'The course has been closed successfully',
+              icon: 'success'
             })
           )
-          .then(() => (window.location = "/myCourses"))
+          .then(() => (window.location = '/myCourses'))
           .catch(error => {
             swal({
-              text: "Failed to Close the course\n" + error,
-              icon: "error"
+              text: 'Failed to Close the course\n' + error,
+              icon: 'error'
             });
           });
       }
@@ -84,37 +84,37 @@ class TeachingContainer extends Component {
 
   onDeleteCourse = info => {
     swal({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text:
-        "Once the course deleted, you will not be able to recover the course and all course request will be deleted",
-      icon: "warning",
+        'Once the course deleted, you will not be able to recover the course and all course request will be deleted',
+      icon: 'warning',
       buttons: true,
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: "http://127.0.0.1:8000/api/delete_course",
+          method: 'POST',
+          url: 'http://127.0.0.1:8000/api/delete_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
             id: info._id
           }),
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
           .then(() =>
             swal({
-              text: "The course has been deleted successfully",
-              icon: "success"
+              text: 'The course has been deleted successfully',
+              icon: 'success'
             })
           )
-          .then(() => (window.location = "/myCourses"))
+          .then(() => (window.location = '/myCourses'))
           .catch(error => {
             swal({
-              text: "Failed to Delete the course\n" + error,
-              icon: "error"
+              text: 'Failed to Delete the course\n' + error,
+              icon: 'error'
             });
           });
       }
@@ -127,14 +127,14 @@ class TeachingContainer extends Component {
 
   renderComponent(course) {
     switch (course.status) {
-      case "open":
+      case 'open':
         return (
           <div>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
             >
-              <Link to="/create_course" style={{ color: "white" }}>
+              <Link to="/create_course" style={{ color: 'white' }}>
                 Edit
               </Link>
             </button>
@@ -147,14 +147,14 @@ class TeachingContainer extends Component {
             </button>
           </div>
         );
-      case "reserved":
+      case 'reserved':
         return (
           <div>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
             >
-              <Link to="/create_course" style={{ color: "white" }}>
+              <Link to="/create_course" style={{ color: 'white' }}>
                 Edit
               </Link>
             </button>
@@ -167,9 +167,9 @@ class TeachingContainer extends Component {
             </button>
           </div>
         );
-      case "closed":
+      case 'closed':
         return (
-          <p style={{ color: "orange", fontWeight: "bold" }}>
+          <p style={{ color: 'orange', fontWeight: 'bold' }}>
             The course had been closed
           </p>
         );
@@ -182,7 +182,7 @@ class TeachingContainer extends Component {
     const { isLoading, coursesAsTutor } = this.state;
     return (
       <div>
-        {" "}
+        {' '}
         <MyCourseContentError>
           {coursesAsTutor.map(course => (
             <MyCourseContainerTemplate info={course} key={course._id}>
@@ -209,8 +209,8 @@ export class LearningCourseContainer extends Component {
       coursesAsLearner: [],
       isLoading: false,
       rating: 0,
-      review: "",
-      courseID: ""
+      review: '',
+      courseID: ''
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.changeRating = this.changeRating.bind(this);
@@ -241,10 +241,10 @@ export class LearningCourseContainer extends Component {
   async onSubmit(e) {
     e.preventDefault();
     if (this.state.rating === 0) {
-      return swal("Please rating");
+      return swal('Please rating');
     }
     const data = {
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem('token'),
       review: this.state.review,
       rating: this.state.rating,
       course_id: this.state.courseID
@@ -252,17 +252,17 @@ export class LearningCourseContainer extends Component {
     console.log(data);
     try {
       await axios({
-        method: "POST",
-        url: "http://localhost:8000/api/review",
+        method: 'POST',
+        url: 'http://localhost:8000/api/review',
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      swal("Good job!", "Thank you for your review", "success");
+      swal('Good job!', 'Thank you for your review', 'success');
     } catch (error) {
-      swal("There are error. Please try again");
+      swal('There are error. Please try again');
     }
   }
 
@@ -270,14 +270,14 @@ export class LearningCourseContainer extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await axios({
-        method: "POST",
-        url: "http://127.0.0.1:8000/api/get_courses_by_learner",
+        method: 'POST',
+        url: 'http://127.0.0.1:8000/api/get_courses_by_learner',
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token
         }),
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
       this.setState({
@@ -297,8 +297,8 @@ export class LearningCourseContainer extends Component {
           {coursesAsLearner.map(course => (
             <MyCourseContainerTemplate info={course} key={course._id}>
               <div>
-                {course.status === "closed" ? (
-                  <p style={{ color: "orange", fontWeight: "bold" }}>
+                {course.status === 'closed' ? (
+                  <p style={{ color: 'orange', fontWeight: 'bold' }}>
                     The course had been closed
                   </p>
                 ) : (
@@ -307,7 +307,7 @@ export class LearningCourseContainer extends Component {
                     className="btn btn-success"
                     data-toggle="modal"
                     data-target="#review"
-                    style={{ marginBottom: "5px" }}
+                    style={{ marginBottom: '5px' }}
                     onClick={() => this.setID(course._id)}
                   >
                     Review
@@ -325,8 +325,8 @@ export class LearningCourseContainer extends Component {
                     <div className="modal-content">
                       <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">
-                          Review Course{"  "}
-                          <span style={{ color: "orange", fontWeight: "bold" }}>
+                          Review Course{'  '}
+                          <span style={{ color: 'orange', fontWeight: 'bold' }}>
                             {course.topic}
                           </span>
                         </h5>
@@ -346,6 +346,7 @@ export class LearningCourseContainer extends Component {
                             id="review"
                             rows="10"
                             name="review"
+                            maxLength="1024"
                             onChange={this.handleInputChange}
                             placeholder="Write review detail here."
                             required
@@ -353,8 +354,8 @@ export class LearningCourseContainer extends Component {
                           <br />
                           <h5
                             style={{
-                              display: "inline-block",
-                              marginRight: "20px"
+                              display: 'inline-block',
+                              marginRight: '20px'
                             }}
                           >
                             Rating
