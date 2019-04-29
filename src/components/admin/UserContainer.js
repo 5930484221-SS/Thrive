@@ -11,7 +11,7 @@ class UserContainer extends Component {
     super(props);
   }
 
-  async deleteUser(username, refresh) {
+  async deleteUser() {
     // call deleteUser API
     try {
       swal({
@@ -25,7 +25,7 @@ class UserContainer extends Component {
         crossDomain: true,
         data: querystring.stringify({
           token: localStorage.getItem('token'),
-          username
+          username: this.props.info.username
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -35,7 +35,7 @@ class UserContainer extends Component {
         text: 'Delete Successful!',
         icon: 'success'
       });
-      refresh();
+      this.props.refresh();
     } catch (ex) {
       swal.stopLoading();
       swal.close();
@@ -43,7 +43,7 @@ class UserContainer extends Component {
     }
   }
 
-  async grantAdmin(username, refresh) {
+  async grantAdmin() {
     // call grantAdmin API
     try {
       swal({
@@ -57,7 +57,7 @@ class UserContainer extends Component {
         crossDomain: true,
         data: querystring.stringify({
           token: localStorage.getItem('token'),
-          username
+          username: this.props.info.username
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -67,7 +67,7 @@ class UserContainer extends Component {
         text: 'Delete Successful!',
         icon: 'success'
       });
-      refresh();
+      this.props.refresh();
     } catch (ex) {
       swal.stopLoading();
       swal.close();

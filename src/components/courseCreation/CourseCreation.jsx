@@ -7,6 +7,7 @@ import Loader from "../loader/Loader";
 import defaultCourse from "../../img/defaultCourse.png";
 import "./courseCreate.css";
 import ipAddress from "../../configIpAddress"
+import swal from "sweetalert";
 
 //redux
 import { EditCourseAction } from "../../actions/EditCourseAction";
@@ -71,8 +72,13 @@ class CourseCreation extends Component {
   }
 
   onFileHandle = event => {
-    if (event.target.files.length > 0) {
-      this.setImg(event.target.files[0]);
+    if (event.target.files[0].size > 3145728) {
+      event.target.value = "";
+      return swal("File is too big!");
+    } else {
+      if (event.target.files.length > 0) {
+        this.setImg(event.target.files[0]);
+      }
     }
   };
 
@@ -141,6 +147,7 @@ class CourseCreation extends Component {
                   onChange={this.onFileHandle}
                   ref={this.imgRef}
                   accept="image/*"
+                  required
                 />
               </div>
               <div className="form-group col-md-11">
@@ -175,6 +182,8 @@ class CourseCreation extends Component {
                   value={topic}
                   disabled={isLoading}
                   required
+                  maxLength="256"
+                  pattern="[A-Za-z0-9 ]*"
                 />
               </div>
 
@@ -214,6 +223,8 @@ class CourseCreation extends Component {
                   onChange={this.handleInputChange}
                   value={description}
                   disabled={isLoading}
+                  maxLength="1024"
+                  pattern="[A-Za-z0-9]*"
                   required
                 />
 
@@ -227,6 +238,8 @@ class CourseCreation extends Component {
                   onChange={this.handleInputChange}
                   value={location}
                   disabled={isLoading}
+                  maxLength="512"
+                  pattern="[A-Za-z0-9]*"
                   required
                 />
 
@@ -240,6 +253,8 @@ class CourseCreation extends Component {
                   onChange={this.handleInputChange}
                   value={duration}
                   disabled={isLoading}
+                  maxLength="512"
+                  pattern="[A-Za-z0-9]*"
                   required
                 />
               </div>
@@ -251,11 +266,13 @@ class CourseCreation extends Component {
                 <div className="form-group col-md-6">
                   <label htmlFor="tuition">Tuition/Hour</label>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="tuition"
                     name="tuition"
                     size="6"
+                    min="0"
+                    max="9999"
                     onChange={this.handleInputChange}
                     value={tuition}
                     disabled={isLoading}
@@ -265,11 +282,13 @@ class CourseCreation extends Component {
                 <div className="form-group col-md-6">
                   <label htmlFor="fee">Joining fee</label>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="fee"
                     name="fee"
                     size="6"
+                    min="80"
+                    max="9999"
                     onChange={this.handleInputChange}
                     value={fee}
                     disabled={isLoading}

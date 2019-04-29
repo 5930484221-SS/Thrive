@@ -4,19 +4,13 @@ import Select from "react-select";
 import querystring from "query-string";
 import ipAddress from "../../configIpAddress"
 
-import CowBg from "../CowBg";
-import CourseContainer from "./CourseContainer";
-import SearchBar from "./SearchBar";
+import CowBg from '../CowBg';
+import CourseContainer from './CourseContainer';
+import SearchBar from './SearchBar';
 
-import Loader from "../loader/Loader";
+import Loader from '../loader/Loader';
 
-import {
-  subjects,
-  locations,
-  tuitionFees,
-  joiningFees,
-  ratings
-} from "./filterLists";
+import { subjects, tuitionFees, joiningFees, ratings } from './filterLists';
 
 class Listing extends Component {
   constructor() {
@@ -24,12 +18,12 @@ class Listing extends Component {
     this.state = {
       courseList: [],
       isLoading: true,
-      search: "",
+      search: '',
       subject: [],
-      location: "",
-      tuitionMax: "",
-      feeMax: "",
-      rating: "",
+      location: '',
+      tuitionMax: '',
+      feeMax: '',
+      rating: '',
       isFilterOn: false
     };
   }
@@ -37,17 +31,17 @@ class Listing extends Component {
   async componentDidMount() {
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         crossDomain: true,
         url: ipAddress + "/api/get_courses",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
         }
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log("fetch fails, please refresh the page");
+      console.log('fetch fails, please refresh the page');
     }
   }
 
@@ -64,7 +58,7 @@ class Listing extends Component {
   }
 
   genQueryString(name, arr) {
-    let str = "";
+    let str = '';
     for (let i = 0; i < arr.length; i++) {
       str += `&${name}=${arr[i].value}`;
     }
@@ -79,25 +73,25 @@ class Listing extends Component {
       isLoading: true
     });
 
-    let queryString = "";
+    let queryString = '';
 
-    if (subject) queryString += this.genQueryString("subject", subject);
+    if (subject) queryString += this.genQueryString('subject', subject);
     if (location) queryString += `&location=${location}`;
     if (tuitionMax) queryString += `&tuitionMax=${tuitionMax.value}`;
     if (feeMax) queryString += `&feeMax=${feeMax.value}`;
     if (rating) queryString += `&ratingMin=${rating.value}`;
     queryString = queryString.slice(1);
 
-    console.log("queryString: ", queryString);
+    console.log('queryString: ', queryString);
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         crossDomain: true,
         url: `${ipAddress}/api/get_courses?${queryString}`
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log("fail to search, please try again");
+      console.log('fail to search, please try again');
     }
   }
 
@@ -114,13 +108,13 @@ class Listing extends Component {
         method: "GET",
         url: `${ipAddress}/api/get_courses?tutor=${search.trim()}`
       });
-      console.log("courses fetched from search: ", response.data.courses);
+      console.log('courses fetched from search: ', response.data.courses);
       this.setState(
         { courseList: response.data.courses, isLoading: false },
-        () => console.log("courseList: ", this.state.courseList)
+        () => console.log('courseList: ', this.state.courseList)
       );
     } catch (error) {
-      console.log("search fails, please try again");
+      console.log('search fails, please try again');
     }
   }
 
@@ -200,7 +194,7 @@ class Listing extends Component {
                       href="#"
                       className="h5 card-title text-center"
                     >
-                      Filters <i className="fas fa-angle-up" />{" "}
+                      Filters <i className="fas fa-angle-up" />{' '}
                     </a>
                   </div>
                   <form onSubmit={this.onFilterSubmit.bind(this)}>
@@ -303,9 +297,11 @@ class Listing extends Component {
           {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => {
-              return c.status === "closed"? null:(
-              <CourseContainer key={index} info={c} index={index} />
-            )})
+              return c.status === "closed" ? null : (
+
+                <CourseContainer key={index} info={c} index={index} />
+              );
+            })
           ) : (
             <div className="display-4 m-auto">
               No <span className="text-orange">Results</span>
