@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import querystring from 'query-string';
 import swal from 'sweetalert';
+import ipAddress from "../../configIpAddress"
 
 class UsernameAndLogoutAdmin extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class UsernameAndLogoutAdmin extends Component {
     e.preventDefault();
     const response = await axios({
       method: "POST",
-      url: "http://localhost:8000/api/logout",
+      url: ipAddress + "/api/logout",
       crossDomain: true,
       data: querystring.stringify({
         token: localStorage.getItem("token")

@@ -6,6 +6,7 @@ import { Courses } from "./Courses";
 import Loader from "../loader/Loader";
 import defaultCourse from "../../img/defaultCourse.png";
 import "./courseCreate.css";
+import ipAddress from "../../configIpAddress"
 
 //redux
 import { EditCourseAction } from "../../actions/EditCourseAction";
@@ -88,8 +89,8 @@ class CourseCreation extends Component {
     this.setState({ isLoading: true });
     const postData = this.getData();
     const url = this.state.isEditing
-      ? "http://localhost:8000/api/edit_course"
-      : "http://localhost:8000/api/create_course";
+      ? ipAddress + "/api/edit_course"
+      : ipAddress + "/api/create_course";
     try {
       const response = await axios({
         method: "POST",

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
 import MyCourseContentError from "./MyCourseContentError";
 import Loader from "../loader/Loader";
+import ipAddress from "../../configIpAddress"
 
 import StarRatings from "react-star-ratings";
 import swal from "sweetalert";
@@ -33,7 +34,7 @@ class TeachingContainer extends Component {
     try {
       await this.setState({ isLoading: true });
       const response = await fetch(
-        "http://127.0.0.1:8000/api/get_courses?tutor=" +
+        ipAddress + "/api/get_courses?tutor=" +
           window.localStorage.username
       );
       const courses = await response.json();
@@ -55,7 +56,7 @@ class TeachingContainer extends Component {
       if (willDelete) {
         axios({
           method: "POST",
-          url: "http://127.0.0.1:8000/api/close_course",
+          url: ipAddress + "/api/close_course",
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -94,7 +95,7 @@ class TeachingContainer extends Component {
       if (willDelete) {
         axios({
           method: "POST",
-          url: "http://127.0.0.1:8000/api/delete_course",
+          url: ipAddress + "/api/delete_course",
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -253,7 +254,7 @@ export class LearningCourseContainer extends Component {
     try {
       await axios({
         method: "POST",
-        url: "http://localhost:8000/api/review",
+        url: ipAddress + "/api/review",
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
@@ -271,7 +272,7 @@ export class LearningCourseContainer extends Component {
     try {
       const response = await axios({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/get_courses_by_learner",
+        url: ipAddress + "/api/get_courses_by_learner",
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token

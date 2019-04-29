@@ -4,6 +4,7 @@ import querystring from 'query-string';
 import swal from 'sweetalert';
 import loaderIcon from '../../img/loaderIcon.gif';
 import '../courseListing/CourseContainer.css';
+import ipAddress from "../../configIpAddress"
 
 class UserContainer extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class UserContainer extends Component {
       });
       await axios({
         method: 'POST',
-        url: 'http://localhost:8000/api/delete_user',
+        url: ipAddress + '/api/delete_user',
         crossDomain: true,
         data: querystring.stringify({
           token: localStorage.getItem('token'),
@@ -52,7 +53,7 @@ class UserContainer extends Component {
       });
       await axios({
         method: 'POST',
-        url: 'http://localhost:8000/api/add_admin',
+        url: ipAddress + '/api/add_admin',
         crossDomain: true,
         data: querystring.stringify({
           token: localStorage.getItem('token'),

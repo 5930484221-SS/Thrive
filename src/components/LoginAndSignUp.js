@@ -4,6 +4,7 @@ import axios from 'axios';
 import querystring from 'query-string';
 import { loginUserSuccess } from '../actions';
 import swal from 'sweetalert';
+import ipAddress from "../configIpAddress"
 
 class LoginAndSignUp extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class LoginAndSignUp extends Component {
     e.preventDefault();
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:8000/api/login',
+      url: ipAddress + '/api/login',
       crossDomain: true,
       data: querystring.stringify({
         username: this.state.username,
