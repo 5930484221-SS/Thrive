@@ -1,60 +1,90 @@
-import React, { Component } from "react";
-import "../courseListing/CourseContainer.css";
-import swal from "sweetalert";
-import loaderIcon from "../../img/loaderIcon.gif";
-import ipAddress from "../../configIpAddress"
+import React, { Component } from 'react';
+import '../courseListing/CourseContainer.css';
+import swal from 'sweetalert';
+import loaderIcon from '../../img/loaderIcon.gif';
+import ipAddress from '../../configIpAddress';
+import StarRatings from 'react-star-ratings';
+import RateReviewContainer from '../courseListing/RateReviewContainer';
 
-import axios from "axios";
-import querystring from "query-string";
+import axios from 'axios';
+import querystring from 'query-string';
 
 class CourseContainer extends Component {
   constructor() {
     super();
     this.state = {
       sendingRequest: false,
-      courseList: []
+      courseList: [],
+      reviewList: [],
+      isSeeMore: false
     };
+
+    this.seeMoreReview = this.seeMoreReview.bind(this);
+  }
+
+  seeMoreReview() {
+    const { isSeeMore } = this.state;
+    this.setState({ isSeeMore: !isSeeMore });
+  }
+
+  async componentWillMount() {
+    try {
+      console.log('see more review');
+      const response = await axios({
+        method: 'GET',
+        url: ipAddress + '/api/get_reviews?course_id=' + this.props.info._id,
+        crossDomain: true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      this.setState({ reviewList: response.data['reviews'] });
+      console.log(this.state.reviewList);
+      // console.log(this.state.reviewList[0].rating);
+    } catch (error) {
+      swal('There are some error occur.');
+    }
   }
 
   async componentDidMount() {
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         crossDomain: true,
-        url: ipAddress + "/api/get_courses",
+        url: ipAddress + '/api/get_courses',
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
         }
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log("fetch fails, please refresh the page");
+      console.log('fetch fails, please refresh the page');
     }
   }
 
   onDelete = async () => {
     try {
       swal({
-        text: "Deleting this course...",
+        text: 'Deleting this course...',
         icon: loaderIcon,
         buttons: false
       });
       await axios({
-        method: "POST",
-        url: ipAddress + "/api/delete_course", //delete_course(request) on database
+        method: 'POST',
+        url: ipAddress + '/api/delete_course', //delete_course(request) on database
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token,
           id: this.props.info._id
         }),
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
       await swal({
-        text: "Delete successfully",
-        icon: "success"
+        text: 'Delete successfully',
+        icon: 'success'
       });
     } catch (error) {
       swal.stopLoading();
@@ -63,12 +93,12 @@ class CourseContainer extends Component {
       if (error.response.status === 403) {
         swal({
           text: error.response.data,
-          icon: "error"
+          icon: 'error'
         });
       } else {
         swal({
-          text: error.response.status + " " + error.response.statusText,
-          icon: "error"
+          text: error.response.status + ' ' + error.response.statusText,
+          icon: 'error'
         });
       }
     }
@@ -85,7 +115,8 @@ class CourseContainer extends Component {
       tuition,
       tutor_display,
       fee,
-      img
+      img,
+      rating
     } = this.props.info;
     const { courseList } = this.state;
 
@@ -112,8 +143,12 @@ class CourseContainer extends Component {
             <hr />
             <strong className="card-text limitP">Score: </strong>
 
-            <i className="star icon" />
-            <i className="half star icon" />
+            <StarRatings
+              rating={rating}
+              starDimension="25px"
+              starSpacing="1px"
+              starRatedColor="darkred"
+            />
             <br />
           </div>
 
@@ -160,15 +195,39 @@ class CourseContainer extends Component {
 
                 <strong className="modal-text">Fee: </strong>
                 <span className="modal-text">฿{fee}</span>
+                <br />
+                {this.state.isSeeMore ? (
+                  this.state.reviewList.length > 0 ? (
+                    <div className="model-header">
+                      <hr />
+                      <h5 className="modal-title pt-3 pb-3">
+                        Review & Ratings{' '}
+                      </h5>
+                      {this.state.reviewList.map(item => (
+                        <div>
+                          <RateReviewContainer item={item} key={item._id} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div>
+                      <hr />
+                      <h5 className="modal-title pt-3 pb-3">
+                        Review & Ratings{' '}
+                      </h5>
+                      <div className="display-5 m-auto">
+                        No <span className="text-orange">Review</span>
+                      </div>
+                    </div>
+                  )
+                ) : null}
               </div>
 
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-orange"
-                  data-toggle="modal"
-                  data-target="#rating"
-                  data-dismiss="modal"
+                  onClick={this.seeMoreReview}
                 >
                   See more review
                 </button>

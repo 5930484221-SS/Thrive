@@ -1,9 +1,18 @@
+
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import MyCourseContainerTemplate from './MyCourseContainerTemplate';
+import MyCourseContentError from './MyCourseContentError';
+import Loader from '../loader/Loader';
+import ipAddress from '../../configIpAddress';
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
 import MyCourseContentError from "./MyCourseContentError";
 import Loader from "../loader/Loader";
 import ipAddress from "../../configIpAddress";
+
 
 import StarRatings from "react-star-ratings";
 import swal from "sweetalert";
@@ -54,8 +63,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: ipAddress + "/api/close_course",
+          method: 'POST',
+          url: ipAddress + '/api/close_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -93,8 +102,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: ipAddress + "/api/delete_course",
+          method: 'POST',
+          url: ipAddress + '/api/delete_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -252,8 +261,8 @@ export class LearningCourseContainer extends Component {
     console.log(data);
     try {
       await axios({
-        method: "POST",
-        url: ipAddress + "/api/review",
+        method: 'POST',
+        url: ipAddress + '/api/review',
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
@@ -270,8 +279,8 @@ export class LearningCourseContainer extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await axios({
-        method: "POST",
-        url: ipAddress + "/api/get_courses_by_learner",
+        method: 'POST',
+        url: ipAddress + '/api/get_courses_by_learner',
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token
