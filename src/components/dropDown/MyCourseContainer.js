@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MyCourseContainerTemplate from './MyCourseContainerTemplate';
 import MyCourseContentError from './MyCourseContentError';
 import Loader from '../loader/Loader';
-=======
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
-import MyCourseContentError from "./MyCourseContentError";
-import Loader from "../loader/Loader";
-import ipAddress from "../../configIpAddress"
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
+import ipAddress from '../../configIpAddress';
 
 import StarRatings from 'react-star-ratings';
 import swal from 'sweetalert';
@@ -42,12 +34,7 @@ class TeachingContainer extends Component {
     try {
       await this.setState({ isLoading: true });
       const response = await fetch(
-<<<<<<< HEAD
-        'http://127.0.0.1:8000/api/get_courses?tutor=' +
-=======
-        ipAddress + "/api/get_courses?tutor=" +
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
-          window.localStorage.username
+        ipAddress + '/api/get_courses?tutor=' + window.localStorage.username
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
@@ -67,13 +54,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-<<<<<<< HEAD
           method: 'POST',
-          url: 'http://127.0.0.1:8000/api/close_course',
-=======
-          method: "POST",
-          url: ipAddress + "/api/close_course",
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
+          url: ipAddress + '/api/close_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -111,13 +93,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-<<<<<<< HEAD
           method: 'POST',
-          url: 'http://127.0.0.1:8000/api/delete_course',
-=======
-          method: "POST",
-          url: ipAddress + "/api/delete_course",
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
+          url: ipAddress + '/api/delete_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -275,13 +252,8 @@ export class LearningCourseContainer extends Component {
     console.log(data);
     try {
       await axios({
-<<<<<<< HEAD
         method: 'POST',
-        url: 'http://localhost:8000/api/review',
-=======
-        method: "POST",
-        url: ipAddress + "/api/review",
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
+        url: ipAddress + '/api/review',
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
@@ -298,13 +270,8 @@ export class LearningCourseContainer extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await axios({
-<<<<<<< HEAD
         method: 'POST',
-        url: 'http://127.0.0.1:8000/api/get_courses_by_learner',
-=======
-        method: "POST",
-        url: ipAddress + "/api/get_courses_by_learner",
->>>>>>> 6b2e577fa80688663e915caec5b6d885bab76a36
+        url: ipAddress + '/api/get_courses_by_learner',
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token
