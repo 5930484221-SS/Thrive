@@ -28,26 +28,29 @@ class LoginAndSignUp extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:8000/api/login',
-      crossDomain: true,
-      data: querystring.stringify({
-        username: this.state.username,
-        password: this.state.password
-      }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    });
-
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('username', this.state.username);
-    localStorage.setItem('displayName', response.data.displayName);
-    localStorage.setItem('is_admin', response.data.is_admin);
-    const success = await swal('Login sucessfully! Welcome to THRIVE.');
-    // alert("ok");
-    window.location = '/';
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://localhost:8000/api/login',
+        crossDomain: true,
+        data: querystring.stringify({
+          username: this.state.username,
+          password: this.state.password
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('username', this.state.username);
+      localStorage.setItem('displayName', response.data.displayName);
+      localStorage.setItem('is_admin', response.data.is_admin);
+      await swal('Login sucessfully! Welcome to THRIVE.');
+      // alert("ok");
+      window.location = '/';
+    } catch (ex) {
+      await swal('This account does not exist');
+    }
   };
 
   render() {
@@ -79,6 +82,9 @@ class LoginAndSignUp extends Component {
                         type="text"
                         placeholder="Username"
                         className="form-control"
+                        minLength="4"
+                        maxLength="30"
+                        pattern="[A-Za-z]*"
                         onChange={this.onUsernameChange.bind(this)}
                       />
                     </div>
@@ -88,6 +94,9 @@ class LoginAndSignUp extends Component {
                         type="password"
                         placeholder="Password"
                         className="form-control"
+                        minLength="6"
+                        maxLength="30"
+                        pattern="[A-Za-z]*"
                         onChange={this.onPasswordChange.bind(this)}
                       />
                     </div>

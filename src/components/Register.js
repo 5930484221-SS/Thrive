@@ -243,7 +243,7 @@ export default class Register extends Component {
                 </div>
                 <div className="form-group col-md-12 text-right">
                   <button type="submit" class="btn btn-outline-warning">
-                    Sumbit
+                    Submit
                   </button>
                 </div>
               </div>

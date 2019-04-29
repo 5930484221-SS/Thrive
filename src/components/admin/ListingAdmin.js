@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Select from "react-select";
-import querystring from "query-string";
 
 import CowBg from "../CowBg";
 import CourseContainerAdmin from "./CourseContainerAdmin";
@@ -11,7 +10,7 @@ import Loader from "../loader/Loader";
 
 import {
   subjects,
-  locations,
+  //locations,
   tuitionFees,
   joiningFees,
   ratings
