@@ -1,9 +1,18 @@
+
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import MyCourseContainerTemplate from './MyCourseContainerTemplate';
+import MyCourseContentError from './MyCourseContentError';
+import Loader from '../loader/Loader';
+import ipAddress from '../../configIpAddress';
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MyCourseContainerTemplate from "./MyCourseContainerTemplate";
 import MyCourseContentError from "./MyCourseContentError";
 import Loader from "../loader/Loader";
-import ipAddress from "../../configIpAddress"
+import ipAddress from "../../configIpAddress";
+
 
 import StarRatings from "react-star-ratings";
 import swal from "sweetalert";
@@ -34,8 +43,7 @@ class TeachingContainer extends Component {
     try {
       await this.setState({ isLoading: true });
       const response = await fetch(
-        ipAddress + "/api/get_courses?tutor=" +
-          window.localStorage.username
+        ipAddress + "/api/get_courses?tutor=" + window.localStorage.username
       );
       const courses = await response.json();
       this.setState({ coursesAsTutor: courses.courses, isLoading: false });
@@ -55,8 +63,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: ipAddress + "/api/close_course",
+          method: 'POST',
+          url: ipAddress + '/api/close_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -94,8 +102,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: "POST",
-          url: ipAddress + "/api/delete_course",
+          method: 'POST',
+          url: ipAddress + '/api/delete_course',
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -253,8 +261,8 @@ export class LearningCourseContainer extends Component {
     console.log(data);
     try {
       await axios({
-        method: "POST",
-        url: ipAddress + "/api/review",
+        method: 'POST',
+        url: ipAddress + '/api/review',
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
@@ -271,8 +279,8 @@ export class LearningCourseContainer extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await axios({
-        method: "POST",
-        url: ipAddress + "/api/get_courses_by_learner",
+        method: 'POST',
+        url: ipAddress + '/api/get_courses_by_learner',
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token
@@ -290,6 +298,12 @@ export class LearningCourseContainer extends Component {
     }
   }
 
+  showContact = contact => {
+    swal({
+      title: "See tutor contact",
+      text: contact
+    });
+  };
   render() {
     const { isLoading, coursesAsLearner } = this.state;
     return (
@@ -303,16 +317,27 @@ export class LearningCourseContainer extends Component {
                     The course had been closed
                   </p>
                 ) : (
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    data-toggle="modal"
-                    data-target="#review"
-                    style={{ marginBottom: "5px" }}
-                    onClick={() => this.setID(course._id)}
-                  >
-                    Review
-                  </button>
+                  <div>
+                    {" "}
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      data-toggle="modal"
+                      data-target="#review"
+                      style={{ marginBottom: "5px" }}
+                      onClick={() => this.setID(course._id)}
+                    >
+                      Review
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{ marginBottom: "5px" ,marginLeft: "5px"}}
+                      onClick={() => this.showContact(course.tutor_contact)}
+                    >
+                      See tutor contact
+                    </button>
+                  </div>
                 )}
                 <div
                   className="modal"
@@ -347,6 +372,7 @@ export class LearningCourseContainer extends Component {
                             id="review"
                             rows="10"
                             name="review"
+                            maxLength="1024"
                             onChange={this.handleInputChange}
                             placeholder="Write review detail here."
                             required
