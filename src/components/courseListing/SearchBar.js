@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import './CourseContainer.css';
+import "./CourseContainer.css";
 
 export default props => (
   <div className="row">
@@ -13,6 +13,8 @@ export default props => (
             placeholder={props.placeHolder}
             onChange={e => props.onChange(e)}
             value={props.searchValue}
+            maxLength="30"
+            pattern="[A-Za-z0-9]*"
           />
           <div className="input-group-append">
             <input
