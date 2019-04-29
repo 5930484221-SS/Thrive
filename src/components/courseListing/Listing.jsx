@@ -295,7 +295,8 @@ class Listing extends Component {
           {console.log(courseList)}
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => {
-              return c.status === 'closed' ? null : (
+              return c.status === "closed" ? null : (
+
                 <CourseContainer key={index} info={c} index={index} />
               );
             })

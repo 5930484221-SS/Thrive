@@ -6,6 +6,11 @@ export default class TutorCourseContainer extends Component {
     super(props);
   }
 
+  componentWillMount() {
+    console.log("info: ");
+    console.log(this.props.info);
+  }
+
   render() {
     const {
       topic,
@@ -18,6 +23,7 @@ export default class TutorCourseContainer extends Component {
       tutor_display,
       fee,
       img,
+      rating,
       status
     } = this.props.info;
     return (
@@ -73,7 +79,8 @@ export default class TutorCourseContainer extends Component {
           <br />
           <strong>Joining fee : </strong>฿{fee}
           <br />
-          <strong>Score : </strong>score??
+          <strong>Score : </strong>
+          {rating}
           <br />
           <br />
           {this.props.children}
