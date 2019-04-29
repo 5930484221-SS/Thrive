@@ -74,29 +74,14 @@ const subjects = [
   }
 ];
 
-const locations = [
-  {
-    value: 'location1',
-    label: 'Location1'
-  },
-  {
-    value: 'location2',
-    label: 'Location2'
-  },
-  {
-    value: 'location3',
-    label: 'Location3'
-  },
-  {
-    value: 'location4',
-    label: 'Location4'
-  }
-];
-
 const tuitionFees = [
   {
     value: '1000000000',
     label: '-none-'
+  },
+  {
+    value: '100',
+    label: '< 100 Baht'
   },
   {
     value: '200',
@@ -107,8 +92,28 @@ const tuitionFees = [
     label: '< 300 Baht'
   },
   {
+    value: '400',
+    label: '< 400 Baht'
+  },
+  {
     value: '500',
     label: '< 500 Baht'
+  },
+  {
+    value: '600',
+    label: '< 600 Baht'
+  },
+  {
+    value: '700',
+    label: '< 700 Baht'
+  },
+  {
+    value: '800',
+    label: '< 800 Baht'
+  },
+  {
+    value: '900',
+    label: '< 900 Baht'
   },
   {
     value: '1000',
@@ -122,6 +127,10 @@ const joiningFees = [
     label: '-none-'
   },
   {
+    value: '100',
+    label: '< 100 Baht'
+  },
+  {
     value: '200',
     label: '< 200 Baht'
   },
@@ -130,8 +139,28 @@ const joiningFees = [
     label: '< 300 Baht'
   },
   {
+    value: '400',
+    label: '< 400 Baht'
+  },
+  {
     value: '500',
     label: '< 500 Baht'
+  },
+  {
+    value: '600',
+    label: '< 600 Baht'
+  },
+  {
+    value: '700',
+    label: '< 700 Baht'
+  },
+  {
+    value: '800',
+    label: '< 800 Baht'
+  },
+  {
+    value: '900',
+    label: '< 900 Baht'
   },
   {
     value: '1000',
