@@ -596,6 +596,7 @@ def get_courses_by_learner(request):  # not done
         course = {field: str(record[field]) for field in course_fields + ['_id', 'status']}
         course['tutor'] = record['tutor']
         course['tutor_display'] = record['tutor_detail'][0]['display']
+        course['tutor_contact'] = record['tutor_detail'][0]['contact']
         n_ratings = sum(record[f'rating_{i}'] for i in range(1, 6))
         if n_ratings:
           course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6)) / n_ratings
