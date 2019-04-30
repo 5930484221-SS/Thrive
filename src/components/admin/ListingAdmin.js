@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import axios from "axios";
-import Select from "react-select";
+import React, { Component } from 'react';
+import axios from 'axios';
+import Select from 'react-select';
 
-import CowBg from "../CowBg";
-import CourseContainerAdmin from "./CourseContainerAdmin";
-import SearchBar from "../courseListing/SearchBar";
-import ipAddress from "../../configIpAddress"
+import CowBg from '../CowBg';
+import CourseContainerAdmin from './CourseContainerAdmin';
+import SearchBar from '../courseListing/SearchBar';
+import ipAddress from '../../configIpAddress';
 
-import Loader from "../loader/Loader";
+import Loader from '../loader/Loader';
 
 import {
   subjects,
@@ -15,7 +15,7 @@ import {
   tuitionFees,
   joiningFees,
   ratings
-} from "../courseListing/filterLists";
+} from '../courseListing/filterLists';
 
 class ListingAdmin extends Component {
   constructor() {
@@ -23,12 +23,12 @@ class ListingAdmin extends Component {
     this.state = {
       courseList: [],
       isLoading: true,
-      search: "",
+      search: '',
       subject: [],
-      location: "",
-      tuitionMax: "",
-      feeMax: "",
-      rating: "",
+      location: '',
+      tuitionMax: '',
+      feeMax: '',
+      rating: '',
       isFilterOn: false
     };
   }
@@ -36,17 +36,17 @@ class ListingAdmin extends Component {
   async componentDidMount() {
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         crossDomain: true,
-        url: ipAddress +"/api/get_courses",
+        url: ipAddress + '/api/get_courses',
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          'Content-Type': 'application/x-www-form-urlencoded'
           // "Access-Control-Allow-Origin": "*"
         }
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log("fetch fails, please refresh the page");
+      console.log('fetch fails, please refresh the page');
     }
   }
 
@@ -63,7 +63,7 @@ class ListingAdmin extends Component {
   }
 
   genQueryString(name, arr) {
-    let str = "";
+    let str = '';
     for (let i = 0; i < arr.length; i++) {
       str += `&${name}=${arr[i].value}`;
     }
@@ -78,25 +78,25 @@ class ListingAdmin extends Component {
       isLoading: true
     });
 
-    let queryString = "";
+    let queryString = '';
 
-    if (subject) queryString += this.genQueryString("subject", subject);
+    if (subject) queryString += this.genQueryString('subject', subject);
     if (location) queryString += `&location=${location}`;
     if (tuitionMax) queryString += `&tuitionMax=${tuitionMax.value}`;
     if (feeMax) queryString += `&feeMax=${feeMax.value}`;
     if (rating) queryString += `&ratingMin=${rating.value}`;
     queryString = queryString.slice(1);
 
-    console.log("queryString: ", queryString);
+    console.log('queryString: ', queryString);
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         crossDomain: true,
         url: `${ipAddress}/api/get_courses?${queryString}`
       });
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
-      console.log("fail to search, please try again");
+      console.log('fail to search, please try again');
     }
   }
 
@@ -110,16 +110,16 @@ class ListingAdmin extends Component {
     });
     try {
       const response = await axios({
-        method: "GET",
+        method: 'GET',
         url: `${ipAddress}/api/get_courses?tutor=${search.trim()}`
       });
-      console.log("courses fetched from search: ", response.data.courses);
+      console.log('courses fetched from search: ', response.data.courses);
       this.setState(
         { courseList: response.data.courses, isLoading: false },
-        () => console.log("courseList: ", this.state.courseList)
+        () => console.log('courseList: ', this.state.courseList)
       );
     } catch (error) {
-      console.log("search fails, please try again");
+      console.log('search fails, please try again');
     }
   }
 
@@ -199,7 +199,7 @@ class ListingAdmin extends Component {
                       href="#"
                       className="h5 card-title text-center"
                     >
-                      Filters <i className="fas fa-angle-up" />{" "}
+                      Filters <i className="fas fa-angle-up" />{' '}
                     </a>
                   </div>
                   <form onSubmit={this.onFilterSubmit.bind(this)}>
@@ -269,7 +269,7 @@ class ListingAdmin extends Component {
                         />
                       </div>
                     </div>
-                    <div classNfame="text-center">
+                    <div className="text-center">
                       <input
                         type="submit"
                         value="Search"
