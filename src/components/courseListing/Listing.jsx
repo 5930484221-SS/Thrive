@@ -222,6 +222,8 @@ class Listing extends Component {
                           className="form-control"
                           onChange={this.onChange.bind(this)}
                           value={location}
+                          maxLength="512"
+                          pattern="[A-Za-z0-9]*"
                         />
                       </div>
                     </div>
@@ -298,7 +300,6 @@ class Listing extends Component {
           {courseList.length > 0 || isLoading ? (
             courseList.map((c, index) => {
               return c.status === "closed" ? null : (
-
                 <CourseContainer key={index} info={c} index={index} />
               );
             })

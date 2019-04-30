@@ -5,8 +5,8 @@ import MyCourseContentError from './MyCourseContentError';
 import Loader from '../loader/Loader';
 import ipAddress from '../../configIpAddress';
 
-import StarRatings from 'react-star-ratings';
-import swal from 'sweetalert';
+import StarRatings from "react-star-ratings";
+import swal from "sweetalert";
 
 //query
 import axios from 'axios';
@@ -54,8 +54,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: 'POST',
-          url: ipAddress + '/api/close_course',
+          method: "POST",
+          url: ipAddress + "/api/close_course",
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -93,8 +93,8 @@ class TeachingContainer extends Component {
     }).then(willDelete => {
       if (willDelete) {
         axios({
-          method: 'POST',
-          url: ipAddress + '/api/delete_course',
+          method: "POST",
+          url: ipAddress + "/api/delete_course",
           crossDomain: true,
           data: querystring.stringify({
             token: window.localStorage.token,
@@ -129,7 +129,7 @@ class TeachingContainer extends Component {
     switch (course.status) {
       case 'open':
         return (
-          <div>
+          <div style={{ marginBottom: "5px"}}>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
@@ -149,7 +149,7 @@ class TeachingContainer extends Component {
         );
       case 'reserved':
         return (
-          <div>
+          <div style={{ marginBottom: "5px"}}>
             <button
               className="btn btn-orange"
               onClick={() => this.onEditCourse(course)}
@@ -252,8 +252,8 @@ export class LearningCourseContainer extends Component {
     console.log(data);
     try {
       await axios({
-        method: 'POST',
-        url: ipAddress + '/api/review',
+        method: "POST",
+        url: ipAddress + "/api/review",
         crossDomain: true,
         data: querystring.stringify(data),
         headers: {
@@ -270,8 +270,8 @@ export class LearningCourseContainer extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await axios({
-        method: 'POST',
-        url: ipAddress + '/api/get_courses_by_learner',
+        method: "POST",
+        url: ipAddress + "/api/get_courses_by_learner",
         crossDomain: true,
         data: querystring.stringify({
           token: window.localStorage.token
@@ -323,7 +323,8 @@ export class LearningCourseContainer extends Component {
                     <button
                       type="button"
                       className="btn btn-secondary"
-                      style={{ marginBottom: '5px', marginLeft: '5px' }}
+
+                      style={{ marginBottom: "5px", marginLeft: "5px" }}
                       onClick={() => this.showContact(course.tutor_contact)}
                     >
                       See tutor contact
