@@ -231,7 +231,8 @@ def create_course(request):
 def get_course_query_object(data: QueryDict):
     fields_exact = ['tutor']
     fields_substring = ['description', 'descriptionProfile', 'location', 'topic']
-    fields_range = ['fee', 'tuition', 'rating']
+    # fields_range = ['fee', 'tuition', 'rating']
+    fields_range = ['fee', 'tuition']
     fields_multi = ['subject']
 
     query_object = dict()
@@ -296,6 +297,9 @@ def get_courses(request):
     _id = request.GET.get('id')
     order = int(request.GET.get('order', 1))
 
+    rating_min = request.GET.get('ratingMin')
+    rating_max = request.GET.get('ratingMax')
+
     qobj = dict()
     if _id:
         qobj = {'_id': ObjectId(_id)}
@@ -325,6 +329,11 @@ def get_courses(request):
           course['rating'] = sum(i * record[f'rating_{i}'] for i in range(1, 6)) / n_ratings
         else:
           course['rating'] = 0
+        
+        if rating_min:
+            if int(rating_min) > course['rating']:
+                continue
+
         courses.append(course)
 
     response = JsonResponse(dict(courses=courses))

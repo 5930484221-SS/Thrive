@@ -94,6 +94,7 @@ class ListingAdmin extends Component {
         crossDomain: true,
         url: `${ipAddress}/api/get_courses?${queryString}`
       });
+      console.log('theresponse', response);
       this.setState({ courseList: response.data.courses, isLoading: false });
     } catch (error) {
       console.log('fail to search, please try again');
