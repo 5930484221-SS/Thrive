@@ -401,8 +401,8 @@ def users(request):
     for match in matches:
         result = {v: match[k] for k, v in result_keys.items()}
         users.append(result)
-    if not users:
-        return HttpResponseNotFound('The given username does not exist')
+    #if not users:
+        #return HttpResponseNotFound('The given username does not exist')
 
     response = JsonResponse({'users': users})
     return set_response_header(response)

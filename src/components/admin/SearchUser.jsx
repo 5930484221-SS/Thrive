@@ -6,7 +6,7 @@ import CowBg from '../CowBg';
 import UserContainer from './UserContainer';
 import SearchBar from '../courseListing/SearchBar';
 import Loader from '../loader/Loader';
-import ipAddress from "../../configIpAddress"
+import ipAddress from '../../configIpAddress';
 
 class SearchUser extends Component {
   constructor() {
@@ -55,7 +55,7 @@ class SearchUser extends Component {
     });
     try {
       const response = await axios.get(
-        `${ipAddress}/api/user?username=${this.state.search.trim()}`
+        `${ipAddress}/api/users?username=${this.state.search.trim()}`
       );
       this.setState({ userList: response.data.users, isLoading: false });
     } catch (error) {
@@ -65,9 +65,27 @@ class SearchUser extends Component {
 
   render() {
     const { isLoading, search, userList } = this.state;
-    console.log({ userList });
     // take a look at the states in the console!
-    console.log({ isLoading, search, userList });
+    let toDisplay;
+    if (isLoading) toDisplay = <div />;
+    else if (userList.length > 0) {
+      toDisplay = userList.map((c, index) => (
+        <li className="list-group-item" key={index}>
+          <UserContainer
+            info={c}
+            index={index}
+            refresh={this.refresh.bind(this)}
+          />
+        </li>
+      ));
+    } else {
+      toDisplay = (
+        <div className="display-4 m-auto">
+          No <span className="text-orange">Results</span>
+        </div>
+      );
+    }
+    console.log({ isLoading, userList });
 
     return (
       <div>
@@ -85,23 +103,7 @@ class SearchUser extends Component {
         <div className="row">
           <div className="col-sm-2" />
           <div className="col-sm-8">
-            <ul className="list-group">
-              {userList.length > 0 || isLoading ? (
-                userList.map((c, index) => (
-                  <li className="list-group-item" key={index}>
-                    <UserContainer
-                      info={c}
-                      index={index}
-                      refresh={this.refresh.bind(this)}
-                    />
-                  </li>
-                ))
-              ) : (
-                <div className="display-4 m-auto">
-                  No <span className="text-orange">Results</span>
-                </div>
-              )}
-            </ul>
+            <ul className="list-group">{toDisplay}</ul>
           </div>
         </div>
       </div>
